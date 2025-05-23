@@ -1,0 +1,216 @@
+﻿@model PetCare_system.Models.PaymentForAdoption
+
+@{
+    ViewBag.Title = "Adoption Payment";
+}
+
+<div class="container payment-container">
+    <div class="payment-header">
+        <h2><i class="fa fa-credit-card"></i> @ViewBag.Title</h2>
+        <p>Complete your payment to finalize the adoption process for @Model.PetName</p>
+    </div>
+
+    <div class="payment-summary">
+        <div class="amount-due">
+            <span>Amount Due:</span>
+            <span class="amount">@Model.Amount.ToString("C")</span>
+        </div>
+    </div>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(model => model.AdoptionId)
+        @Html.HiddenFor(model => model.Amount)
+        @Html.HiddenFor(model => model.PetName)
+
+        <div class="payment-form">
+            <h3><i class="fa fa-money"></i> Payment Information</h3>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.PaymentMethod)
+                        @Html.DropDownListFor(model => model.PaymentMethod, (SelectList)ViewBag.PaymentMethods, "Select payment method", new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.PaymentMethod, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.BankType)
+                        @Html.DropDownListFor(model => model.BankType, (SelectList)ViewBag.BankTypes, "Select card type", new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.BankType, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.CardHolderName)
+                @Html.TextBoxFor(model => model.CardHolderName, new { @class = "form-control", placeholder = "Name on card" })
+                @Html.ValidationMessageFor(model => model.CardHolderName, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.AccountNumber)
+                @Html.TextBoxFor(model => model.AccountNumber, new { @class = "form-control", placeholder = "1234 5678 9012 3456" })
+                @Html.ValidationMessageFor(model => model.AccountNumber, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.ExpiryDate)
+                        @Html.TextBoxFor(model => model.ExpiryDate, "{0:yyyy-MM}", new { @class = "form-control", type = "month" })
+                        @Html.ValidationMessageFor(model => model.ExpiryDate, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.CVV)
+                        <div class="input-group">
+                            @Html.TextBoxFor(model => model.CVV, new { @class = "form-control", placeholder = "123" })
+                            <span class="input-group-addon" data-toggle="tooltip" title="3-digit security code">
+                                <i class="fa fa-question-circle"></i>
+                            </span>
+                        </div>
+                        @Html.ValidationMessageFor(model => model.CVV, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+
+            <div class="payment-security">
+                <i class="fa fa-lock"></i> Your payment is secure and encrypted
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-success btn-lg">
+                    <i class="fa fa-check-circle"></i> Complete Payment
+                </button>
+            </div>
+        </div>
+    }
+</div>
+
+@section Styles {
+    <style>
+        .payment-container {
+            max-width: 800px;
+            margin: 30px auto;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .payment-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+            .payment-header h2 {
+                color: #2c3e50;
+                font-weight: 600;
+            }
+
+            .payment-header i {
+                color: #3498db;
+                margin-right: 10px;
+            }
+
+        .payment-summary {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .amount-due {
+            font-size: 24px;
+            font-weight: 500;
+        }
+
+        .amount {
+            color: #e74c3c;
+            font-weight: 600;
+        }
+
+        .payment-form {
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+            .payment-form h3 {
+                color: #2c3e50;
+                margin-top: 0;
+                margin-bottom: 25px;
+                font-weight: 500;
+            }
+
+                .payment-form h3 i {
+                    margin-right: 10px;
+                    color: #3498db;
+                }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-control {
+            border-radius: 4px;
+            box-shadow: none;
+            border: 1px solid #ddd;
+            height: 45px;
+        }
+
+            .form-control:focus {
+                border-color: #3498db;
+                box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+            }
+
+        .input-group-addon {
+            cursor: help;
+            background: #f8f9fa;
+        }
+
+        .payment-security {
+            text-align: center;
+            margin: 25px 0;
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+
+            .payment-security i {
+                margin-right: 5px;
+                color: #2ecc71;
+            }
+
+        .form-actions {
+            text-align: center;
+        }
+
+        .btn-success {
+            background-color: #2ecc71;
+            border-color: #27ae60;
+            padding: 12px 40px;
+            font-weight: 500;
+        }
+
+            .btn-success:hover {
+                background-color: #27ae60;
+                border-color: #219955;
+            }
+
+            .btn-success i {
+                margin-right: 8px;
+            }
+    </style>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+    </script>
+}

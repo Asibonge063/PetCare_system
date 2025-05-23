@@ -1,0 +1,317 @@
+﻿@model PetCare_system.Models.MembershipViewModel
+
+@{
+    ViewBag.Title = "Choose Your Membership Plan";
+}
+
+<div class="container py-5">
+    <div class="text-center mb-5">
+        <h1 class="display-4 text-primary"><i class="fas fa-paw mr-2"></i>PetCare Membership</h1>
+        <p class="lead">Select the perfect plan for your pet's needs</p>
+    </div>
+
+    <!-- Membership Plan Cards -->
+    <div class="row">
+        <!-- Weekly Plan -->
+        <div class="col-md-4 mb-4">
+            <div class="card membership-card h-100" data-plan="Weekly" data-price="250">
+                <div class="card-header bg-info text-white">
+                    <h3 class="my-0">Weekly</h3>
+                </div>
+                <div class="card-body">
+                    <h2 class="card-title pricing-card-title">R250<small class="text-muted">/ week</small></h2>
+                    <ul class="list-unstyled mt-3 mb-4">
+                        <li><i class="fas fa-check text-success mr-2"></i> 7-day access</li>
+                        <li><i class="fas fa-check text-success mr-2"></i> Basic grooming</li>
+                        <li><i class="fas fa-check text-success mr-2"></i> Health check</li>
+                    </ul>
+                </div>
+                <div class="card-footer bg-transparent">
+                    <button type="button" class="btn btn-lg btn-block btn-outline-primary select-plan">Select Plan</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Monthly Plan -->
+        <div class="col-md-4 mb-4">
+            <div class="card membership-card h-100" data-plan="Monthly" data-price="850">
+                <div class="card-header bg-warning text-white">
+                    <h3 class="my-0">Monthly</h3>
+                </div>
+                <div class="card-body">
+                    <h2 class="card-title pricing-card-title">R850<small class="text-muted">/ month</small></h2>
+                    <ul class="list-unstyled mt-3 mb-4">
+                        <li><i class="fas fa-check text-success mr-2"></i> All Weekly benefits</li>
+                        <li><i class="fas fa-check text-success mr-2"></i> Premium grooming</li>
+                        <li><i class="fas fa-check text-success mr-2"></i> Dental check</li>
+                    </ul>
+                </div>
+                <div class="card-footer bg-transparent">
+                    <button type="button" class="btn btn-lg btn-block btn-primary select-plan">Most Popular</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Yearly Plan -->
+        <div class="col-md-4 mb-4">
+            <div class="card membership-card h-100" data-plan="Yearly" data-price="8500">
+                <div class="card-header bg-success text-white">
+                    <h3 class="my-0">Yearly</h3>
+                </div>
+                <div class="card-body">
+                    <h2 class="card-title pricing-card-title">R8500<small class="text-muted">/ year</small></h2>
+                    <ul class="list-unstyled mt-3 mb-4">
+                        <li><i class="fas fa-check text-success mr-2"></i> All Monthly benefits</li>
+                        <li><i class="fas fa-check text-success mr-2"></i> Unlimited visits</li>
+                        <li><i class="fas fa-check text-success mr-2"></i> 24/7 emergency</li>
+                    </ul>
+                </div>
+                <div class="card-footer bg-transparent">
+                    <button type="button" class="btn btn-lg btn-block btn-outline-success select-plan">Best Value</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Registration Form (Initially Hidden) -->
+    <div id="registrationForm" class="card shadow-lg mt-4" style="display: none;">
+        <div class="card-header bg-primary text-white">
+            <h3 class="mb-0"><i class="fas fa-edit mr-2"></i>Complete Your Registration</h3>
+        </div>
+
+        <div class="card-body">
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+                @Html.HiddenFor(model => model.MembershipType)
+                @Html.HiddenFor(model => model.AmountPaid)
+
+                @Html.ValidationSummary(true, "", new { @class = "alert alert-danger" })
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.PetId, "Select Your Pet", new { @class = "font-weight-bold" })
+                            @Html.DropDownListFor(model => model.PetId, (SelectList)ViewBag.PetId, "Choose your pet", new { @class = "form-control select2" })
+                            @Html.ValidationMessageFor(model => model.PetId, "", new { @class = "text-danger small" })
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="font-weight-bold">Selected Plan</label>
+                            <div class="form-control" id="selectedPlanDisplay" style="height: auto; padding-top: 8px;">
+                                <strong id="displayPlanName"></strong> - R<span id="displayPlanPrice"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mt-3">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.PaymentMethod, "Payment Method", new { @class = "font-weight-bold" })
+                            @Html.DropDownListFor(model => model.PaymentMethod,
+                                new SelectList(new[] { "Credit Card", "Cash", "Bank Transfer" }),
+                                "Select payment method",
+                                new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.PaymentMethod, "", new { @class = "text-danger small" })
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.PaymentDate, "Payment Date", new { @class = "font-weight-bold" })
+                            @Html.EditorFor(model => model.PaymentDate, new { htmlAttributes = new { @class = "form-control datepicker" } })
+                            @Html.ValidationMessageFor(model => model.PaymentDate, "", new { @class = "text-danger small" })
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Credit Card Fields -->
+                <div id="creditCardFields" class="border-top mt-3 pt-3" style="display: none;">
+                    <h5 class="text-primary"><i class="fas fa-credit-card mr-2"></i>Card Details</h5>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.BankType, "Card Type", new { @class = "font-weight-bold" })
+                                @Html.DropDownListFor(model => model.BankType, (SelectList)ViewBag.BankTypes, "Select card type", new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.BankType, "", new { @class = "text-danger small" })
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.AccountHolder, "Cardholder Name", new { @class = "font-weight-bold" })
+                                @Html.EditorFor(model => model.AccountHolder, new { htmlAttributes = new { @class = "form-control", placeholder = "As shown on card" } })
+                                @Html.ValidationMessageFor(model => model.AccountHolder, "", new { @class = "text-danger small" })
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.AccountNumber, "Card Number", new { @class = "font-weight-bold" })
+                                @Html.EditorFor(model => model.AccountNumber, new { htmlAttributes = new { @class = "form-control", placeholder = "1234 5678 9012 3456", data_mask = "9999 9999 9999 9999" } })
+                                @Html.ValidationMessageFor(model => model.AccountNumber, "", new { @class = "text-danger small" })
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.ExpiryDate, "Expiry Date", new { @class = "font-weight-bold" })
+                                @Html.TextBox("ExpiryDateMMYY",
+                                             Model.ExpiryDate.HasValue ? $"{Model.ExpiryDate.Value.Month:D2}/{Model.ExpiryDate.Value.Year % 100:D2}" : "",
+                                             new
+                                                  {
+                                                 @class = "form-control",
+                                                 placeholder = "MM/YY",
+                                                 autocomplete = "cc-exp",
+                                                 data_mask = "99/99"
+                                             })
+                                @Html.HiddenFor(model => model.ExpiryDate)
+                                @Html.ValidationMessageFor(model => model.ExpiryDate, "", new { @class = "text-danger small" })
+                            </div>
+                        
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.CVV, "Security Code", new { @class = "font-weight-bold" })
+                                @Html.EditorFor(model => model.CVV, new { htmlAttributes = new { @class = "form-control", placeholder = "123", data_mask = "999" } })
+                                @Html.ValidationMessageFor(model => model.CVV, "", new { @class = "text-danger small" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group mt-4">
+                    <button type="submit" class="btn btn-primary btn-lg btn-block">
+                        <i class="fas fa-check-circle mr-2"></i>Complete Registration
+                    </button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <style>
+        .membership-card {
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+
+            .membership-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            }
+
+            .membership-card.selected {
+                border-color: #007bff;
+                box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+            }
+
+        .pricing-card-title {
+            font-size: 2.5rem;
+        }
+
+        .select2-container .select2-selection--single {
+            height: 38px;
+        }
+
+        .card-header {
+            border-radius: 0 !important;
+        }
+    </style>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            // Initialize select2
+            $('.select2').select2();
+
+            // Initialize datepicker
+            $('.datepicker').datepicker({
+                format: 'yyyy-mm-dd',
+                autoclose: true,
+                todayHighlight: true
+            });
+            $(document).ready(function () {
+                // Initialize input masking for MM/YY format
+                $('#ExpiryDateMMYY').mask('99/99', {
+                    placeholder: 'MM/YY',
+                    clearIfNotMatch: true
+                });
+
+                // Convert MM/YY to DateTime when form submits
+                $('form').submit(function (e) {
+                    const expiryInput = $('#ExpiryDateMMYY').val();
+                    if (expiryInput && expiryInput.length === 5) {
+                        const [month, year] = expiryInput.split('/');
+                        // Create date (first day of month)
+                        const expiryDate = new Date(2000 + parseInt(year), parseInt(month) - 1, 1);
+                        $('#ExpiryDate').val(expiryDate.toISOString());
+                    } else {
+                        $('#ExpiryDate').val('');
+                    }
+                });
+
+                // Real-time validation
+                $('#ExpiryDateMMYY').on('blur', function () {
+                    const value = $(this).val();
+                    if (value.length === 5) {
+                        const [month, year] = value.split('/').map(Number);
+                        const now = new Date();
+                        const currentYear = now.getFullYear() % 100;
+                        const currentMonth = now.getMonth() + 1;
+
+                        if (year < currentYear || (year === currentYear && month < currentMonth)) {
+                            alert('This card has expired');
+                            $(this).addClass('is-invalid');
+                        } else {
+                            $(this).removeClass('is-invalid');
+                        }
+                    }
+                });
+            });
+
+            // Plan selection
+            $('.membership-card').click(function () {
+                $('.membership-card').removeClass('selected');
+                $(this).addClass('selected');
+
+                const plan = $(this).data('plan');
+                const price = $(this).data('price');
+
+                $('#MembershipType').val(plan);
+                $('#AmountPaid').val(price);
+
+                $('#displayPlanName').text(plan);
+                $('#displayPlanPrice').text(price);
+
+                $('#registrationForm').slideDown();
+                $('html, body').animate({
+                    scrollTop: $('#registrationForm').offset().top - 20
+                }, 500);
+            });
+
+            // Toggle credit card fields
+            $('#PaymentMethod').change(function () {
+                $('#creditCardFields').toggle($(this).val() === 'Credit Card');
+            });
+
+            // Input masking
+            $('[data-mask]').each(function () {
+                $(this).mask($(this).data('mask'));
+            });
+        });
+    </script>
+}

@@ -1,0 +1,51 @@
+﻿@model PetCare_system.Models.BookingSpar
+
+@{
+    ViewBag.Title = "Complete Payment";
+}
+@using System.Globalization
+@{
+    var culture = new CultureInfo("en-ZA"); // South African culture
+}
+
+<h2>@ViewBag.Title</h2>
+
+<div class="row">
+    <div class="col-md-6">
+        <h4>Booking Summary</h4>
+        <dl class="dl-horizontal">
+            <dt>Service:</dt>
+            <dd>@Model.SpaService.Name</dd>
+
+            <dt>Pet:</dt>
+            <dd>@Model.PetName (@Model.PetType)</dd>
+
+            <dt>Date:</dt>
+            <dd>@Model.BookingDate.ToString("f")</dd>
+
+            <dt>Price:</dt>
+            <dd>@Model.SpaService.Price.ToString("C", culture)</dd>
+        </dl>
+    </div>
+
+    <div class="col-md-6">
+        @using (Html.BeginForm("CompletePayment", "Spa", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+            @Html.Hidden("bookingId", Model.BookingSparId)
+
+            <div class="form-group">
+                <label>Payment Method</label>
+                <select name="paymentMethod" class="form-control" required>
+                    <option value="">-- Select Payment --</option>
+                    <option value="Credit Card">Credit Card</option>
+                    <option value="Debit Card">Debit Card</option>
+                    <option value="PayPal">PayPal</option>
+                    <option value="Cash">Cash on Arrival</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-success">Complete Payment</button>
+        }
+    </div>
+</div>

@@ -1,0 +1,456 @@
+﻿@model PetCare_system.Models.Payment
+@{
+    ViewBag.Title = "Payment Confirmation";
+    var consultation = Model.VetConsultation;
+    var pet = consultation?.Pet;
+}
+<head>
+    <!-- Add this line in your head section -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<style>
+    :root {
+        --primary: #6366F1;
+        --secondary: #8B5CF6;
+        --success: #10B981;
+        --surface: #FFFFFF;
+        --background: #F8FAFC;
+        --text-primary: #1E293B;
+        --text-secondary: #64748B;
+        --border: #E2E8F0;
+        --shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.08);
+    }
+
+    body {
+        background: var(--background);
+        font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    }
+
+    .receipt-card {
+        background: var(--surface);
+        border-radius: 1.5rem;
+        box-shadow: var(--shadow);
+        max-width: 880px;
+        overflow: hidden;
+        position: relative;
+        backdrop-filter: blur(12px);
+        background: rgba(255, 255, 255, 0.95);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .receipt-header {
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        padding: 4rem 2.5rem;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .header-overlay {
+        position: absolute;
+        top: -50%;
+        right: -20%;
+        width: 160%;
+        height: 160%;
+        background: radial-gradient(circle, rgba(255,255,255,0.1) 20%, transparent 70%);
+    }
+
+    .receipt-badge {
+        position: absolute;
+        top: -1.25rem;
+        right: -1.25rem;
+        background: var(--success);
+        width: 4.5rem;
+        height: 4.5rem;
+        border-radius: 1rem;
+        transform: rotate(15deg);
+        box-shadow: 0 10px 20px rgba(16, 185, 129, 0.3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .receipt-title {
+        font-size: 2.75rem;
+        font-weight: 800;
+        color: white;
+        letter-spacing: -0.025em;
+        margin-bottom: 0.75rem;
+        position: relative;
+    }
+
+    .receipt-subtitle {
+        font-size: 1.125rem;
+        color: rgba(255,255,255,0.9);
+        font-weight: 500;
+    }
+
+    .receipt-body {
+        padding: 3.5rem 2.5rem;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2.5rem;
+    }
+
+    .detail-section {
+        position: relative;
+    }
+
+    .section-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin-bottom: 1.75rem;
+        padding-bottom: 1rem;
+        border-bottom: 2px solid var(--border);
+    }
+
+    .detail-grid {
+        display: grid;
+        gap: 1rem;
+    }
+
+    .detail-item {
+        display: flex;
+        justify-content: space-between;
+        padding: 1.25rem;
+        background: var(--background);
+        border-radius: 0.875rem;
+        transition: transform 0.2s ease;
+    }
+
+        .detail-item:hover {
+            transform: translateY(-2px);
+        }
+
+    .detail-label {
+        color: var(--text-primary);
+        font-weight: 600;
+        font-size: 0.9375rem;
+    }
+
+    .detail-value {
+        color: var(--text-secondary);
+        font-weight: 500;
+        font-size: 0.9375rem;
+    }
+
+    .notes-section {
+        background: var(--background);
+        padding: 1.75rem;
+        border-radius: 1rem;
+        border-left: 4px solid var(--primary);
+        margin-top: 1.5rem;
+    }
+
+    .action-bar {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        margin-top: 3rem;
+    }
+
+    .btn {
+        padding: 1rem 2rem;
+        border-radius: 0.875rem;
+        font-weight: 600;
+        transition: all 0.2s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.75rem;
+        border: none;
+        cursor: pointer;
+        background: var(--primary);
+        color: white;
+        box-shadow: 0 4px 6px rgba(99, 102, 241, 0.1);
+    }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(99, 102, 241, 0.15);
+        }
+
+    .btn-secondary {
+        background: var(--success);
+        box-shadow: 0 4px 6px rgba(16, 185, 129, 0.1);
+    }
+
+    .btn-tertiary {
+        background: var(--text-primary);
+        box-shadow: 0 4px 6px rgba(30, 41, 59, 0.1);
+    }
+
+
+    /* Add these modifications to make the page full */
+    body {
+        padding: 0;
+        margin: 0;
+        min-height: 100vh;
+        display: flex;
+    }
+
+    .receipt-card {
+        flex: 1;
+        max-width: none;
+        border-radius: 0;
+        margin: 0;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .receipt-header {
+        padding: 5rem 2.5rem;
+    }
+
+    .receipt-body {
+        flex: 1;
+        padding: 4rem 2.5rem;
+    }
+
+    @@media (min-width: 1024px) {
+        .receipt-card {
+            border-radius: 1.5rem;
+            margin: 2rem auto;
+            min-height: auto;
+            max-width: 880px;
+            min-width: 880px;
+        }
+
+        body {
+            padding: 2rem;
+            align-items: center;
+        }
+    }
+
+    @@media (max-width: 640px) {
+        .receipt-header {
+            padding: 3rem 1.5rem;
+        }
+
+        .receipt-body {
+            padding: 2.5rem 1.5rem;
+        }
+    }
+
+
+    @@keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .btn {
+        padding: 0.75rem 1.5rem; /* Reduced from 1rem 2rem */
+        border-radius: 0.75rem; /* Slightly smaller radius */
+        font-size: 0.875rem; /* Smaller font size */
+        gap: 0.5rem; /* Reduced icon spacing */
+        /* Rest of the properties remain the same */
+    }
+
+        /* Adjust icon sizes to match new button scale */
+        .btn i {
+            font-size: 0.9rem;
+        }
+
+    /* Media query adjustment for mobile */
+    @@media (max-width: 768px) {
+        .btn {
+            padding: 0.675rem 1.25rem; /* Slightly smaller mobile padding */
+        }
+    }
+
+    .receipt-card {
+        animation: fadeIn 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+</style>
+
+<body>
+    <div class="receipt-card">
+        <div class="receipt-header">
+            <div class="header-overlay"></div>
+            <div class="receipt-badge">
+                <i class="fas fa-check fa-lg" style="color: white; transform: rotate(-15deg)"></i>
+            </div>
+            <h1 class="receipt-title">Payment Successful</h1>
+            <p class="receipt-subtitle">Transaction #@Model.TransactionReference</p>
+        </div>
+
+        <div class="receipt-body">
+            <!-- Payment Details Card -->
+            <div class="detail-section">
+                <h3 class="section-title">
+                    <i class="fas fa-wallet"></i>
+                    Payment Details
+                </h3>
+                <div class="detail-grid">
+                    <div class="detail-item">
+                        <span class="detail-label">Total Amount</span>
+                        <span class="detail-value">R @Model.AmountPaid.ToString("0.00")</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Payment Date</span>
+                        <span class="detail-value">@Model.PaymentDate.ToString("dd MMM yyyy • HH:mm")</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Payment Method</span>
+                        <span class="detail-value">@Model.PaymentMethod</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Appointment Details Card -->
+            <div class="detail-section">
+                <h3 class="section-title">
+                    <i class="fas fa-calendar-star"></i>
+                    Appointment Details
+                </h3>
+                <div class="detail-grid">
+                    <div class="detail-item">
+                        <span class="detail-label">Pet Name</span>
+                        <span class="detail-value">@pet.Name</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Appointment Date</span>
+                        <span class="detail-value">@consultation.Consult_Date.ToString("dd MMM yyyy")</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Time Slot</span>
+                        <span class="detail-value">@consultation.Consult_Time.ToString("hh:mm tt")</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Service Type</span>
+                        <span class="detail-value">@consultation.ConsultationType</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Veterinary Notes -->
+            @if (!string.IsNullOrEmpty(consultation.Consult_Description))
+            {
+                <div class="notes-section">
+                    <h4 class="section-title">
+                        <i class="fas fa-clipboard-list"></i>
+                        Veterinary Notes
+                    </h4>
+                    <p class="detail-value" style="line-height: 1.6;">@consultation.Consult_Description</p>
+                </div>
+            }
+
+            <!-- Action Buttons -->
+            <div class="action-bar">
+                <a href="@Url.Action("Index", "Home")" class="btn btn-tertiary">
+                    <i class="fas fa-arrow-left"></i> Return Home
+                </a>
+                <button onclick="window.print()" class="btn btn-secondary">
+                    <i class="fas fa-print"></i> Print Receipt
+                </button>
+                <button id="downloadPdf" class="btn">
+                    <i class="fas fa-file-pdf"></i> Download PDF
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    // Initialize jsPDF properly with UMD module
+    const { jsPDF } = window.jspdf;
+
+    // Shared PDF generation function
+    function generatePDF() {
+        const doc = new jsPDF();
+        const margin = 20;
+        let yPos = 30;
+
+        // Header Section
+        doc.setFillColor(99, 102, 241);
+        doc.rect(0, 0, doc.internal.pageSize.width, 80, 'F');
+        doc.setFontSize(24);
+        doc.setTextColor(255, 255, 255);
+        doc.text('Payment Receipt', margin, 45);
+        doc.setFontSize(12);
+        doc.text(`Transaction #@Html.Raw(Json.Encode(Model.TransactionReference))`, margin, 55);
+
+        // Payment Details
+        yPos = 85;
+        doc.setFontSize(11);
+        doc.setTextColor(30, 41, 59);
+        doc.setFont(undefined, 'bold');
+        doc.text('Payment Details', margin, yPos);
+        yPos += 10;
+        doc.setFont(undefined, 'normal');
+        doc.text(`Amount: R @Html.Raw(Json.Encode(Model.AmountPaid.ToString("0.00")))`, margin, yPos);
+        doc.text(`Date: @Html.Raw(Json.Encode(Model.PaymentDate.ToString("dd MMM yyyy • HH:mm")))`, 110, yPos);
+        yPos += 7;
+        doc.text(`Method: @Html.Raw(Json.Encode(Model.PaymentMethod))`, margin, yPos);
+        yPos += 15;
+
+        // Appointment Details
+        doc.setFont(undefined, 'bold');
+        doc.text('Appointment Details', margin, yPos);
+        yPos += 10;
+        doc.setFont(undefined, 'normal');
+        doc.text(`Pet: @Html.Raw(Json.Encode(pet?.Name))`, margin, yPos);
+        doc.text(`Date: @Html.Raw(Json.Encode(consultation?.Consult_Date.ToString("dd MMM yyyy")))`, 110, yPos);
+        yPos += 7;
+        doc.text(`Time: @Html.Raw(Json.Encode(consultation?.Consult_Time.ToString("hh:mm tt")))`, margin, yPos);
+        doc.text(`Service: @Html.Raw(Json.Encode(consultation?.ConsultationType))`, 110, yPos);
+        yPos += 15;
+
+        // Veterinary Notes
+        @if (!string.IsNullOrEmpty(consultation?.Consult_Description))
+        {
+            <text>
+            doc.setFont(undefined, 'bold');
+            doc.text('Veterinary Notes:', margin, yPos);
+            yPos += 7;
+            doc.setFont(undefined, 'normal');
+            const notes = `@Html.Raw(HttpUtility.JavaScriptStringEncode(consultation.Consult_Description))`;
+            const splitNotes = doc.splitTextToSize(notes, 170);
+            splitNotes.forEach((line, index) => {
+                doc.text(line, margin, yPos + (index * 7));
+            });
+            yPos += splitNotes.length * 7 + 10;
+            </text>
+        }
+
+        // Footer
+        doc.setFontSize(10);
+        doc.setTextColor(100, 116, 139);
+        doc.text('Thank you for choosing PetCare Clinic!',
+                doc.internal.pageSize.width/2, 280,
+                {align: 'center'});
+
+        return doc;
+    }
+
+    // Download PDF Handler
+    document.getElementById('downloadPdf').addEventListener('click', function() {
+        const doc = generatePDF();
+        doc.save(`PetCare_Receipt_@Html.Raw(Json.Encode(Model.TransactionReference))`);
+    });
+
+    // Print PDF Handler
+    document.querySelector('.btn-secondary').addEventListener('click', function(e) {
+        e.preventDefault();
+        const doc = generatePDF();
+        const pdfBlob = doc.output('blob');
+        const pdfUrl = URL.createObjectURL(pdfBlob);
+        const printWindow = window.open(pdfUrl);
+
+        printWindow.onload = function() {
+            printWindow.print();
+            URL.revokeObjectURL(pdfUrl);
+        };
+    });
+    </script>
+</body>
+

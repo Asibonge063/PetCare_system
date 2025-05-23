@@ -1,0 +1,25 @@
+﻿
+@model PetCare_system.Models.Inventory
+
+@{
+    ViewBag.Title = "Subtract Stock";
+}
+
+<h2>Subtract Stock - @Model.MedicationName</h2>
+
+@using (Html.BeginForm("SubtractStock", "Inventories", new { id = Model.InventoryId }, FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    <p><strong>Current Quantity:</strong> @Model.InventoryQuantity</p>
+
+    <div class="form-group">
+        <label>Quantity to Subtract</label>
+        <input type="number" name="quantityToSubtract" class="form-control" min="1" max="@Model.InventoryQuantity" required />
+    </div>
+
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+    <button type="submit" class="btn btn-danger">Subtract Stock</button>
+    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-secondary" })
+}

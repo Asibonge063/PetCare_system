@@ -1,0 +1,259 @@
+﻿@model PetCare_system.Models.Vet_Consultations
+@{
+    ViewBag.Title = "Provide Feedback";
+    Layout = null; // Remove layout for full control
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>@ViewBag.Title - PetCare System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4b6cb7;
+            --secondary-color: #182848;
+            --accent-color: #ff6b6b;
+            --light-color: #f8f9fc;
+            --dark-color: #5a5c69;
+            --text-color: #858796;
+            --border-color: #d1d3e2;
+            --shadow-color: rgba(58, 59, 69, 0.15);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+        }
+
+        .feedback-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .header-section {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+
+            .header-section h2 {
+                color: var(--primary-color);
+                font-weight: 700;
+            }
+
+        .pet-info-card {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .pet-info-row {
+            display: flex;
+            margin-bottom: 0.5rem;
+        }
+
+        .pet-info-label {
+            font-weight: 600;
+            min-width: 150px;
+            color: var(--dark-color);
+        }
+
+        .pet-info-value {
+            color: var(--text-color);
+        }
+
+        .form-section {
+            margin-bottom: 2rem;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+
+        .form-control, .form-select {
+            border-radius: 6px;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border-color);
+        }
+
+            .form-control:focus, .form-select:focus {
+                border-color: var(--primary-color);
+                box-shadow: 0 0 0 0.2rem rgba(75, 108, 183, 0.25);
+            }
+
+        textarea.form-control {
+            min-height: 150px;
+        }
+
+        .availability-toggle {
+            display: flex;
+            align-items: center;
+            margin-top: 1rem;
+        }
+
+        .toggle-label {
+            margin-left: 0.5rem;
+            font-weight: 500;
+        }
+
+        .btn-submit {
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            border: none;
+            padding: 0.75rem 2rem;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+            .btn-submit:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            }
+
+        .btn-back {
+            border: 1px solid var(--border-color);
+            padding: 0.75rem 2rem;
+            transition: all 0.3s;
+        }
+
+            .btn-back:hover {
+                background-color: #f1f1f1;
+            }
+
+        .action-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2rem;
+        }
+
+        /* Custom checkbox style */
+        .form-check-input {
+            width: 1.2em;
+            height: 1.2em;
+            margin-top: 0.2em;
+        }
+
+            .form-check-input:checked {
+                background-color: var(--primary-color);
+                border-color: var(--primary-color);
+            }
+
+        /* Responsive adjustments */
+        @@media (max-width: 768px) {
+            .feedback-container {
+                padding: 1.5rem;
+                margin: 1rem;
+            }
+
+            .pet-info-row {
+                flex-direction: column;
+            }
+
+            .pet-info-label {
+                margin-bottom: 0.25rem;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .btn-submit, .btn-back {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="feedback-container">
+            <div class="header-section">
+                <h2><i class="fas fa-comment-medical"></i> Provide Consultation Feedback</h2>
+                <p class="text-muted">Share your professional assessment and recommendations</p>
+            </div>
+
+            @using (Html.BeginForm("ProvideFeedback", "Vet_Consultations", FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+                @Html.HiddenFor(model => model.Consult_Id)
+
+                <!-- Pet Information Card -->
+        <div class="pet-info-card">
+            <h5><i class="fas fa-paw"></i> Consultation Details</h5>
+            <div class="pet-info-row">
+                <span class="pet-info-label">Pet Name:</span>
+                <span class="pet-info-value">@Model.PetName</span>
+            </div>
+            <div class="pet-info-row">
+                <span class="pet-info-label">Consultation Type:</span>
+                <span class="pet-info-value">@Model.ConsultationType</span>
+            </div>
+            <div class="pet-info-row">
+                <span class="pet-info-label">Consultation Description:</span>
+                <span class="pet-info-value">@Model.Consult_Description</span>
+            </div>
+            <div class="pet-info-row">
+                <span class="pet-info-label">Consultation Date:</span>
+                <span class="pet-info-value">@Model.Consult_Date.ToShortDateString()</span>
+            </div>
+        </div>
+
+                <!-- Feedback Form Section -->
+                <div class="form-section">
+                    <div class="mb-4">
+                        <label class="form-label" for="Feedback">
+                            <i class="fas fa-notes-medical"></i> Professional Feedback
+                        </label>
+                        @Html.TextAreaFor(model => model.Feedback, new { @class = "form-control", rows = "6", placeholder = "Enter detailed feedback including diagnosis, treatment plan, and recommendations..." })
+                        @Html.ValidationMessageFor(model => model.Feedback, "", new { @class = "text-danger" })
+                        <small class="text-muted">Be as detailed as possible to help the pet owner understand their pet's condition</small>
+                    </div>
+
+                    <div class="availability-toggle">
+                        <div class="form-check form-switch">
+                            @Html.CheckBoxFor(model => model.DoctorAvailability, new { @class = "form-check-input", role = "switch", id = "availabilitySwitch" })
+                            <label class="form-check-label toggle-label" for="availabilitySwitch">
+                                <i class="fas fa-user-md"></i> I'm available for follow-up
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="action-buttons">
+                    <a href="@Url.Action("Dashboard_Doc", "Doctor")" class="btn btn-back">
+                        <i class="fas fa-arrow-left"></i> Back to Dashboard
+                    </a>
+                    <button type="submit" class="btn btn-primary btn-submit">
+                        <i class="fas fa-paper-plane"></i> Submit Feedback
+                    </button>
+                </div>
+            }
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Enhance the textarea with auto-expanding functionality
+        const textarea = document.querySelector('textarea');
+        if (textarea) {
+            textarea.addEventListener('input', function() {
+                this.style.height = 'auto';
+                this.style.height = (this.scrollHeight) + 'px';
+            });
+        }
+    </script>
+</body>
+</html>

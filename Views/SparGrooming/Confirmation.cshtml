@@ -1,0 +1,212 @@
+﻿@model PetCare_system.Models.Spar_Grooming
+@{
+    ViewBag.Title = "Booking Confirmation - Paws & Relax";
+}
+
+<div class="confirmation-container">
+    <div class="confirmation-header">
+        <div class="header-icon">
+            <i class="fas fa-check-circle"></i>
+        </div>
+        <h1>Booking Confirmed!</h1>
+        <p class="text-muted">We're excited to pamper your pet</p>
+    </div>
+
+    <div class="confirmation-card">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="booking-details">
+                    <h3><i class="fas fa-calendar-alt"></i> Appointment Details</h3>
+                    <div class="detail-item">
+                        <span class="detail-label">Booking #</span>
+                        <span class="detail-value">@Model.BookingId</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Date & Time</span>
+                        <span class="detail-value">@Model.PreferredDate.ToString("dddd, MMMM d") at @Model.PreferredTime</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Service</span>
+                        <span class="detail-value">@Model.ServiceType</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Total</span>
+                        <span class="detail-value highlight">@Model.TotalPrice.ToString("C")</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="pet-details">
+                    <h3><i class="fas fa-paw"></i> Pet Details</h3>
+                    <div class="detail-item">
+                        <span class="detail-label">Pet Name</span>
+                        <span class="detail-value">@Model.PetName</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Pet Type</span>
+                        <span class="detail-value">@Model.PetType</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Breed</span>
+                        <span class="detail-value">@Model.Breed</span>
+                    </div>
+                </div>
+
+                <div class="owner-details">
+                    <h3><i class="fas fa-user"></i> Owner Information</h3>
+                    <div class="detail-item">
+                        <span class="detail-label">Name</span>
+                        <span class="detail-value">@Model.OwnerName</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="confirmation-actions">
+            <a href="@Url.Action("Payment", "SparGrooming", new { id = Model.BookingId })" class="btn btn-primary btn-pay">
+                <i class="fas fa-credit-card"></i> Proceed to Payment
+            </a>
+            <a href="@Url.Action("Index", "Home")" class="btn btn-outline-secondary">
+                <i class="fas fa-home"></i> Back to Home
+            </a>
+        </div>
+
+        <div class="confirmation-footer">
+            <p><i class="fas fa-info-circle"></i> You'll receive a confirmation email shortly</p>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <style>
+        /* Main Container */
+        .confirmation-container {
+            max-width: 900px;
+            margin: 30px auto;
+            padding: 20px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        /* Header Section */
+        .confirmation-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px 0;
+        }
+
+        .header-icon {
+            font-size: 60px;
+            color: #28a745;
+            margin-bottom: 15px;
+        }
+
+        .confirmation-header h1 {
+            color: #2c3e50;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        /* Card Styling */
+        .confirmation-card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            padding: 30px;
+            border-top: 5px solid #6a4c93;
+        }
+
+        /* Detail Items */
+        .detail-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .detail-label {
+            font-weight: 600;
+            color: #555;
+        }
+
+        .detail-value {
+            color: #333;
+        }
+
+        .highlight {
+            color: #6a4c93;
+            font-weight: 700;
+            font-size: 1.1em;
+        }
+
+        /* Section Headers */
+        h3 {
+            color: #6a4c93;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        /* Buttons */
+        .confirmation-actions {
+            margin-top: 40px;
+            text-align: center;
+        }
+
+        .btn-pay {
+            padding: 12px 30px;
+            font-size: 1.1em;
+            font-weight: 600;
+            border-radius: 50px;
+            margin-right: 15px;
+            background: #6a4c93;
+            border: none;
+            transition: all 0.3s;
+        }
+
+            .btn-pay:hover {
+                background: #5a3d83;
+                transform: translateY(-2px);
+                box-shadow: 0 5px 15px rgba(106, 76, 147, 0.3);
+            }
+
+        .btn-outline-secondary {
+            padding: 12px 30px;
+            font-size: 1.1em;
+            border-radius: 50px;
+            transition: all 0.3s;
+        }
+
+        /* Footer */
+        .confirmation-footer {
+            margin-top: 30px;
+            text-align: center;
+            color: #6c757d;
+            font-size: 0.9em;
+        }
+
+        /* Icons */
+        .fa-calendar-alt, .fa-paw, .fa-user {
+            margin-right: 8px;
+            color: #6a4c93;
+        }
+
+        /* Responsive */
+        @@media (max-width: 768px) {
+            .confirmation-actions .btn {
+                display: block;
+                width: 100%;
+                margin-bottom: 15px;
+            }
+
+            .btn-pay {
+                margin-right: 0;
+            }
+        }
+    </style>
+}
+
+@section Scripts {
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+}

@@ -1,0 +1,38 @@
+﻿@model PetCare_system.Models.BookingSpar
+
+@{
+    ViewBag.Title = "Booking Confirmed";
+}
+
+@using System.Globalization
+@{
+    var culture = new CultureInfo("en-ZA"); // South African culture
+}
+<div class="alert alert-success">
+    <h2>Thank You!</h2>
+    <p>Your spa booking has been confirmed.</p>
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-body">
+        <h4>Booking Details</h4>
+        <dl class="dl-horizontal">
+            <dt>Service:</dt>
+            <dd>@Model.SpaService.Name</dd>
+
+            <dt>Pet:</dt>
+            <dd>@Model.PetName (@Model.PetType)</dd>
+
+            <dt>Date:</dt>
+            <dd>@Model.BookingDate.ToString("f")</dd>
+
+            <dt>Price:</dt>
+            <dd>@Model.SpaService.Price.ToString("C", culture)</dd>
+
+            <dt>Status:</dt>
+            <dd>@(Model.IsPaid ? "Paid" : "Payment Pending")</dd>
+        </dl>
+    </div>
+</div>
+
+@Html.ActionLink("Back to Home", "Index", "Home", null, new { @class = "btn btn-default" })

@@ -1,0 +1,42 @@
+﻿@model PetCare_system.Models.GroomingStaff
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>GroomingStaff</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Groom_Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Groom_Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Groom_Surname)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Groom_Surname)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Groom_Email)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Groom_Email)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.GroomStaffId }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

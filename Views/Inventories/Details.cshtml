@@ -1,0 +1,50 @@
+﻿@model PetCare_system.Models.Inventory
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Inventory</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.MedicationName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.MedicationName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.InventoryType)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.InventoryType)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.InventoryQuantity)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.InventoryQuantity)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.MedDiscription)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.MedDiscription)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.InventoryId }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

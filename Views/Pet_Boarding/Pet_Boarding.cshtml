@@ -1,0 +1,948 @@
+﻿@model PetCare_system.Models.Pet_Boarding
+@{
+    ViewData["Title"] = "Premium Pet Boarding";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium Pet Boarding | Paws & Relax</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #3a86ff;
+            --secondary: #8338ec;
+            --accent: #ff006e;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --success: #38b000;
+            --warning: #ffbe0b;
+            --danger: #ef233c;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f7ff;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+            header::before {
+                content: "";
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: url('https://images.unsplash.com/photo-1586671267731-da2cf3ceeb80?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80') center/cover;
+                opacity: 0.15;
+                z-index: 0;
+            }
+
+        .header-content {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .tagline {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 1.5rem;
+            font-weight: 300;
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+        }
+
+            .logo i {
+                margin-right: 0.5rem;
+                color: var(--accent);
+            }
+        /*
+        .container {
+            max-width: 1200px;
+            margin: 3rem auto;
+            padding: 0 2rem;
+        }*/
+
+        .boarding-intro {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+            .boarding-intro h2 {
+                font-size: 2.2rem;
+                color: var(--primary);
+                margin-bottom: 1rem;
+                position: relative;
+                display: inline-block;
+            }
+
+                .boarding-intro h2::after {
+                    content: '';
+                    position: absolute;
+                    bottom: -10px;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    width: 80px;
+                    height: 4px;
+                    background-color: var(--accent);
+                    border-radius: 2px;
+                }
+
+        .boarding-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .feature-card {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            border-top: 4px solid var(--primary);
+        }
+
+            .feature-card:hover {
+                transform: translateY(-10px);
+                box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+            }
+
+            .feature-card i {
+                font-size: 2.5rem;
+                color: var(--primary);
+                margin-bottom: 1.5rem;
+            }
+
+            .feature-card h3 {
+                color: var(--primary);
+                margin-bottom: 1rem;
+            }
+
+        .process-steps {
+            margin: 4rem 0;
+        }
+
+        .step {
+            display: flex;
+            margin-bottom: 2rem;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+
+        .step-number {
+            background: var(--primary);
+            color: white;
+            font-size: 2rem;
+            font-weight: bold;
+            min-width: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .step-content {
+            padding: 2rem;
+            flex-grow: 1;
+        }
+
+            .step-content h3 {
+                color: var(--primary);
+                margin-bottom: 1rem;
+            }
+
+        .requirements {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            margin: 3rem 0;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            border-left: 4px solid var(--accent);
+        }
+
+            .requirements h2 {
+                color: var(--accent);
+                margin-bottom: 1.5rem;
+                text-align: center;
+            }
+
+        .requirements-list {
+            columns: 2;
+            column-gap: 2rem;
+        }
+
+            .requirements-list li {
+                margin-bottom: 1rem;
+                break-inside: avoid;
+            }
+
+        .pricing {
+            margin: 4rem 0;
+        }
+
+        .pricing-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .pricing-card {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+            .pricing-card:hover {
+                border-color: var(--primary);
+                transform: translateY(-5px);
+            }
+
+            .pricing-card.popular {
+                border: 2px solid var(--accent);
+                position: relative;
+            }
+
+        .popular-tag {
+            position: absolute;
+            top: -12px;
+            right: 20px;
+            background: var(--accent);
+            color: white;
+            padding: 0.3rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .price {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--primary);
+            margin: 1rem 0;
+        }
+
+            .price span {
+                font-size: 1rem;
+                color: var(--dark);
+            }
+
+        .pricing-features {
+            list-style: none;
+            margin: 1.5rem 0;
+        }
+
+            .pricing-features li {
+                margin-bottom: 0.8rem;
+                position: relative;
+                padding-left: 1.5rem;
+            }
+
+                .pricing-features li::before {
+                    content: '\f00c';
+                    font-family: 'Font Awesome 6 Free';
+                    font-weight: 900;
+                    position: absolute;
+                    left: 0;
+                    color: var(--success);
+                }
+
+        .cta-section {
+            text-align: center;
+            margin: 4rem 0;
+            padding: 3rem 2rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border-radius: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+
+            .cta-section::before {
+                content: "";
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: url('https://images.unsplash.com/photo-1586671267731-da2cf3ceeb80?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80') center/cover;
+                opacity: 0.1;
+                z-index: 0;
+            }
+
+        .cta-content {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .cta-section h2 {
+            font-size: 2.2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .cta-section p {
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 15px 30px;
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            box-shadow: 0 4px 15px rgba(255, 0, 110, 0.3);
+        }
+
+            .btn:hover {
+                background-color: #e00063;
+                transform: translateY(-3px);
+                box-shadow: 0 6px 20px rgba(255, 0, 110, 0.4);
+            }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 2px solid white;
+            margin-left: 1rem;
+        }
+
+            .btn-outline:hover {
+                background-color: rgba(255,255,255,0.1);
+            }
+
+        footer {
+            background-color: var(--dark);
+            color: white;
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            text-align: left;
+        }
+
+        .footer-column h3 {
+            color: var(--accent);
+            margin-bottom: 1.5rem;
+            font-size: 1.2rem;
+        }
+
+        .footer-column ul {
+            list-style: none;
+        }
+
+            .footer-column ul li {
+                margin-bottom: 0.8rem;
+            }
+
+                .footer-column ul li a {
+                    color: #ccc;
+                    text-decoration: none;
+                    transition: all 0.3s ease;
+                }
+
+                    .footer-column ul li a:hover {
+                        color: white;
+                        padding-left: 5px;
+                    }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+            .social-links a {
+                color: white;
+                background-color: rgba(255,255,255,0.1);
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: all 0.3s ease;
+            }
+
+                .social-links a:hover {
+                    background-color: var(--accent);
+                    transform: translateY(-3px);
+                }
+
+        .copyright {
+            margin-top: 3rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            font-size: 0.9rem;
+            color: #aaa;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.7);
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 2rem;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 800px;
+            box-shadow: 0 5px 30px rgba(0,0,0,0.3);
+            position: relative;
+            animation: modalOpen 0.4s ease;
+        }
+
+        @@keyframes modalOpen {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--dark);
+            transition: all 0.3s ease;
+        }
+
+            .close-modal:hover {
+                color: var(--accent);
+                transform: rotate(90deg);
+            }
+
+        .modal h2 {
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+            .form-group label {
+                display: block;
+                margin-bottom: 0.5rem;
+                font-weight: 600;
+                color: var(--dark);
+            }
+
+            .form-group input,
+            .form-group select,
+            .form-group textarea {
+                width: 100%;
+                padding: 12px 15px;
+                border: 1px solid #ddd;
+                border-radius: 6px;
+                font-size: 1rem;
+                transition: all 0.3s ease;
+            }
+
+                .form-group input:focus,
+                .form-group select:focus,
+                .form-group textarea:focus {
+                    outline: none;
+                    border-color: var(--primary);
+                    box-shadow: 0 0 0 3px rgba(58, 134, 255, 0.2);
+                }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .form-actions {
+            text-align: center;
+            margin-top: 2rem;
+        }
+
+        @@media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .requirements-list {
+                columns: 1;
+            }
+
+            .btn-outline {
+                margin-left: 0;
+                margin-top: 1rem;
+                display: block;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="nav-container">
+        <div class="logo">
+            <i class="fas fa-paw"></i>
+            <span>Paws & Relax</span>
+        </div>
+    </div>
+
+    <header>
+        <div class="header-content">
+            <h1>Premium Pet Boarding</h1>
+            <p class="tagline">Your pet's home away from home - where tails never stop wagging!</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <section class="boarding-intro">
+            <h2>Our Boarding Facilities</h2>
+            <p>At Paws & Relax, we provide a safe, comfortable, and fun environment for your pets while you're away. Our state-of-the-art facility is designed to make your pet feel at home with personalized care and attention.</p>
+        </section>
+
+        <section class="boarding-features">
+            <div class="feature-card">
+                <i class="fas fa-home"></i>
+                <h3>Luxury Suites</h3>
+                <p>Spacious, climate-controlled accommodations with comfortable bedding and peaceful music.</p>
+            </div>
+
+            <div class="feature-card">
+                <i class="fas fa-heartbeat"></i>
+                <h3>24/7 Veterinary Care</h3>
+                <p>On-call veterinarian and trained staff to monitor your pet's health around the clock.</p>
+            </div>
+
+            <div class="feature-card">
+                <i class="fas fa-dog"></i>
+                <h3>Daily Exercise</h3>
+                <p>Individual and group play sessions in our secure outdoor play areas.</p>
+            </div>
+
+            <div class="feature-card">
+                <i class="fas fa-camera"></i>
+                <h3>Live Webcams</h3>
+                <p>Check in on your pet anytime with our 24/7 live streaming service.</p>
+            </div>
+
+            <div class="feature-card">
+                <i class="fas fa-utensils"></i>
+                <h3>Gourmet Meals</h3>
+                <p>Custom meal plans prepared according to your pet's dietary needs.</p>
+            </div>
+
+            <div class="feature-card">
+                <i class="fas fa-spa"></i>
+                <h3>Spa Services</h3>
+                <p>Optional grooming, massage, and pampering sessions available.</p>
+            </div>
+        </section>
+
+        <section class="process-steps">
+            <h2 class="section-title">Our Boarding Process</h2>
+
+            <div class="step">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <h3>Reservation</h3>
+                    <p>Book online or call to reserve your pet's stay. We recommend booking early during peak seasons.</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <h3>Check-In</h3>
+                    <p>Bring your pet along with vaccination records and any special instructions. We'll conduct a health assessment.</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                    <h3>Daily Care</h3>
+                    <p>Your pet enjoys scheduled meals, exercise, playtime, and plenty of love from our staff.</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-number">4</div>
+                <div class="step-content">
+                    <h3>Check-Out</h3>
+                    <p>Pick up your happy, healthy pet along with a report card of their stay and any belongings.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="requirements">
+            <h2>Boarding Requirements</h2>
+            <ul class="requirements-list">
+                <li><strong>Vaccinations:</strong> Rabies, DHLPP (dogs) or FVRCP (cats), Bordetella (dogs)</li>
+                <li><strong>Health:</strong> Pets must be flea/tick free and in good health</li>
+                <li><strong>Age:</strong> Minimum 12 weeks old</li>
+                <li><strong>Behavior:</strong> No history of aggression towards people or other animals</li>
+                <li><strong>Food:</strong> Bring your pet's regular food or purchase our premium options</li>
+                <li><strong>Medication:</strong> Clearly labeled with instructions if applicable</li>
+                <li><strong>Emergency Contact:</strong> Must provide 24/7 contact information</li>
+                <li><strong>Spay/Neuter:</strong> Required for pets over 6 months in group play</li>
+            </ul>
+        </section>
+
+        <section class="pricing">
+            <h2 class="section-title">Pricing Packages</h2>
+
+            <div class="pricing-cards">
+                <div class="pricing-card">
+                    <h3>Standard</h3>
+                    <div class="price">R350<span>/night</span></div>
+                    <ul class="pricing-features">
+                        <li>Comfortable private suite</li>
+                        <li>2 daily walks</li>
+                        <li>Basic meals included</li>
+                        <li>Daily photo updates</li>
+                        <li>Medication administration</li>
+                    </ul>
+                </div>
+
+                <div class="pricing-card popular">
+                    <div class="popular-tag">MOST POPULAR</div>
+                    <h3>Deluxe</h3>
+                    <div class="price">R500<span>/night</span></div>
+                    <ul class="pricing-features">
+                        <li>Spacious luxury suite</li>
+                        <li>4 daily walks/play sessions</li>
+                        <li>Premium meals included</li>
+                        <li>Live webcam access</li>
+                        <li>Daily brushing</li>
+                        <li>Bedtime story/treat</li>
+                    </ul>
+                </div>
+
+                <div class="pricing-card">
+                    <h3>Executive</h3>
+                    <div class="price">R750<span>/night</span></div>
+                    <ul class="pricing-features">
+                        <li>VIP luxury suite with TV</li>
+                        <li>Unlimited play sessions</li>
+                        <li>Gourmet meals</li>
+                        <li>24/7 webcam access</li>
+                        <li>Daily grooming session</li>
+                        <li>Personalized attention</li>
+                        <li>End-of-stay bath</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section class="cta-section">
+            <div class="cta-content">
+                <h2>Ready to Book Your Pet's Stay?</h2>
+                <p>Give your pet the vacation they deserve while you're away. Our caring staff is ready to welcome your furry family member!</p>
+                <button class="btn" id="openBookingBtn">Book Now</button>
+                <button class="btn btn-outline" id="contactBtn">Contact Us</button>
+            </div>
+        </section>
+    </div>
+    @Html.TextBoxFor(m => m.OwnerName, new { @class = "form-control", @id = "ownerName", @readonly = "readonly" })
+    @Html.TextBoxFor(m => m.Email, new { @class = "form-control", @id = "email", @type = "email", @readonly = "readonly" })
+    @Html.TextBoxFor(m => m.Phone, new { @class = "form-control", @id = "phone", @type = "tel", @readonly = "readonly" })
+
+    <!-- Booking Modal -->
+    <div class="modal" id="bookingModal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>Book Your Pet's Stay</h2>
+
+            @using (Html.BeginForm("Pet_Boarding", "Pet_Boarding", FormMethod.Post, new { @id = "bookingForm" }))
+            {
+                @Html.AntiForgeryToken()
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="ownerName">Your Name*</label>
+                @Html.TextBoxFor(m => m.OwnerName, new { @class = "form-control", @id = "ownerName", @required = "required", @readonly = "readonly" })
+            </div>
+            <div class="form-group">
+                <label for="petName">Pet's Name</label>
+                @Html.TextBox("PetName", Session["PetName"]?.ToString() ?? "Do not type", new { @class = "form-control", @id = "petName", @readonly = "readonly" })
+            </div>
+
+            <div class="form-group">
+                <label for="petSelection">Select Your Pet*</label>
+                @Html.DropDownList("SelectedPetId", ViewBag.Pets as SelectList, "Select a Pet", new
+                {
+                    @class = "form-control",
+                    @id = "petSelection",
+                    @required = "required",
+                    @onchange = "populatePetDetails()" // Calls JavaScript function on selection
+                })
+            </div>
+        </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        @Html.TextBoxFor(m => m.Email, new { @class = "form-control", @id = "email", @type = "email", @required = "required", @readonly = "readonly" })
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Phone</label>
+                        @Html.TextBoxFor(m => m.Phone, new { @class = "form-control", @id = "phone", @type = "tel", @required = "required", @readonly = "readonly" })
+                    </div>
+                </div>
+
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="petType">Pet Type</label>
+                        @Html.TextBox("PetType", Session["PetType"]?.ToString() ?? "Do not type", new { @class = "form-control", @id = "petType", @readonly = "readonly" })
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="petBreed">Breed</label>
+                        @Html.TextBox("PetBreed", Session["PetBreed"]?.ToString() ?? "Do not type", new { @class = "form-control", @id = "petBreed", @readonly = "readonly" })
+                    </div>
+
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="checkIn">Check-In Date*</label>
+                        @Html.TextBoxFor(m => m.CheckInDate, new { @class = "form-control", @id = "checkIn", @type = "date", @required = "required" })
+                    </div>
+                    <div class="form-group">
+                        <label for="checkOut">Check-Out Date*</label>
+                        @Html.TextBoxFor(m => m.CheckOutDate, new { @class = "form-control", @id = "checkOut", @type = "date", @required = "required" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="package">Boarding Package*</label>
+                    @Html.DropDownListFor(m => m.Package, new SelectList(new[] {
+                        new SelectListItem { Text = "Standard (R350/night)", Value = "Standard (R350/night)" },
+                        new SelectListItem { Text = "Deluxe (R500/night)", Value = "Deluxe (R500/night)" },
+                        new SelectListItem { Text = "Executive (R750/night)", Value = "Executive (R750/night)" }
+                    }, "Value", "Text"), "Select Package", new
+                        {
+                            @class = "form-control",
+                            @id = "package",
+                            @required = "required",
+                            @onchange = "updateAmountDue(this)"
+                        })
+                </div>
+
+                <div class="form-group">
+                    <label for="specialNeeds">Special Needs/Instructions</label>
+                    @Html.TextAreaFor(m => m.SpecialNeeds, new { @class = "form-control", @id = "specialNeeds", @rows = "3" })
+                </div>
+
+                <div class="form-group">
+                    <label style="text-align:center;">
+
+                        @Html.CheckBox("agreement", new { @required = "required" })
+                        I confirm that my pet is up-to-date on all required vaccinations and I agree to the terms of service.
+                    </label>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-outline-secondary">Submit Booking Request</button>
+                </div>
+
+            }
+        </div>
+    </div>
+
+
+    <script>
+        // Modal functionality
+        const modal = document.getElementById('bookingModal');
+        const openBtn = document.getElementById('openBookingBtn');
+        const closeBtn = document.querySelector('.close-modal');
+        const contactBtn = document.getElementById('contactBtn');
+
+        openBtn.addEventListener('click', () => {
+            modal.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        });
+
+        closeBtn.addEventListener('click', () => {
+            modal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        });
+
+        contactBtn.addEventListener('click', () => {
+            alert("Please call us at (555) 123-4567 or email info@pawsandrelax.com");
+        });
+
+        window.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }
+        });
+
+
+
+
+        ///
+
+
+        function updateAmountDue(select) {
+            // Extract price from package string
+            const packageText = select.value;
+            const priceMatch = packageText.match(/R(\d+)/);
+            const amount = priceMatch ? parseFloat(priceMatch[1]) : 0;
+
+            // Update display and hidden field
+            document.getElementById('amountDue').textContent = amount.toFixed(2);
+            document.getElementById('amountPaid').value = amount;
+        }
+
+        // Initialize on page load if a package is already selected
+        document.addEventListener('DOMContentLoaded', function () {
+            const packageSelect = document.getElementById('package');
+            if (packageSelect.value) {
+                updateAmountDue(packageSelect);
+            }
+        });
+
+        //$(document).ready(function () {
+        //    // When package selection changes
+        //    $('#package').change(function () {
+        //        var selectedValue = $(this).val();
+        //        if (selectedValue) {
+        //            var amount = parseFloat(selectedValue);
+        //            $('#amountDue').text(amount.toFixed(2));
+        //            $('#amountPaid').val(amount);
+        //        } else {
+        //            $('#amountDue').text('0.00');
+        //            $('#amountPaid').val('0');
+        //        }
+        //    });
+
+        //    // Initialize on page load if a package is already selected
+        //    if ($('#package').val()) {
+        //        $('#package').trigger('change');
+        //    }
+        //});
+
+        // Form submission
+        //document.getElementById('bookingForm').addEventListener('submit', (e) => {
+        //  e.preventDefault();
+        // alert('Thank you for your booking request! We will contact you shortly to confirm your reservation.');
+        // modal.style.display = 'none';
+        // document.body.style.overflow = 'auto';
+        // e.target.reset();
+        // });
+
+        // Set minimum date for check-in to today
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('checkIn').min = today;
+
+        // Update check-out min date when check-in changes
+        document.getElementById('checkIn').addEventListener('change', function () {
+            document.getElementById('checkOut').min = this.value;
+        });
+
+        
+            document.addEventListener("DOMContentLoaded", function () {
+                document.getElementById("petSelection").addEventListener("change", function () {
+                    var selectedPetId = this.value;
+
+                    // Fetch pet details via an AJAX request
+                    if (selectedPetId) {
+                        fetch(`/Pet/GetPetDetails?petId=${selectedPetId}`)
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data) {
+                                    document.getElementById("petName").value = data.Name;
+                                    document.getElementById("petType").value = data.Type;
+                                    document.getElementById("petBreed").value = data.Breed;
+                                }
+                            })
+                            .catch(error => console.error("Error fetching pet details:", error));
+                    }
+                });
+        });
+    
+    </script>
+</body>
+</html>

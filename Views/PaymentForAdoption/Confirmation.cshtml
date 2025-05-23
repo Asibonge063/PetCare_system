@@ -1,0 +1,40 @@
+﻿@model PetCare_system.Models.PaymentForAdoption
+
+@{
+    ViewBag.Title = "Adoption Confirmed";
+}
+
+<div class="container">
+    <div class="alert alert-success">
+        <h2><i class="fa fa-check-circle"></i> @ViewBag.Title</h2>
+        <p>Thank you for your payment! Your adoption has been confirmed.</p>
+    </div>
+
+    <div class="confirmation-details">
+        <h3>Transaction Details</h3>
+        <dl class="dl-horizontal">
+            <dt>Transaction ID:</dt>
+            <dd>@Model.TransactionId</dd>
+
+            <dt>Date:</dt>
+            <dd>@Model.PaymentDate.ToString("f")</dd>
+
+            <dt>Amount:</dt>
+            <dd>@Model.Amount.ToString("C")</dd>
+
+            <dt>Payment Method:</dt>
+            <dd>@Model.PaymentMethod (@Model.BankType)</dd>
+
+            <dt>Pet:</dt>
+            <dd>@Model.PetName</dd>
+        </dl>
+    </div>
+
+    <div class="alert alert-info">
+        <h4>Next Steps</h4>
+        <p>We'll contact you within 24 hours to arrange pickup of your new pet.</p>
+        <p>Please bring a valid ID when you come to collect your pet.</p>
+    </div>
+
+    @Html.ActionLink("Back to Home", "Index", "Home", null, new { @class = "btn btn-default" })
+</div>

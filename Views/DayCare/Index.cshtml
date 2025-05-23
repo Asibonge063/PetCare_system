@@ -1,0 +1,190 @@
+﻿@model IEnumerable<PetCare_system.Models.DayCare>
+
+@{
+    ViewBag.Title = "Day Care Records";
+}
+
+<div class="container mt-4">
+    <h2 class="mb-4"><i class="fas fa-paw me-2"></i>Pet Day Care History</h2>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">
+            <h4 class="alert-heading"><i class="fas fa-info-circle me-2"></i>No records found</h4>
+            <p class="mb-0">You haven't checked in any pets yet. Start by checking in your pet for daycare services.</p>
+        </div>
+    }
+
+    @foreach (var item in Model)
+    {
+        <div class="card boarding-record mb-4 shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h4 class="mb-0">
+                        <i class="fas fa-calendar-check me-2"></i>
+                        @item.CheckInDate.ToString("MMM dd, yyyy")
+                    </h4>
+                    <span class="badge bg-white text-primary fs-6">
+                        @item.Membership.MembershipType Membership
+                    </span>
+                </div>
+            </div>
+
+            <div class="card-body">
+                <div class="row">
+                    <!-- Pet Information Column -->
+                    <div class="col-md-6 border-end">
+                        <div class="pet-info mb-4">
+                            <h5 class="text-secondary mb-3">
+                                <i class="fas fa-paw me-2"></i>Pet Details
+                            </h5>
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="avatar avatar-lg me-3">
+                                    <div class="avatar-title bg-light rounded-circle">
+                                        <i class="fas fa-dog text-primary fs-4"></i>
+                                    </div>
+                                </div>
+                                <div>
+                                    <h3 class="mb-0">@item.Pet.Name</h3>
+                                    <p class="text-muted mb-0">@item.Pet.Type</p>
+                                </div>
+                            </div>
+
+                            <dl class="row">
+                                <dt class="col-sm-4">Check-in Time:</dt>
+                                <dd class="col-sm-8">@item.CheckInDate.ToString("hh:mm tt")</dd>
+
+                                <dt class="col-sm-4">Check-out Time:</dt>
+                                <dd class="col-sm-8">
+                                    @if (item.CheckOutDate.HasValue)
+                                    {
+                                        @item.CheckOutDate.Value.ToString("hh:mm tt")
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-success">Currently With US</span>
+                                    }
+                                </dd>
+
+                                <dt class="col-sm-4">Special Instructions:</dt>
+                                <dd class="col-sm-8">
+                                    @if (!string.IsNullOrEmpty(item.SpecialInstructions))
+                                    {
+                                        @item.SpecialInstructions
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">None provided</span>
+                                    }
+                                </dd>
+                            </dl>
+                        </div>
+                    </div>
+
+                    <!-- Owner Information Column -->
+                    <div class="col-md-6">
+                        <div class="owner-info">
+                            <h5 class="text-secondary mb-3">
+                                <i class="fas fa-user me-2"></i>Owner Details
+                            </h5>
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="avatar avatar-lg me-3">
+                                    <div class="avatar-title bg-light rounded-circle">
+                                        <i class="fas fa-user-circle text-primary fs-4"></i>
+                                    </div>
+                                </div>
+                                <div>
+                                    <h3 class="mb-0">@item.User.FirstName @item.User.LastName</h3>
+                                    <p class="text-muted mb-0">@item.User.Email</p>
+                                </div>
+                            </div>
+
+                            <dl class="row">
+                                <dt class="col-sm-4">Contact:</dt>
+                                <dd class="col-sm-8">@item.User.CellphoneNumber</dd>
+
+                                <dt class="col-sm-4">Membership:</dt>
+                                <dd class="col-sm-8">
+                                    <span class="badge bg-primary">
+                                        @item.Membership.MembershipType
+                                    </span>
+                                </dd>
+
+                                <dt class="col-sm-4">Duration:</dt>
+                                <dd class="col-sm-8">
+                                    @if (item.CheckOutDate.HasValue)
+                                    {
+                                        var duration = item.CheckOutDate.Value - item.CheckInDate;
+                                        @($"{duration.Days}d {duration.Hours}h {duration.Minutes}m")
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">Ongoing stay</span>
+                                    }
+                                </dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-footer bg-light">
+                <div class="d-flex justify-content-between align-items-center">
+                    <small class="text-muted">
+                        Record ID: #@item.Id.ToString("D4")
+                    </small>
+                    <div>
+                        @Html.ActionLink("View Details", "Details", new { id = item.Id },
+                        new { @class = "btn btn-outline-primary btn-sm" })
+
+                        @if (!item.CheckOutDate.HasValue)
+                        {
+                            <a href="@Url.Action("CheckOut", new { id = item.Id })" class="btn btn-success btn-sm ms-2">
+                                <i class="fas fa-sign-out-alt me-1"></i>Check Out
+                            </a>
+                        }
+                    
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<style>
+    .boarding-record {
+        border-radius: 15px;
+        transition: transform 0.2s;
+    }
+
+        .boarding-record:hover {
+            transform: translateY(-2px);
+        }
+
+    .avatar {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 50px;
+        height: 50px;
+    }
+
+    .badge {
+        padding: 0.5em 0.8em;
+        border-radius: 10px;
+    }
+
+    h5 {
+        font-weight: 500;
+        letter-spacing: 0.5px;
+    }
+
+    dt {
+        font-weight: 400;
+        color: #6c757d;
+    }
+
+    dd {
+        font-weight: 500;
+    }
+</style>

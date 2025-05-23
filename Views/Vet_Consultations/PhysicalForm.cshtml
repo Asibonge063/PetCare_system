@@ -1,0 +1,257 @@
+﻿@{
+    ViewBag.Title = "PhysicalForm";
+}
+
+<h2 class="form-title">Physical Medication Form</h2>
+<p class="form-description">Please fill out the medication details below. You can add multiple medications as needed.</p>
+
+<form method="post" action="@Url.Action("SubmitPhysicalForm")" class="medication-form">
+    <div id="dropdown-container">
+        <div class="form-group medication-entry">
+            <label class="form-label">Select Medication:</label>
+            <div class="input-group">
+                <select class="form-control medication-dropdown" name="MedicationName[]">
+                    <option value="">-- Select Medication --</option>
+                    @foreach (var med in ViewBag.Medications)
+                    {
+                        <option value="@med">@med</option>
+                    }
+                </select>
+                <input type="number" class="form-control quantity-input" name="MedicationQuantity[]" min="1" value="1" placeholder="Qty" />
+                <span class="input-group-addon">units</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-actions">
+        <button type="button" class="btn btn-add" onclick="addDropdown()">
+            <i class="fas fa-plus-circle"></i> Add Another Medication
+        </button>
+        <button type="submit" class="btn btn-submit">
+            <span class="submit-text">Submit Form</span>
+            <span class="loading-spinner" style="display:none;">
+                <i class="fas fa-spinner fa-spin"></i> Processing...
+            </span>
+        </button>
+    </div>
+
+    <div class="form-footer">
+        <p><i class="fas fa-info-circle"></i> All fields are required. Please review before submission.</p>
+    </div>
+</form>
+
+<style>
+    /* Base Styles */
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f5f7fa;
+        color: #333;
+        line-height: 1.6;
+    }
+
+    .medication-form {
+        max-width: 800px;
+        margin: 30px auto;
+        padding: 25px;
+        background: #fff;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-title {
+        color: #2c3e50;
+        text-align: center;
+        margin-bottom: 5px;
+        font-weight: 600;
+    }
+
+    .form-description {
+        text-align: center;
+        color: #7f8c8d;
+        margin-bottom: 25px;
+        font-size: 0.95em;
+    }
+
+    /* Form Elements */
+    .form-label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 500;
+        color: #34495e;
+    }
+
+    .form-control {
+        height: 40px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        padding: 8px 12px;
+        font-size: 14px;
+        transition: border-color 0.3s;
+    }
+
+    .form-control:focus {
+        border-color: #3498db;
+        box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        outline: none;
+    }
+
+    .input-group {
+        display: flex;
+        margin-bottom: 15px;
+    }
+
+    .input-group select {
+        flex: 1;
+        margin-right: 10px;
+    }
+
+    .input-group input {
+        width: 80px;
+        text-align: center;
+    }
+
+    .input-group-addon {
+        background: #ecf0f1;
+        border: 1px solid #ddd;
+        padding: 8px 12px;
+        font-size: 14px;
+        color: #7f8c8d;
+        border-radius: 0 4px 4px 0;
+    }
+
+    /* Buttons */
+    .btn {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        font-size: 14px;
+        cursor: pointer;
+        transition: all 0.3s;
+        display: inline-flex;
+        align-items: center;
+    }
+
+    .btn-add {
+        background-color: #27ae60;
+        color: white;
+    }
+
+    .btn-add:hover {
+        background-color: #2ecc71;
+        transform: translateY(-1px);
+    }
+
+    .btn-submit {
+        background-color: #3498db;
+        color: white;
+    }
+
+    .btn-submit:hover {
+        background-color: #2980b9;
+        transform: translateY(-1px);
+    }
+
+    .form-actions {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 25px;
+    }
+
+    /* Medication Entry */
+    .medication-entry {
+        padding: 15px;
+        background: #f8f9fa;
+        border-radius: 6px;
+        margin-bottom: 15px;
+        border-left: 4px solid #3498db;
+    }
+
+    /* Footer */
+    .form-footer {
+        margin-top: 30px;
+        padding-top: 15px;
+        border-top: 1px solid #eee;
+        font-size: 0.85em;
+        color: #7f8c8d;
+    }
+
+    .form-footer i {
+        margin-right: 5px;
+        color: #3498db;
+    }
+
+    /* Loading Animation */
+    .loading-spinner {
+        margin-left: 8px;
+    }
+
+    .fa-spin {
+        animation: fa-spin 2s infinite linear;
+    }
+
+    @@keyframes fa-spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+</style>
+
+<script>
+    function addDropdown() {
+        var dropdownContainer = document.getElementById("dropdown-container");
+        var newDropdown = document.createElement("div");
+        newDropdown.classList.add("form-group", "medication-entry");
+        newDropdown.innerHTML = `
+            <label class="form-label">Select Another Medication:</label>
+            <div class="input-group">
+                <select class="form-control medication-dropdown" name="MedicationName[]">
+                    <option value="">-- Select Medication --</option>
+                    ${document.querySelector("select[name='MedicationName[]']").innerHTML}
+                </select>
+                <input type="number" class="form-control quantity-input" name="MedicationQuantity[]" min="1" value="1" placeholder="Qty" />
+                <span class="input-group-addon">units</span>
+            </div>
+        `;
+        dropdownContainer.appendChild(newDropdown);
+
+        // Animation for new element
+        newDropdown.style.opacity = 0;
+        setTimeout(() => {
+            newDropdown.style.transition = "opacity 0.3s";
+            newDropdown.style.opacity = 1;
+        }, 10);
+    }
+
+    // Form submission animation
+    document.querySelector('form').addEventListener('submit', function (e) {
+        const submitBtn = document.querySelector('.btn-submit');
+        submitBtn.disabled = true;
+        document.querySelector('.submit-text').style.display = 'none';
+        document.querySelector('.loading-spinner').style.display = 'inline-block';
+
+        // This is just for demo - remove in production
+        setTimeout(() => {
+            alert("Form would submit here in a real application");
+            submitBtn.disabled = false;
+            document.querySelector('.submit-text').style.display = 'inline-block';
+            document.querySelector('.loading-spinner').style.display = 'none';
+        }, 2000);
+
+        e.preventDefault(); // Remove this in production
+    });
+
+    // Add hover effects to dropdowns
+    document.addEventListener('DOMContentLoaded', function () {
+        const dropdowns = document.querySelectorAll('.medication-dropdown');
+        dropdowns.forEach(dropdown => {
+            dropdown.addEventListener('mouseenter', function () {
+                this.style.backgroundColor = '#f8f9fa';
+            });
+            dropdown.addEventListener('mouseleave', function () {
+                this.style.backgroundColor = '';
+            });
+        });
+    });
+</script>
+
+<!-- Include Font Awesome for icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">

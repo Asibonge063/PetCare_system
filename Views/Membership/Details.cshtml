@@ -1,0 +1,808 @@
+﻿@model PetCare_system.Models.Membership
+
+@{
+        ViewBag.Title = "Membership Details";
+        var isActive = Model.Status == "Active" && Model.EndDate >= DateTime.Today;
+        var remainingDays = isActive ? (Model.EndDate - DateTime.Today).Days : 0;
+        var totalDays = (Model.EndDate - Model.StartDate).Days;
+        var progressPercentage = totalDays > 0 ? Math.Max(0, Math.Min(100, (int)((remainingDays * 100) / totalDays))) : 0;
+}
+
+<div class="container membership-details">
+    <div class="row">
+        <div class="col-md-12">
+            <!-- Header Section -->
+            <div class="page-header-container">
+                <div class="row">
+                    <div class="col-sm-8">
+                        <h1 class="page-title">
+                            <i class="fas fa-id-card"></i> Membership Details
+                        </h1>
+                        <p class="page-subtitle">View and manage your pet's membership information</p>
+                    </div>
+                    <div class="col-sm-4 text-right status-badge">
+                        @if (isActive)
+                        {
+                            <span class="badge-active">
+                                <i class="fas fa-check-circle"></i> ACTIVE
+                            </span>
+                        }
+                        else if (Model.Status == "Cancelled")
+                        {
+                            <span class="badge-cancelled">
+                                <i class="fas fa-times-circle"></i> CANCELLED
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="badge-expired">
+                                <i class="fas fa-exclamation-circle"></i> EXPIRED
+                            </span>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <!-- Progress Card (only shown for active memberships) -->
+            @if (isActive)
+            {
+                <div class="membership-card progress-card">
+                    <div class="progress-container">
+                        <div class="progress-info">
+                            <span class="days-remaining">
+                                <i class="fas fa-calendar-alt"></i> @remainingDays days remaining
+                            </span>
+                            <span class="days-total">@totalDays days total</span>
+                        </div>
+                        <div class="progress">
+                            <div class="progress-bar" role="progressbar" style="width: @progressPercentage%"
+                                 aria-valuenow="@remainingDays" aria-valuemin="0" aria-valuemax="@totalDays">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            <!-- Main Membership Card -->
+            <div class="membership-card">
+                <div class="card-header">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <h3><i class="fas fa-paw"></i> @(Model.Pet?.Name ?? "Pet")'s Membership</h3>
+                            <p class="text-muted">@Model.MembershipType Plan</p>
+                        </div>
+                        <div class="col-sm-6 text-right">
+                            <div class="membership-dates">
+                                <p>
+                                    <i class="far fa-calendar-alt"></i> Valid from
+                                    <strong>@Model.StartDate.ToString("dd MMM yyyy")</strong> to
+                                    <strong>@Model.EndDate.ToString("dd MMM yyyy")</strong>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <div class="row">
+                        <!-- Membership Details -->
+                        <div class="col-md-6">
+                            <div class="detail-section">
+                                <h4><i class="fas fa-info-circle"></i> Plan Details</h4>
+                                <div class="detail-item">
+                                    <span class="detail-label">Pet Name:</span>
+                                    <span class="detail-value">@(Model.Pet?.Name ?? "N/A")</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">Plan Type:</span>
+                                    <span class="detail-value highlight">@Model.MembershipType</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">Start Date:</span>
+                                    <span class="detail-value">@Model.StartDate.ToString("dd MMM yyyy")</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">End Date:</span>
+                                    <span class="detail-value">@Model.EndDate.ToString("dd MMM yyyy")</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">Status:</span>
+                                    <span class="detail-value">
+                                        @if (isActive)
+                                        {
+                                            <span class="text-success"><i class="fas fa-check-circle"></i> Active</span>
+                                        }
+                                        else if (Model.Status == "Cancelled")
+                                        {
+                                            <span class="text-warning"><i class="fas fa-times-circle"></i> Cancelled</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-danger"><i class="fas fa-exclamation-circle"></i> Expired</span>
+                                        }
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Payment Details -->
+                        <div class="col-md-6">
+                            <div class="detail-section payment-section">
+                                <h4><i class="fas fa-credit-card"></i> Payment Details</h4>
+                                <div class="detail-item">
+                                    <span class="detail-label">Amount Paid:</span>
+                                    <span class="detail-value price">R @Model.PaymentAmount.ToString("N2")</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">Payment Method:</span>
+                                    <span class="detail-value">@Model.PaymentMethod</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">Payment Date:</span>
+                                    <span class="detail-value">@Model.PaymentDate.ToString("dd MMM yyyy HH:mm")</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">Payment Status:</span>
+                                    <span class="detail-value">
+                                        @if (Model.PaymentStatus == "Completed")
+                                        {
+                                            <span class="payment-completed"><i class="fas fa-check-circle"></i> @Model.PaymentStatus</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="payment-failed"><i class="fas fa-exclamation-triangle"></i> @Model.PaymentStatus</span>
+                                        }
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card Details (if applicable) -->
+                    @if (Model.PaymentMethod == "Credit Card")
+                    {
+                        <div class="credit-card-section">
+                            <h4><i class="far fa-credit-card"></i> Card Information</h4>
+                            <div class="credit-card">
+                                <div class="card-front">
+                                    <div class="card-logo">
+                                        @if (!string.IsNullOrEmpty(Model.BankType))
+                                        {
+                                            <span class="card-type">@Model.BankType</span>
+                                        }
+                                    </div>
+                                    <div class="card-number">
+                                        @{
+                                            var lastFourDigits = !string.IsNullOrEmpty(Model.AccountNumber) && Model.AccountNumber.Length >= 4
+                                            ? Model.AccountNumber.Substring(Model.AccountNumber.Length - 4)
+                                            : "••••";
+                                        }
+                                        <span>•••• •••• •••• @lastFourDigits</span>
+                                    </div>
+                                    <div class="card-details">
+                                        <div class="card-holder">
+                                            <span class="label">Card Holder</span>
+                                            <span class="value">@(Model.AccountHolder ?? "•••• ••••")</span>
+                                        </div>
+                                        <div class="card-expiry">
+                                            <span class="label">Expires</span>
+                                            <span class="value">
+                                                @if (Model.ExpiryDate.HasValue)
+                                                {
+                                                    @Model.ExpiryDate.Value.ToString("MM/yy")
+                                                }
+                                                else
+                                                {
+                                                    <text>••/••</text>
+                                                }
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <button onclick="downloadPDF()" class="btn btn-download" title="Download membership details as PDF">
+                    <i class="fas fa-file-pdf"></i> Download PDF
+                </button>
+
+                @if (isActive)
+                {
+                    <button onclick="location.href='@Url.Action("Renew", new { id = Model.Id })'" class="btn btn-renew" title="Renew this membership">
+                        <i class="fas fa-sync-alt"></i> Renew
+                    </button>
+                    <button onclick="if(confirm('Are you sure you want to cancel this membership?')) { location.href='@Url.Action("Cancel", new { id = Model.Id })'; }" class="btn btn-cancel" title="Cancel this membership">
+                        <i class="fas fa-times"></i> Cancel
+                    </button>
+                }
+                else if (Model.Status != "Cancelled")
+                {
+                    <button onclick="location.href='@Url.Action("Register", new { petId = Model.PetId })'" class="btn btn-renew" title="Register a new membership">
+                        <i class="fas fa-plus"></i> Register New
+                    </button>
+                }
+                <button onclick="location.href='@Url.Action("Index")'" class="btn btn-back" title="Return to memberships list">
+                    <i class="fas fa-arrow-left"></i> Back to List
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section styles {
+    <style>
+        /* Base Styles */
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #333;
+        }
+
+        .container.membership-details {
+            max-width: 1200px;
+            margin-top: 30px;
+            margin-bottom: 50px;
+        }
+
+        /* Header Styles */
+        .page-header-container {
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e1e5eb;
+        }
+
+        .page-title {
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 5px;
+            font-size: 28px;
+        }
+
+            .page-title i {
+                margin-right: 10px;
+                color: #3498db;
+            }
+
+        .page-subtitle {
+            color: #7f8c8d;
+            font-size: 16px;
+            margin: 0;
+        }
+
+        /* Status Badge */
+        .status-badge span {
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 14px;
+            display: inline-block;
+            margin-top: 10px;
+        }
+
+        .badge-active {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+            border: 1px solid #a5d6a7;
+        }
+
+        .badge-cancelled {
+            background-color: #fff8e1;
+            color: #ff8f00;
+            border: 1px solid #ffe082;
+        }
+
+        .badge-expired {
+            background-color: #fbe9e7;
+            color: #d84315;
+            border: 1px solid #ffab91;
+        }
+
+        /* Membership Card */
+        .membership-card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+            overflow: hidden;
+            border: 1px solid #e1e5eb;
+        }
+
+        .progress-card {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-color: #c3cfe2;
+        }
+
+        .card-header {
+            padding: 20px 25px;
+            background-color: #f8f9fa;
+            border-bottom: 1px solid #e1e5eb;
+        }
+
+            .card-header h3 {
+                margin: 0;
+                font-weight: 600;
+                color: #2c3e50;
+            }
+
+                .card-header h3 i {
+                    margin-right: 10px;
+                    color: #3498db;
+                }
+
+            .card-header .text-muted {
+                margin: 5px 0 0;
+                font-size: 14px;
+            }
+
+        .membership-dates {
+            font-size: 14px;
+            color: #7f8c8d;
+            margin-top: 5px;
+        }
+
+            .membership-dates i {
+                margin-right: 5px;
+            }
+
+        /* Progress Bar */
+        .progress-container {
+            padding: 25px;
+        }
+
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 14px;
+            color: #2c3e50;
+            font-weight: 500;
+        }
+
+            .progress-info .days-remaining i {
+                margin-right: 5px;
+                color: #4caf50;
+            }
+
+        .progress {
+            height: 12px;
+            border-radius: 6px;
+            background-color: #e0e0e0;
+            overflow: hidden;
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+        }
+
+        .progress-bar {
+            background: linear-gradient(90deg, #4caf50, #8bc34a);
+            border-radius: 6px;
+            transition: width 0.6s ease;
+            position: relative;
+        }
+
+            .progress-bar:after {
+                content: '';
+                position: absolute;
+                right: -6px;
+                top: -4px;
+                width: 20px;
+                height: 20px;
+                background-color: #4caf50;
+                border-radius: 50%;
+                border: 3px solid white;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            }
+
+        /* Detail Sections */
+        .card-body {
+            padding: 25px;
+        }
+
+        .detail-section {
+            margin-bottom: 25px;
+        }
+
+            .detail-section h4 {
+                color: #2c3e50;
+                font-weight: 600;
+                margin-bottom: 20px;
+                padding-bottom: 10px;
+                border-bottom: 1px solid #e1e5eb;
+                font-size: 18px;
+            }
+
+                .detail-section h4 i {
+                    margin-right: 10px;
+                    color: #3498db;
+                }
+
+        .detail-item {
+            display: flex;
+            margin-bottom: 15px;
+            align-items: center;
+        }
+
+        .detail-label {
+            flex: 0 0 140px;
+            color: #7f8c8d;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .detail-value {
+            flex: 1;
+            color: #2c3e50;
+            font-size: 15px;
+        }
+
+        .highlight {
+            font-weight: 600;
+            color: #3498db;
+        }
+
+        .price {
+            font-weight: 700;
+            color: #27ae60;
+            font-size: 18px;
+        }
+
+        .payment-completed {
+            color: #27ae60;
+            font-weight: 500;
+        }
+
+            .payment-completed i {
+                margin-right: 5px;
+            }
+
+        .payment-failed {
+            color: #e74c3c;
+            font-weight: 500;
+        }
+
+            .payment-failed i {
+                margin-right: 5px;
+            }
+
+        .payment-section {
+            padding-left: 25px;
+            border-left: 1px dashed #e1e5eb;
+        }
+
+        /* Credit Card Section */
+        .credit-card-section {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e1e5eb;
+        }
+
+            .credit-card-section h4 {
+                color: #2c3e50;
+                font-weight: 600;
+                margin-bottom: 20px;
+            }
+
+                .credit-card-section h4 i {
+                    margin-right: 10px;
+                    color: #3498db;
+                }
+
+        .credit-card {
+            max-width: 350px;
+            perspective: 1000px;
+        }
+
+        .card-front {
+            background: linear-gradient(135deg, #3498db, #2c3e50);
+            color: white;
+            border-radius: 12px;
+            padding: 20px;
+            height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+            .card-front:before {
+                content: '';
+                position: absolute;
+                top: -50%;
+                right: -50%;
+                width: 200px;
+                height: 200px;
+                background: rgba(255,255,255,0.1);
+                border-radius: 50%;
+            }
+
+            .card-front:after {
+                content: '';
+                position: absolute;
+                bottom: -30%;
+                right: -20%;
+                width: 150px;
+                height: 150px;
+                background: rgba(255,255,255,0.05);
+                border-radius: 50%;
+            }
+
+        .card-logo {
+            text-align: right;
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            z-index: 1;
+        }
+
+        .card-number {
+            font-size: 20px;
+            letter-spacing: 2px;
+            text-align: center;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            font-weight: 500;
+            z-index: 1;
+        }
+
+        .card-details {
+            display: flex;
+            justify-content: space-between;
+            z-index: 1;
+        }
+
+        .card-holder, .card-expiry {
+            font-size: 12px;
+        }
+
+            .card-holder .label, .card-expiry .label {
+                display: block;
+                opacity: 0.7;
+                margin-bottom: 3px;
+                font-size: 10px;
+            }
+
+            .card-holder .value, .card-expiry .value {
+                font-size: 14px;
+                font-weight: 500;
+                text-transform: uppercase;
+            }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+            .action-buttons .btn {
+                padding: 12px 25px;
+                border-radius: 8px;
+                font-weight: 600;
+                transition: all 0.3s ease;
+                border: none;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+                min-width: 150px;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+                .action-buttons .btn i {
+                    margin-right: 8px;
+                }
+
+        .btn-download {
+            background-color: #e74c3c;
+            color: white;
+        }
+
+            .btn-download:hover {
+                background-color: #c0392b;
+                transform: translateY(-2px);
+                box-shadow: 0 4px 8px rgba(231, 76, 60, 0.3);
+            }
+
+        .btn-renew {
+            background-color: #3498db;
+            color: white;
+        }
+
+            .btn-renew:hover {
+                background-color: #2980b9;
+                transform: translateY(-2px);
+                box-shadow: 0 4px 8px rgba(41, 128, 185, 0.3);
+            }
+
+        .btn-cancel {
+            background-color: #95a5a6;
+            color: white;
+        }
+
+            .btn-cancel:hover {
+                background-color: #7f8c8d;
+                transform: translateY(-2px);
+                box-shadow: 0 4px 8px rgba(149, 165, 166, 0.3);
+            }
+
+        .btn-back {
+            background-color: #2c3e50;
+            color: white;
+        }
+
+            .btn-back:hover {
+                background-color: #1a252f;
+                transform: translateY(-2px);
+                box-shadow: 0 4px 8px rgba(44, 62, 80, 0.3);
+            }
+
+        /* PDF Loading Indicator */
+        .pdf-loading {
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            font-weight: 500;
+            color: #3498db;
+        }
+
+            .pdf-loading i {
+                margin-right: 10px;
+            }
+
+        /* Responsive Adjustments */
+        @@media (max-width: 768px) {
+            .payment-section {
+                padding-left: 0;
+                border-left: none;
+                padding-top: 20px;
+                border-top: 1px dashed #e1e5eb;
+                margin-top: 20px;
+            }
+
+            .detail-label {
+                flex: 0 0 120px;
+            }
+
+            .credit-card {
+                max-width: 100%;
+            }
+
+            .action-buttons .btn {
+                min-width: 120px;
+                padding: 10px 15px;
+                font-size: 14px;
+            }
+        }
+
+        /* Print Styles */
+        @@media print {
+            body * {
+                visibility: hidden;
+            }
+
+            .container.membership-details,
+            .container.membership-details * {
+                visibility: visible;
+            }
+
+            .container.membership-details {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                padding: 0;
+                margin: 0;
+            }
+
+            .membership-card {
+                box-shadow: none;
+                border: none;
+                page-break-inside: avoid;
+            }
+
+            .action-buttons {
+                display: none !important;
+            }
+
+            .progress-card {
+                background: white !important;
+            }
+        }
+    </style>
+}
+
+@section scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script>
+        function downloadPDF() {
+            // Store original button content
+            const actionButtons = document.querySelector('.action-buttons');
+            const originalContent = actionButtons.innerHTML;
+
+            // Show loading message
+            actionButtons.innerHTML = '<div class="pdf-loading"><i class="fas fa-spinner fa-spin"></i> Generating PDF...</div>';
+
+            // Get pet name safely
+            const petName = '@(Model.Pet?.Name ?? "Membership")'.replace(/[^a-z0-9]/gi, '_');
+            const currentDate = new Date().toISOString().slice(0, 10);
+
+            // Create a temporary container for PDF content
+            const element = document.createElement('div');
+            element.className = 'pdf-container';
+
+            // Clone both membership cards
+            const progressCard = document.querySelector('.progress-card')?.cloneNode(true);
+            const mainCard = document.querySelector('.membership-card:not(.progress-card)')?.cloneNode(true);
+
+            // Add header
+            const header = document.createElement('div');
+            header.className = 'pdf-header';
+            header.innerHTML = `
+                <h1>PetCare Membership Details</h1>
+                <p>Generated on ${new Date().toLocaleDateString()}</p>
+                <hr>
+            `;
+            element.appendChild(header);
+
+            // Add the cards to our container
+            if (progressCard) element.appendChild(progressCard);
+            if (mainCard) element.appendChild(mainCard);
+
+            // Add footer
+            const footer = document.createElement('div');
+            footer.className = 'pdf-footer';
+            footer.innerHTML = `
+                <hr>
+                <p class="text-muted">Thank you for choosing PetCare System</p>
+                <p>Customer Support: support@petcare.com | Phone: (123) 456-7890</p>
+            `;
+            element.appendChild(footer);
+
+            document.body.appendChild(element);
+
+            // PDF options
+            const options = {
+                margin: 15,
+                filename: `PetCare_Membership_${petName}_${currentDate}.pdf`,
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: {
+                    scale: 2,
+                    scrollY: 0,
+                    useCORS: true,
+                    letterRendering: true,
+                    allowTaint: true
+                },
+                jsPDF: {
+                    unit: 'mm',
+                    format: 'a4',
+                    orientation: 'portrait'
+                },
+                pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+            };
+
+            // Generate PDF
+            html2pdf()
+                .set(options)
+                .from(element)
+                .save()
+                .then(() => {
+                    // Clean up
+                    document.body.removeChild(element);
+                })
+                .catch(error => {
+                    console.error('PDF generation failed:', error);
+                    alert('Failed to generate PDF. Please try again.');
+                })
+                .finally(() => {
+                    // Restore original buttons
+                    actionButtons.innerHTML = originalContent;
+                });
+        }
+    </script>
+}

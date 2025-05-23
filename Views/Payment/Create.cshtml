@@ -1,0 +1,527 @@
+﻿@model PetCare_system.Models.Payment
+@{
+    ViewBag.Title = "Complete Your Payment";
+   
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title | PetCare System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4b6cb7;
+            --primary-dark: #3a5795;
+            --secondary-color: #182848;
+            --accent-color: #f8b400;
+            --light-bg: #f8fafc;
+            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            --input-focus: rgba(75, 108, 183, 0.25);
+            --success-color: #28a745;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--light-bg);
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            line-height: 1.6;
+        }
+
+        .main-container {
+            display: flex;
+            flex: 1;
+            min-height: 100vh;
+        }
+
+        .illustration-side {
+            flex: 1;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .illustration-content {
+            max-width: 500px;
+            text-align: center;
+            z-index: 1;
+        }
+
+        .illustration-side h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .illustration-side p {
+            opacity: 0.9;
+            margin-bottom: 2rem;
+        }
+
+        .illustration-img {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 2rem;
+        }
+
+        .payment-side {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .payment-container {
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .payment-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: var(--card-shadow);
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+
+        .payment-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .payment-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 25px;
+            text-align: center;
+            position: relative;
+        }
+
+        .payment-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .payment-subtitle {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .payment-body {
+            padding: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .form-label {
+            font-weight: 500;
+            color: var(--secondary-color);
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .form-control {
+            padding: 12px 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            transition: all 0.3s;
+            font-size: 0.95rem;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.25rem var(--input-focus);
+        }
+
+        .input-group-text {
+            background-color: #f1f3f5;
+            border-color: #e0e0e0;
+            font-size: 0.95rem;
+        }
+
+        .btn-pay {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border: none;
+            padding: 14px;
+            font-size: 1.1rem;
+            font-weight: 500;
+            border-radius: 8px;
+            color: white;
+            transition: all 0.3s;
+            width: 100%;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-pay:hover {
+            background: linear-gradient(135deg, var(--primary-dark), var(--secondary-color));
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        .payment-method-icon {
+            font-size: 1.5rem;
+            margin-right: 10px;
+            color: var(--primary-color);
+        }
+
+        .payment-details {
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 25px;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .payment-amount {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--secondary-color);
+        }
+
+        .text-danger {
+            font-size: 0.85rem;
+            margin-top: 5px;
+            color: #dc3545 !important;
+        }
+
+        .secure-payment {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+
+        .secure-payment i {
+            color: var(--success-color);
+            margin-right: 5px;
+        }
+
+        .payment-badge {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background-color: var(--accent-color);
+            color: white;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Animation for the illustration side */
+        .circle {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .circle-1 {
+            width: 300px;
+            height: 300px;
+            top: -100px;
+            left: -100px;
+        }
+
+        .circle-2 {
+            width: 200px;
+            height: 200px;
+            bottom: -50px;
+            right: -50px;
+        }
+
+        /* Responsive adjustments */
+        @@media (max-width: 992px) {
+            .main-container {
+                flex-direction: column;
+            }
+
+            .illustration-side {
+                padding: 1.5rem;
+            }
+
+            .payment-side {
+                padding: 1.5rem;
+            }
+
+            .illustration-content {
+                max-width: 100%;
+            }
+        }
+
+        @@media (max-width: 768px) {
+            .payment-body {
+                padding: 20px;
+            }
+
+            .payment-title {
+                font-size: 1.5rem;
+            }
+
+            .payment-amount {
+                font-size: 1.5rem;
+            }
+        }
+
+        /* Loading animation for button */
+        .btn-loading {
+            position: relative;
+            pointer-events: none;
+        }
+
+        .btn-loading:after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 20px;
+            height: 20px;
+            margin: -10px 0 0 -10px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @@keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+
+  
+        <!-- [Previous head content remains exactly the same] -->
+    </head>
+    <body>
+        <div class="main-container">
+            <!-- Illustration Side (remains the same) -->
+            <div class="illustration-side">
+                <!-- [Previous illustration content remains exactly the same] -->
+            </div>
+
+            <!-- Payment Form Side -->
+            <div class="payment-side">
+                <div class="payment-container">
+                    <div class="payment-card">
+                        <div class="payment-header">
+                            <h1 class="payment-title">Complete Your Payment</h1>
+                            <p class="payment-subtitle">Consultation #@Model.ConsultId</p>
+                            <div class="payment-badge">
+                                <i class="fas fa-lock"></i>
+                            </div>
+                        </div>
+
+                        <div class="payment-body">
+                            @using (Html.BeginForm("Create", "Payment", FormMethod.Post, new { id = "paymentForm" }))
+                            {
+                                @Html.AntiForgeryToken()
+                                @Html.HiddenFor(m => m.ConsultId)
+                                @Html.HiddenFor(m => m.PaymentDate, new { Value = DateTime.Now })
+                                @Html.HiddenFor(m => m.PaymentStatus, new { Value = "false" })
+
+                                <!-- Enhanced Consultation Details Section -->
+                                <div class="consultation-details">
+                                    <h5><i class="fas fa-calendar-check me-2"></i> Consultation Summary</h5>
+                                    <div class="row mt-3">
+                                        <div class="col-md-6">
+                                            <p><strong>Pet Name:</strong> @(Model.VetConsultation?.Pet?.Name ?? "N/A")</p>
+                                            <p><strong>Consultation Date:</strong> @(Model.VetConsultation?.Consult_Date.ToString("d") ?? "N/A")</p>
+                                            <p><strong>Consultation Time:</strong> @(Model.VetConsultation?.Consult_Time.ToString("t") ?? "N/A")</p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <p><strong>Consultation Type:</strong> @(Model.VetConsultation?.ConsultationType ?? "N/A")</p>
+                                            <p>
+                                                <strong>Status:</strong>
+                                                <span class="badge @(Model.VetConsultation?.PaymentStatus == true ? "bg-success" : "bg-warning")">
+                                                    @(Model.VetConsultation?.PaymentStatus == true ? "Paid" : "Pending Payment")
+                                                </span>
+                                            </p>
+                                            <p><strong>Amount Due:</strong> <span class="payment-amount">R @Model.AmountPaid.ToString("0.00")</span></p>
+                                        </div>
+                                    </div>
+
+                                    @if (!string.IsNullOrEmpty(Model.VetConsultation?.Consult_Description))
+                                    {
+                                        <div class="mt-3">
+                                            <p class="mb-1"><strong>Notes:</strong></p>
+                                            <div class="alert alert-light">
+                                                @Model.VetConsultation.Consult_Description
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label">
+                                        <i class="fas fa-credit-card payment-method-icon"></i> Payment Method
+                                    </label>
+                                    @Html.DropDownListFor(m => m.PaymentMethod, new SelectList(new[] {
+                                        "Credit Card",
+                                        "Debit Card"
+                                       
+                                    }), "Select payment method", new { @class = "form-control", required = "required" })
+                                    @Html.ValidationMessageFor(m => m.PaymentMethod, "", new { @class = "text-danger" })
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.AccountNumber, "Card/Bank Number", new { @class = "form-label" })
+                                            @Html.TextBoxFor(m => m.AccountNumber, new { @class = "form-control", placeholder = "1234 5678 9012 3456", required = "required", maxlength = "19" })
+                                            @Html.ValidationMessageFor(m => m.AccountNumber, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.AccountHolder, "Cardholder Name", new { @class = "form-label" })
+                                            @Html.TextBoxFor(m => m.AccountHolder, new { @class = "form-control", placeholder = "As shown on card", required = "required" })
+                                            @Html.ValidationMessageFor(m => m.AccountHolder, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.ExpiryDate, "Expiry Date", new { @class = "form-label" })
+                                            @Html.TextBoxFor(m => m.ExpiryDate, new { @class = "form-control", placeholder = "MM/YYYY", required = "required", maxlength = "7" })
+                                            @Html.ValidationMessageFor(m => m.ExpiryDate, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.CVV, "Security Code", new { @class = "form-label" })
+                                            @Html.TextBoxFor(m => m.CVV, new { @class = "form-control", placeholder = "CVV", required = "required", maxlength = "4" })
+                                            @Html.ValidationMessageFor(m => m.CVV, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.BankType, "Bank Name", new { @class = "form-label" })
+                                            @Html.DropDownListFor(m => m.BankType, new SelectList(new[] {
+                                                "Standard Bank",
+                                                "First National Bank",
+                                                "Nedbank",
+                                                "Capitec Bank",
+                                                "Absa Bank",
+                                                "Other Bank"
+                                            }), "Select bank", new { @class = "form-control", required = "required" })
+                                            @Html.ValidationMessageFor(m => m.BankType, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group form-check mt-3">
+                                    <input type="checkbox" class="form-check-input" id="savePayment" name="savePayment">
+                                    <label class="form-check-label" for="savePayment">Save this payment method for future use</label>
+                                </div>
+
+                                <div class="form-group mt-4">
+                                    <button type="submit" id="submitBtn" class="btn btn-pay">
+                                        <i class="fas fa-lock"></i> Complete Payment of R @Model.AmountPaid.ToString("0.00")
+                                    </button>
+                                </div>
+
+                                <div class="secure-payment">
+                                    <i class="fas fa-shield-alt"></i> 256-bit SSL secured payment processing
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+        $(document).ready(function () {
+            // Format card number input
+            $('#AccountNumber').on('input', function (e) {
+                var value = $(this).val().replace(/\s+/g, '');
+                if (value.length > 0) {
+                    value = value.match(new RegExp('.{1,4}', 'g')).join(' ');
+                }
+                $(this).val(value);
+            });
+
+            // Format expiry date input
+            $('#ExpiryDate').on('input', function () {
+                var value = $(this).val().replace(/\D/g, '');
+                if (value.length > 2) {
+                    value = value.substring(0, 2) + '/' + value.substring(2, 6);
+                }
+                $(this).val(value);
+            });
+
+            // Form submission handling
+            $('#paymentForm').on('submit', function(e) {
+                var form = this;
+                var submitBtn = $('#submitBtn');
+
+                // Check if form is valid
+                if (!form.checkValidity()) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    $(form).addClass('was-validated');
+                    return;
+                }
+
+                // Show loading state
+                submitBtn.addClass('btn-loading');
+                submitBtn.prop('disabled', true);
+                submitBtn.html('<i class="fas fa-circle-notch fa-spin"></i> Processing Payment...');
+
+                // Simulate processing delay (remove in production)
+                setTimeout(function() {
+                    // In a real application, this would be an AJAX call
+                    Swal.fire({
+                        title: 'Payment Successful!',
+                        text: 'Your payment of R @Model.AmountPaid has been processed successfully.',
+                        icon: 'success',
+                        confirmButtonText: 'Continue',
+                        confirmButtonColor: 'var(--primary-color)'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            // Redirect or perform other actions
+                            form.submit();
+                        }
+                    });
+                }, 2000);
+            });
+
+            // CVV input restriction to numbers only
+            $('#CVV').on('input', function() {
+                this.value = this.value.replace(/[^0-9]/g, '');
+            });
+        });
+</script>
+</body>
+</html>

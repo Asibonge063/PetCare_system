@@ -1,0 +1,167 @@
+﻿@{
+    ViewBag.Title = "Doctor Dashboard";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>@ViewBag.Title</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .sidebar {
+            height: 100vh;
+            background: #2c3e50;
+            color: white;
+            position: fixed;
+            width: 250px;
+        }
+
+        .main-content {
+            margin-left: 250px;
+            padding: 20px;
+        }
+
+        .nav-link {
+            color: white;
+            padding: 10px 15px;
+        }
+
+            .nav-link:hover, .nav-link.active {
+                background: #34495e;
+                color: white;
+            }
+
+        .dashboard-card {
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+
+            .dashboard-card:hover {
+                transform: translateY(-5px);
+            }
+
+        @@media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar p-3">
+        <h4 class="text-center mb-4">Doctor Panel</h4>
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link active" href="@Url.Action("Dashboard_Doc", "Doctor")">
+                    <i class="fas fa-home me-2"></i> Dashboard
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="@Url.Action("Index_Doc", "Vet_Consultations")">
+                    <i class="fas fa-calendar-alt me-2"></i> Appointments
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="@Url.Action("AllPatients", "Pet")">
+                    <i class="fas fa-users me-2"></i> Patients
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="@Url.Action("Profile", "Doctor")">
+                    <i class="fas fa-user me-2"></i> Profile
+                </a>
+            </li>
+            <li class="nav-item mt-4">
+                <a class="nav-link text-danger" href="@Url.Action("Index", "Home")">
+                    <i class="fas fa-sign-out-alt me-2"></i> Logout
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2>Welcome, Dr. @Model.Email</h2>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="row mb-4">
+            <div class="col-md-4 mb-3">
+                <div class="card dashboard-card text-white bg-primary">
+                    <div class="card-body">
+                        <h5 class="card-title">Patients</h5>
+                        <p class="h4">120</p>
+                        <a href="@Url.Action("Patients", "Doctor")" class="text-white">View all</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="card dashboard-card text-white bg-success">
+                    <div class="card-body">
+                        <h5 class="card-title">Appointments</h5>
+                        <p class="h4">5</p>
+                        <a href="@Url.Action("Index", "Vet_Consultations")" class="text-white">View schedule</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="card dashboard-card text-dark bg-warning">
+                    <div class="card-body">
+                        <h5 class="card-title">Profile Complete</h5>
+                        <p class="h4">80%</p>
+                        <a href="@Url.Action("Profile", "Doctor")" class="text-dark">Complete profile</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Upcoming Appointments -->
+        <div class="card dashboard-card mb-4">
+            <div class="card-body">
+                <h5 class="card-title mb-3">Today's Appointments</h5>
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Time</th>
+                                <th>Patient</th>
+                                <th>Type</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>09:00 AM</td>
+                                <td>Max (Golden Retriever)</td>
+                                <td>Checkup</td>
+                                <td><span class="badge bg-success">Confirmed</span></td>
+                            </tr>
+                            <tr>
+                                <td>10:30 AM</td>
+                                <td>Whiskers (Cat)</td>
+                                <td>Vaccination</td>
+                                <td><span class="badge bg-warning text-dark">Pending</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

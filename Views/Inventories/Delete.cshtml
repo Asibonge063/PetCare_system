@@ -1,0 +1,56 @@
+﻿@model PetCare_system.Models.Inventory
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>Inventory</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.MedicationName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.MedicationName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.InventoryType)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.InventoryType)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.InventoryQuantity)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.InventoryQuantity)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.MedDiscription)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.MedDiscription)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    }
+</div>

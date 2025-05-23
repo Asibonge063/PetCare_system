@@ -1,0 +1,825 @@
+﻿@{
+    ViewBag.Title = "Home";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DrPaws - Premium Pet Care Services</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/site.css")" />
+    <style>
+        :root {
+            --primary-color: #4b6cb7;
+            --secondary-color: #182848;
+            --accent-color: #ff6b6b;
+            --light-color: #f8f9fa;
+            --dark-color: #343a40;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 5rem 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            border-radius: 0 0 20px 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+            .hero-section::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: url('https://images.unsplash.com/photo-1534361960057-19889db9621e?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80') no-repeat center center/cover;
+                opacity: 0.15;
+                z-index: 0;
+            }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .hero-section h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .hero-section .lead {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            font-weight: 300;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.9rem;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background-color: var(--accent-color);
+            color: white;
+            box-shadow: 0 4px 15px rgba(255,107,107,0.4);
+        }
+
+            .btn-primary:hover {
+                background-color: #ff5252;
+                transform: translateY(-3px);
+                box-shadow: 0 7px 20px rgba(255,107,107,0.6);
+            }
+
+        .btn-outline {
+            background-color: transparent;
+            color: white;
+            border: 2px solid white;
+            margin-left: 15px;
+        }
+
+            .btn-outline:hover {
+                background-color: white;
+                color: var(--primary-color);
+            }
+
+        /* Service Cards */
+        .service-card {
+            background-color: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            transition: all 0.4s ease;
+            height: 100%;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+
+            .service-card:hover {
+                transform: translateY(-10px);
+                box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+            }
+
+            .service-card i {
+                font-size: 3rem;
+                color: var(--primary-color);
+                margin-bottom: 1.5rem;
+                display: block;
+            }
+
+            .service-card h2 {
+                font-size: 1.5rem;
+                margin-bottom: 1rem;
+                color: var(--secondary-color);
+            }
+
+            .service-card p {
+                color: #666;
+                margin-bottom: 2rem;
+            }
+
+            .service-card .btn {
+                padding: 8px 20px;
+                font-size: 0.8rem;
+            }
+
+        /* Features Section */
+        .features-section {
+            padding: 5rem 0;
+            background-color: #f9f9f9;
+        }
+
+        .feature-box {
+            text-align: center;
+            padding: 30px;
+        }
+
+            .feature-box i {
+                font-size: 2.5rem;
+                color: var(--primary-color);
+                margin-bottom: 1.5rem;
+            }
+
+            .feature-box h3 {
+                font-size: 1.3rem;
+                margin-bottom: 1rem;
+            }
+
+        /* Testimonials */
+        .testimonial-section {
+            padding: 5rem 0;
+            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+            color: white;
+        }
+
+        .testimonial-card {
+            background-color: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 15px;
+            backdrop-filter: blur(10px);
+        }
+
+        .testimonial-text {
+            font-style: italic;
+            margin-bottom: 1.5rem;
+        }
+
+        .testimonial-author {
+            font-weight: 700;
+        }
+
+        .testimonial-role {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        /* Pet Gallery */
+        .pet-gallery {
+            padding: 5rem 0;
+        }
+
+        .pet-item {
+            position: relative;
+            border-radius: 15px;
+            overflow: hidden;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+            .pet-item:hover {
+                transform: scale(1.03);
+            }
+
+            .pet-item img {
+                width: 100%;
+                height: 250px;
+                object-fit: cover;
+            }
+
+        .pet-info {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 15px;
+        }
+
+        /* Newsletter */
+        .newsletter-section {
+            padding: 5rem 0;
+            background-color: var(--light-color);
+        }
+
+        .newsletter-form {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .form-control {
+            height: 50px;
+            border-radius: 50px;
+            padding: 0 20px;
+            border: 1px solid #ddd;
+        }
+
+        /* Responsive Adjustments */
+        @@media (max-width: 768px) {
+            .hero-section h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero-section .lead {
+                font-size: 1.2rem;
+            }
+
+            .btn-outline {
+                margin-left: 0;
+                margin-top: 15px;
+                display: block;
+            }
+        }
+
+        /* Animation */
+        @@keyframes float {
+            0% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-15px);
+            }
+
+            100% {
+                transform: translateY(0px);
+            }
+        }
+
+        .floating {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        /* Alert Styling */
+        .alert {
+            border-radius: 10px;
+            padding: 15px 25px;
+            margin-bottom: 20px;
+        }
+
+        .footer-section {
+            background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+            color: #fff;
+            padding: 60px 0 0;
+            margin-top: 50px;
+            position: relative;
+        }
+
+        .footer-heading {
+            color: #fff;
+            font-size: 1.3rem;
+            margin-bottom: 25px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+            .footer-heading::after {
+                content: '';
+                position: absolute;
+                left: 0;
+                bottom: 0;
+                width: 50px;
+                height: 2px;
+                background: #ff5722;
+            }
+
+        .footer-text {
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .social-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            color: #fff;
+            transition: all 0.3s ease;
+        }
+
+            .social-icon:hover {
+                background: #ff5722;
+                transform: translateY(-3px);
+            }
+
+        .footer-links {
+            list-style: none;
+            padding: 0;
+        }
+
+            .footer-links li {
+                margin-bottom: 10px;
+            }
+
+            .footer-links a {
+                color: rgba(255, 255, 255, 0.8);
+                text-decoration: none;
+                transition: all 0.3s ease;
+                display: inline-block;
+            }
+
+                .footer-links a:hover {
+                    color: #fff;
+                    transform: translateX(5px);
+                }
+
+        .footer-contact-info {
+            list-style: none;
+            padding: 0;
+        }
+
+            .footer-contact-info li {
+                margin-bottom: 15px;
+                display: flex;
+                align-items: flex-start;
+            }
+
+            .footer-contact-info i {
+                margin-top: 3px;
+            }
+
+            .footer-contact-info span {
+                margin-left: 10px;
+                color: rgba(255, 255, 255, 0.8);
+            }
+
+        .copyright-section {
+            background: rgba(0, 0, 0, 0.1);
+            padding: 20px 0;
+            margin-top: 40px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Display Success Message -->
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="hero-content">
+            @if (!User.Identity.IsAuthenticated)
+            {
+                <h1>Premium Care for Your Beloved Pets</h1>
+                <p class="lead">Trusted by thousands of pet owners. Veterinary care, grooming, boarding and more - all in one place.</p>
+                <div class="mt-4">
+                    <a href="/Account/Login" class="btn btn-primary">Get Started</a>
+                    <a href="#services" class="btn btn-outline">Our Services</a>
+                </div>
+            }
+            else
+            {
+                <h1>Welcome back to DrPaws!</h1>
+                <p class="lead">We're happy to see you and your pet again. How can we help today?</p>
+                <div class="mt-4">
+                    <a href="#services" class="btn btn-primary">Book a Service</a>
+                    <a href="/Vet_Consultations/Detail" class="btn btn-outline">View Appointments</a>
+                </div>
+            }
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Features Section -->
+        <section class="features-section">
+            <div class="row text-center mb-5">
+                <div class="col-12">
+                    <h2 class="display-4 mb-3">Why Choose DrPaws?</h2>
+                    <p class="lead">We provide exceptional care with a personal touch</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="feature-box">
+                        <i class="fas fa-shield-alt"></i>
+                        <h3>Certified Experts</h3>
+                        <p>All our veterinarians and groomers are certified professionals with years of experience.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-box">
+                        <i class="fas fa-heart"></i>
+                        <h3>Compassionate Care</h3>
+                        <p>We treat every pet as if they were our own, with love and attention to detail.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-box">
+                        <i class="fas fa-clock"></i>
+                        <h3>24/7 Emergency</h3>
+                        <p>Round-the-clock emergency services when your pet needs urgent care.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Services Section -->
+        <section id="services" class="py-5">
+            <div class="row text-center mb-5">
+                <div class="col-12">
+                    <h2 class="display-4 mb-3">Our Services</h2>
+                    <p class="lead">Comprehensive care for all your pet's needs</p>
+                </div>
+            </div>
+            <div class="row">
+                <!-- Veterinary Care -->
+                <div class="col-md-4 mb-4">
+                    <div class="service-card">
+                        <i class="fas fa-stethoscope"></i>
+                        <h3>Veterinary Care</h3>
+                        <p>Comprehensive medical services including check-ups, vaccinations, dental care, and surgery.</p>
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            @Html.ActionLink("Book Now »", "Create", "Vet_Consultations", null, new { @class = "btn btn-primary" })
+                        }
+                        else
+                        {
+                            <a href="/Account/Login" class="btn btn-primary">Login to Book</a>
+                        }
+                    </div>
+                </div>
+                <!-- Grooming & Spa -->
+                <div class="col-md-4 mb-4">
+                    <div class="service-card">
+                        <i class="fas fa-paw"></i>
+                        <h3>Grooming & Spa</h3>
+                        <p>Pamper your pet with our luxury grooming services including baths, haircuts, and nail care.</p>
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                             @Html.ActionLink("Book Now »", "Create", "SparGrooming", null, new { @class = "btn btn-primary" })
+                                }
+                                else
+                                {
+                            <a href = "/Account/Login" class="btn btn-primary">Login to Book</a>
+                        }
+                    </div>
+                </div>
+                <!-- Pet Boarding -->
+                <div class="col-md-4 mb-4">
+                    <div class="service-card">
+                        <i class="fas fa-home"></i>
+                        <h3>Pet Boarding</h3>
+                        <p>Safe and comfortable boarding facilities with daily exercise and playtime.</p>
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            @Html.ActionLink("Book Now »", "Pet_Boarding", "Pet_Boarding", null, new { @class = "btn btn-primary" })
+                        }
+                        else
+                        {
+                            <a href="/Account/Login" class="btn btn-primary">Login to Book</a>
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <!-- Training -->
+                <div class="col-md-4 mb-4">
+                    <div class="service-card">
+                        <i class="fas fa-graduation-cap"></i>
+                        <h3>Training</h3>
+                        <p>Professional obedience training and behavior modification programs.</p>
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            @Html.ActionLink("Enroll Now »", "Create", "Training", null, new { @class = "btn btn-primary" })
+                        }
+                        else
+                        {
+                            <a href="/Account/Login" class="btn btn-primary">Login to Book</a>
+                        }
+                    </div>
+                </div>
+                <!-- Day Care Check-In -->
+                <div class="col-md-4 mb-4">
+                    <div class="service-card">
+                        <i class="fas fa-clock"></i>
+                        <h3>Day Care Check-In</h3>
+                        <p>Daily daycare services with professional supervision and fun activities</p>
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            @Html.ActionLink("Check-In Now »", "CheckIn", "DayCare", null, new { @class = "btn btn-primary" })
+                        }
+                        else
+                        {
+                            <a href="/Account/Login" class="btn btn-primary">Login to Check-In</a>
+                        }
+                    </div>
+                </div>
+                <!-- Pet Daycare Membership -->
+                <div class="col-md-4 mb-4">
+                    <div class="service-card">
+                        <i class="fas fa-heartbeat"></i>
+                        <h3>Pet Daycare Membership</h3>
+                        <p>Daily care and socialization for your pet while you're at work.</p>
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            @Html.ActionLink("Register Membership »", "Register", "Membership", null, new { @class = "btn btn-primary" })
+                        }
+                        else
+                        {
+                            <a href="/Account/Login" class="btn btn-primary">Login to Register</a>
+                        }
+                    </div>
+                </div>
+
+
+                <div class="col-md-4 mb-4">
+                    <div class="service-card">
+                        <i class="fas fa-dog"></i>
+                        <h2>Adoption Services</h2>
+                        <p>Find your perfect companion from our selection of adoptable pets.</p>
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            @Html.ActionLink("Book Now »", "Create", "PetAdoption", null, new { @class = "btn btn-primary" })
+                        }
+                        else
+                        {
+                            <a href="/Account/Login" class="btn btn-primary">Login to Book</a>
+                        }
+
+                    </div>
+                </div>
+           
+                
+                <div class="col-md-4 mb-4">
+                    <div class="service-card">
+                        <i class="fas fa-clock"></i>
+                        <h3>Day Care Check-Out</h3>
+                        <p>Daily daycare services with professional supervision and fun activities</p>
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            // You need to pass the correct day care ID here
+                            @Html.ActionLink("Check-Out Now »", "Index", "DayCare", new { id = Model?.Id }, new { @class = "btn btn-primary" })
+                        }
+                        else
+                        {
+                            <a href="/Account/Login" class="btn btn-primary">Login to Check-Out</a>
+                        }
+                    </div>
+                </div>
+            
+            
+</section>
+
+        <!-- Rest of the sections remain unchanged -->
+        <!-- Testimonials Section -->
+        <section class="testimonial-section">
+            <div class="row text-center mb-5">
+                <div class="col-12">
+                    <h2 class="display-4 mb-3">Happy Pets, Happy Owners</h2>
+                    <p class="lead">What our clients say about us</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="testimonial-card">
+                        <p class="testimonial-text">"DrPaws saved my dog's life when he had an emergency. Their team was professional and compassionate throughout the entire process."</p>
+                        <p class="testimonial-author">Sarah Johnson</p>
+                        <p class="testimonial-role">Dog Owner</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="testimonial-card">
+                        <p class="testimonial-text">"The groomers at DrPaws are amazing! My cat actually enjoys her spa days now. They're so gentle and patient with her."</p>
+                        <p class="testimonial-author">Michael Chen</p>
+                        <p class="testimonial-role">Cat Owner</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="testimonial-card">
+                        <p class="testimonial-text">"We've been using DrPaws for boarding for years. It's the only place we trust with our pets when we travel."</p>
+                        <p class="testimonial-author">The Rodriguez Family</p>
+                        <p class="testimonial-role">Pet Parents</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Pet Gallery -->
+        <section class="pet-gallery">
+            <div class="row text-center mb-5">
+                <div class="col-12">
+                    <h2 class="display-4 mb-3">Our Pet Family</h2>
+                    <p class="lead">Meet some of our happy patients</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4 col-sm-6">
+                    <div class="pet-item">
+                        <img src="https://images.unsplash.com/photo-1586671267731-da2cf3ceeb80?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Happy Dog">
+                        <div class="pet-info">
+                            <h4>Buddy</h4>
+                            <p>Golden Retriever</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 col-sm-6">
+                    <div class="pet-item">
+                        <img src="https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Playful Cat">
+                        <div class="pet-info">
+                            <h4>Whiskers</h4>
+                            <p>Domestic Shorthair</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 col-sm-6">
+                    <div class="pet-item">
+                        <img src="https://th.bing.com/th/id/OIP.41zSDge7enlsgdzVjFQ70gHaHr?rs=1&pid=ImgDetMain" alt="Small Rabbit">
+                        <div class="pet-info">
+                            <h4>Thumper</h4>
+                            <p>Mini Lop Rabbit</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Newsletter Section -->
+        <section class="newsletter-section">
+            <div class="row justify-content-center">
+                <div class="col-lg-8 text-center">
+                    <h2 class="mb-4">Join Our Pet Community</h2>
+                    <p class="lead mb-5">Subscribe to receive pet care tips, special offers, and updates</p>
+                    <form class="newsletter-form">
+                        <div class="input-group mb-3">
+                            <input type="email" class="form-control" placeholder="Your email address" required>
+                            <button class="btn btn-primary" type="submit">Subscribe</button>
+                        </div>
+                        <small class="text-muted">We'll never share your email. Unsubscribe anytime.</small>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer class="footer-section">
+        <div class="container">
+            <div class="row">
+                <!-- About Column -->
+                <div class="col-lg-4 col-md-6 mb-4 mb-md-0">
+                    <h3 class="footer-heading">
+                        <i class="fas fa-paw me-2"></i> PetCare System
+                    </h3>
+                    <p class="footer-text">
+                        Providing premium care for your beloved pets since 2015.
+                        Our mission is to ensure every pet receives the love and
+                        attention they deserve.
+                    </p>
+                    <div class="social-icons">
+                        <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+
+                <!-- Quick Links Column -->
+                <div class="col-lg-2 col-md-6 mb-4 mb-md-0">
+                    <h3 class="footer-heading">Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="@Url.Action("Index", "Home")"><i class="fas fa-chevron-right me-2"></i> Home</a></li>
+                        <li><a href="@Url.Action("About", "Home")"><i class="fas fa-chevron-right me-2"></i> About Us</a></li>
+                        <li><a href="@Url.Action("Contact", "Home")"><i class="fas fa-chevron-right me-2"></i> Contact</a></li>
+                        <li><a href="@Url.Action("Dashboard", "Pet")"><i class="fas fa-chevron-right me-2"></i> Pet Dashboard</a></li>
+                        <li><a href="@Url.Action("Detail", "Vet_Consultations")"><i class="fas fa-chevron-right me-2"></i> Vet Consultations</a></li>
+                    </ul>
+                </div>
+
+                <!-- Services Column -->
+                <div class="col-lg-3 col-md-6 mb-4 mb-md-0">
+                    <h3 class="footer-heading">Our Services</h3>
+                    <ul class="footer-links">
+                        <li><a href="#"><i class="fas fa-bone me-2"></i> Pet Boarding</a></li>
+                        <li><a href="#"><i class="fas fa-shower me-2"></i> Grooming</a></li>
+                        <li><a href="#"><i class="fas fa-stethoscope me-2"></i> Veterinary Care</a></li>
+                        <li><a href="#"><i class="fas fa-graduation-cap me-2"></i> Training</a></li>
+                        <li><a href="#"><i class="fas fa-home me-2"></i> Pet Daycare</a></li>
+                    </ul>
+                </div>
+
+                <!-- Contact Column -->
+                <div class="col-lg-3 col-md-6">
+                    <h3 class="footer-heading">Contact Us</h3>
+                    <ul class="footer-contact-info">
+                        <li>
+                            <i class="fas fa-map-marker-alt me-2"></i>
+                            <span>123 Pet Street, Animal City, PC 12345</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-phone-alt me-2"></i>
+                            <span>(123) 456-7890</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-envelope me-2"></i>
+                            <span>info@petcaresystem.com</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-clock me-2"></i>
+                            <span>Mon-Fri: 9AM - 6PM</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Copyright Section -->
+        <div class="copyright-section">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6 text-center text-md-start">
+                        <p class="copyright-text">
+                            &copy; @DateTime.Now.Year PetCare System. All Rights Reserved.
+                        </p>
+                    </div>
+                    <div class="col-md-6 text-center text-md-end">
+                        <p class="copyright-text">
+                            Made with <i class="fas fa-heart" style="color: #ff5722;"></i> for pets
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        // Smooth scrolling for anchor links
+        $('a[href*="#"]').on('click', function (e) {
+            e.preventDefault();
+            $('html, body').animate(
+                {
+                    scrollTop: $($(this).attr('href')).offset().top - 100,
+                },
+                500,
+                'linear'
+            );
+        });
+
+        // Animation for service cards on scroll
+        $(window).scroll(function () {
+            $('.service-card').each(function () {
+                var cardPosition = $(this).offset().top;
+                var scrollPosition = $(window).scrollTop() + $(window).height();
+
+                if (scrollPosition > cardPosition) {
+                    $(this).addClass('animate__animated animate__fadeInUp');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

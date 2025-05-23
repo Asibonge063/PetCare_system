@@ -1,0 +1,320 @@
+﻿@using PetCare_system.Models
+@model RegisterViewModel
+@{
+    ViewBag.Title = "Create Your Account";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>@ViewBag.Title - PetCare System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4b6cb7;
+            --secondary-color: #182848;
+            --accent-color: #ff6b6b;
+            --light-color: #f8f9fc;
+            --dark-color: #5a5c69;
+            --text-color: #858796;
+            --border-color: #d1d3e2;
+            --shadow-color: rgba(58, 59, 69, 0.15);
+        }
+
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .full-page-container {
+            display: flex;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #f8f9fc 0%, #e3e6f0 100%);
+        }
+
+        .illustration-side {
+            flex: 1;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .illustration-content {
+            max-width: 80%;
+            text-align: center;
+            z-index: 2;
+        }
+
+            .illustration-content img {
+                max-width: 400px;
+                height: auto;
+                margin-bottom: 2rem;
+                filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
+            }
+
+            .illustration-content h2 {
+                font-size: 2.5rem;
+                margin-bottom: 1rem;
+            }
+
+            .illustration-content p {
+                font-size: 1.25rem;
+                opacity: 0.9;
+            }
+
+        .form-side {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 4rem;
+        }
+
+        .register-card {
+            width: 100%;
+            max-width: 500px;
+            background: white;
+            border-radius: 1rem;
+            box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.1);
+            padding: 3rem;
+        }
+
+        .form-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+            .form-header img {
+                width: 80px;
+                height: auto;
+                margin-bottom: 1.5rem;
+            }
+
+            .form-header h2 {
+                font-size: 2rem;
+                color: var(--dark-color);
+                margin-bottom: 0.5rem;
+            }
+
+            .form-header p {
+                color: var(--text-color);
+                font-size: 1.1rem;
+            }
+
+        .form-group {
+            margin-bottom: 1.75rem;
+            position: relative;
+        }
+
+        .form-control {
+            padding: 1rem 1rem 1rem 3rem;
+            font-size: 1.1rem;
+            border-radius: 0.5rem;
+            height: auto;
+        }
+
+            .form-control:focus {
+                border-color: var(--primary-color);
+                box-shadow: 0 0 0 0.25rem rgba(75, 108, 183, 0.25);
+            }
+
+        .input-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-color);
+            font-size: 1.25rem;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-color);
+            font-size: 1.25rem;
+            cursor: pointer;
+        }
+
+        .btn-register {
+            width: 100%;
+            padding: 1rem;
+            font-size: 1.1rem;
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            border: none;
+            border-radius: 0.5rem;
+            color: white;
+            transition: all 0.3s;
+        }
+
+            .btn-register:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+            }
+
+        .login-link {
+            text-align: center;
+            margin-top: 2rem;
+            font-size: 1.1rem;
+        }
+
+            .login-link a {
+                color: var(--primary-color);
+                font-weight: 600;
+                text-decoration: none;
+            }
+
+        /* Responsive adjustments */
+        @@media (max-width: 992px) {
+            .full-page-container {
+                flex-direction: column;
+            }
+
+            .illustration-side {
+                padding: 3rem 2rem;
+            }
+
+            .illustration-content img {
+                max-width: 250px;
+            }
+
+            .form-side {
+                padding: 3rem 2rem;
+            }
+        }
+
+        @@media (max-width: 576px) {
+            .register-card {
+                padding: 2rem;
+            }
+
+            .form-header h2 {
+                font-size: 1.75rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="full-page-container">
+        <!-- Illustration Side -->
+        <div class="illustration-side">
+            <div class="illustration-content">
+                <img src="https://cdn-icons-png.flaticon.com/512/1076/1076984.png" alt="Pet Care">
+                <h2>Join PetCare Today</h2>
+                <p>Create an account to manage your pet's health</p>
+            </div>
+        </div>
+
+        <!-- Form Side -->
+        <div class="form-side">
+            <div class="register-card">
+                <div class="form-header">
+                    <img src="https://cdn-icons-png.flaticon.com/512/194/194279.png" alt="Logo">
+                    <h2>Create Your Account</h2>
+                    <p>Fill in your details to get started</p>
+                </div>
+
+                @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { role = "form" }))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary(true, "", new { @class = "alert alert-danger" })
+
+                    <!-- First Name -->
+                    <div class="form-group">
+                        @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control", placeholder = "First Name" })
+                        <i class="fas fa-user input-icon"></i>
+                        @Html.ValidationMessageFor(m => m.FirstName, "", new { @class = "text-danger small" })
+                    </div>
+
+                    <!-- Last Name -->
+                    <div class="form-group">
+                        @Html.TextBoxFor(m => m.LastName, new { @class = "form-control", placeholder = "Last Name" })
+                        <i class="fas fa-user input-icon"></i>
+                        @Html.ValidationMessageFor(m => m.LastName, "", new { @class = "text-danger small" })
+                    </div>
+
+                    <!-- Email -->
+                    <div class="form-group">
+                        @Html.TextBoxFor(m => m.Email, new { @class = "form-control", placeholder = "Email Address" })
+                        <i class="fas fa-envelope input-icon"></i>
+                        @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger small" })
+                    </div>
+
+                    <!-- Cellphone -->
+                    <div class="form-group">
+                        @Html.TextBoxFor(m => m.CellphoneNumber, new { @class = "form-control", placeholder = "Cellphone Number" })
+                        <i class="fas fa-phone input-icon"></i>
+                        @Html.ValidationMessageFor(m => m.CellphoneNumber, "", new { @class = "text-danger small" })
+                    </div>
+
+                    <!-- ID Number -->
+                    <div class="form-group">
+                        @Html.TextBoxFor(m => m.IdNumber, new { @class = "form-control", placeholder = "ID Number" })
+                        <i class="fas fa-id-card input-icon"></i>
+                        @Html.ValidationMessageFor(m => m.IdNumber, "", new { @class = "text-danger small" })
+                    </div>
+
+                    <!-- Password -->
+                    <div class="form-group">
+                        @Html.PasswordFor(m => m.Password, new { @class = "form-control", placeholder = "Password", id = "password" })
+                        <i class="fas fa-lock input-icon"></i>
+                        <i class="fas fa-eye password-toggle" id="togglePassword"></i>
+                        @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger small" })
+                    </div>
+
+                    <!-- Confirm Password -->
+                    <div class="form-group">
+                        @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control", placeholder = "Confirm Password", id = "confirmPassword" })
+                        <i class="fas fa-lock input-icon"></i>
+                        <i class="fas fa-eye password-toggle" id="toggleConfirmPassword"></i>
+                        @Html.ValidationMessageFor(m => m.ConfirmPassword, "", new { @class = "text-danger small" })
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit" class="btn btn-register">
+                        <i class="fas fa-user-plus"></i> Register
+                    </button>
+
+                    <!-- Login Link -->
+                    <div class="login-link">
+                        Already have an account? @Html.ActionLink("Sign in", "Login")
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Toggle password visibility
+        document.getElementById('togglePassword').addEventListener('click', function() {
+            const passwordInput = document.getElementById('password');
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            this.classList.toggle('fa-eye');
+            this.classList.toggle('fa-eye-slash');
+        });
+
+        // Toggle confirm password visibility
+        document.getElementById('toggleConfirmPassword').addEventListener('click', function() {
+            const confirmPasswordInput = document.getElementById('confirmPassword');
+            const type = confirmPasswordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            confirmPasswordInput.setAttribute('type', type);
+            this.classList.toggle('fa-eye');
+            this.classList.toggle('fa-eye-slash');
+        });
+    </script>
+</body>
+</html>

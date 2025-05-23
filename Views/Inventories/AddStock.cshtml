@@ -1,0 +1,23 @@
+﻿
+@model PetCare_system.Models.Inventory
+
+@{
+    ViewBag.Title = "Add Stock";
+}
+
+<h2>Add Stock - @Model.MedicationName</h2>
+
+@using (Html.BeginForm("AddStock", "Inventories", new { id = Model.InventoryId }, FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    <p><strong>Current Quantity:</strong> @Model.InventoryQuantity</p>
+
+    <div class="form-group">
+        <label>Quantity to Add</label>
+        <input type="number" name="quantityToAdd" class="form-control" min="1" required />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Add Stock</button>
+    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-secondary" })
+}

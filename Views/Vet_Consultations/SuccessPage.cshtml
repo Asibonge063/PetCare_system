@@ -1,0 +1,63 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Success</title>
+    <style>
+        .popup {
+            width: 400px;
+            margin: 100px auto;
+            padding: 30px;
+            background: #d4edda;
+            border: 2px solid #c3e6cb;
+            color: #155724;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            font-family: Arial, sans-serif;
+            animation: fadeOut 5s forwards;
+        }
+
+        .btn {
+            margin-top: 20px;
+            padding: 10px 20px;
+            border: none;
+            background: #28a745;
+            color: white;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        @@keyframes fadeOut {
+            0% {
+                opacity: 1;
+            }
+
+            80% {
+                opacity: 1;
+            }
+
+            100% {
+                opacity: 0;
+                display: none;
+            }
+        }
+    </style>
+
+</head>
+<body>
+    <div class="popup">
+        <h2>Success!</h2>
+        <p>The consultation report has been successfully generated.</p>
+
+        <!-- Download button (PDF functionality to be added later) -->
+        <a href="#" class="btn">Download Prescription</a>
+    </div>
+</body>
+</html>

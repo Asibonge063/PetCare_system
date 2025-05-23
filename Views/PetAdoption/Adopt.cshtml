@@ -1,0 +1,92 @@
+﻿@model List<PetCare_system.Models.Pet_Adoption>
+
+@{
+    ViewBag.Title = "Adopt";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .adoption-container {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    .pet-card {
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 20px;
+        display: flex;
+        gap: 20px;
+        background-color: #f9f9f9;
+        box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+        transition: transform 0.2s;
+    }
+
+        .pet-card:hover {
+            transform: scale(1.02);
+        }
+
+    .pet-image {
+        flex-shrink: 0;
+    }
+
+        .pet-image img {
+            height: 150px;
+            width: 150px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+    .pet-info {
+        flex-grow: 1;
+    }
+
+    .submit-btn {
+        display: block;
+        margin: 30px auto;
+        padding: 10px 30px;
+        font-size: 16px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+    }
+
+        .submit-btn:hover {
+            background-color: #0056b3;
+        }
+</style>
+
+<div class="adoption-container">
+    <h2>Select a Pet for Adoption</h2>
+
+    @using (Html.BeginForm("SubmitAdoptionSelection", "PetAdoption", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+
+        foreach (var adoption in Model)
+        {
+            <div class="pet-card">
+                <div class="pet-image">
+                    <img src="@Url.Content(adoption.Pet?.PicturePath ?? "~/Content/Images/default-pet.jpg")" alt="Pet Image" />
+                </div>
+                <div class="pet-info">
+                    <label>
+                        @Html.RadioButton("selectedAdoptionId", adoption.Adoption_Id)
+                        <strong>@(adoption.PetName ?? adoption.Pet?.Name ?? "Unknown")</strong>
+                    </label>
+                    <p>Type: @(adoption.PetType ?? adoption.Pet?.Type ?? "Unknown")</p>
+                    <p>Breed: @(adoption.PetBreed ?? adoption.Pet?.Breed ?? "Unknown")</p>
+
+                    <p>Date of Birth: @(adoption.Pet?.DateOfBirth.ToString("yyyy-MM-dd") ?? "Unknown")</p>
+
+
+                </div>
+            </div>
+        }
+
+        <button type="submit" class="submit-btn">Submit Selection</button>
+    }
+</div>

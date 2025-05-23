@@ -1,0 +1,313 @@
+﻿@model PetCare_system.Models.Vet_Consultations
+
+@{
+    ViewBag.Title = "Delete Consultation";
+}
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+<style>
+    :root {
+        --primary-color: #4b6cb7;
+        --secondary-color: #182848;
+        --accent-color: #ff6b6b;
+        --light-color: #f8f9fa;
+        --dark-color: #343a40;
+    }
+
+    body {
+        background-color: #f9f9f9;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .delete-header {
+        text-align: center;
+        margin: 2rem 0;
+    }
+
+        .delete-header h2 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--secondary-color);
+            margin-bottom: 0.5rem;
+        }
+
+    .confirmation-card {
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        padding: 2rem;
+        margin-bottom: 2rem;
+        border-left: 4px solid var(--accent-color);
+    }
+
+    .consultation-details {
+        margin-bottom: 2rem;
+    }
+
+    .detail-section {
+        margin-bottom: 1.5rem;
+    }
+
+    .section-title {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: var(--primary-color);
+        margin-bottom: 1rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 1px solid #eee;
+    }
+
+    .detail-row {
+        display: flex;
+        margin-bottom: 0.8rem;
+    }
+
+    .detail-label {
+        font-weight: 600;
+        color: var(--secondary-color);
+        width: 220px;
+    }
+
+    .detail-value {
+        flex: 1;
+        color: #555;
+    }
+
+    .bool-value {
+        display: inline-block;
+        padding: 3px 10px;
+        border-radius: 50px;
+        font-weight: 500;
+        font-size: 0.9rem;
+    }
+
+    .bool-true {
+        background-color: #e8f5e9;
+        color: #388e3c;
+    }
+
+    .bool-false {
+        background-color: #ffebee;
+        color: #d32f2f;
+    }
+
+    .pet-image-container {
+        text-align: center;
+        margin: 1.5rem 0;
+    }
+
+    .pet-image {
+        max-width: 100%;
+        max-height: 200px;
+        border-radius: 8px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    .warning-message {
+        background-color: #fff3cd;
+        color: #856404;
+        padding: 1rem;
+        border-radius: 8px;
+        margin-bottom: 2rem;
+        display: flex;
+        align-items: center;
+    }
+
+    .warning-icon {
+        font-size: 1.5rem;
+        margin-right: 1rem;
+        color: #ffc107;
+    }
+
+    .action-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        margin-top: 2rem;
+    }
+
+    .btn {
+        border-radius: 50px;
+        padding: 10px 25px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        border: none;
+        cursor: pointer;
+    }
+
+    .btn-danger {
+        background-color: var(--accent-color);
+        color: white;
+    }
+
+        .btn-danger:hover {
+            background-color: #e05555;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.3);
+        }
+
+    .btn-secondary {
+        background-color: #6c757d;
+        color: white;
+    }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(108, 117, 125, 0.3);
+        }
+
+    /* Responsive adjustments */
+    @@media (max-width: 768px) {
+        .detail-row {
+            flex-direction: column;
+        }
+
+        .detail-label {
+            width: 100%;
+            margin-bottom: 0.3rem;
+        }
+
+        .action-buttons {
+            flex-direction: column;
+        }
+
+        .btn {
+            width: 100%;
+        }
+    }
+</style>
+
+<div class="container">
+    <div class="delete-header">
+        <h2>Delete Consultation</h2>
+    </div>
+
+    <div class="confirmation-card">
+        <div class="warning-message">
+            <i class="fas fa-exclamation-triangle warning-icon"></i>
+            <div>
+                <strong>Warning:</strong> This action cannot be undone. All information about this consultation will be permanently deleted.
+            </div>
+        </div>
+
+        <div class="consultation-details">
+            <div class="detail-section">
+                <h3 class="section-title">
+                    <i class="far fa-calendar-alt"></i> Appointment Details
+                </h3>
+
+                <div class="detail-row">
+                    <span class="detail-label">Date:</span>
+                    <span class="detail-value">@Model.Consult_Date.ToString("dddd, MMMM dd, yyyy")</span>
+                </div>
+
+                <div class="detail-row">
+                    <span class="detail-label">Time:</span>
+                    <span class="detail-value">@Model.Consult_Time.ToString("h:mm tt")</span>
+                </div>
+
+                <div class="detail-row">
+                    <span class="detail-label">Description:</span>
+                    <span class="detail-value">
+                        @if (!string.IsNullOrEmpty(Model.Consult_Description))
+                        {
+                            @Model.Consult_Description
+                        }
+                        else
+                        {
+                            <span class="text-muted">No description provided</span>
+                        }
+                    </span>
+                </div>
+            </div>
+
+            <div class="detail-section">
+                <h3 class="section-title">
+                    <i class="fas fa-heartbeat"></i> Health Information
+                </h3>
+
+                <div class="detail-row">
+                    <span class="detail-label">Signs of illness:</span>
+                    <span class="detail-value">
+                        <span class="bool-value @(Model.HasSignsOfIllness ? "bool-true" : "bool-false")">
+                            @(Model.HasSignsOfIllness ? "Yes" : "No")
+                        </span>
+                    </span>
+                </div>
+
+                <div class="detail-row">
+                    <span class="detail-label">On medication:</span>
+                    <span class="detail-value">
+                        <span class="bool-value @(Model.IsOnMedication ? "bool-true" : "bool-false")">
+                            @(Model.IsOnMedication ? "Yes" : "No")
+                        </span>
+                    </span>
+                </div>
+
+                <div class="detail-row">
+                    <span class="detail-label">Vaccinated:</span>
+                    <span class="detail-value">
+                        <span class="bool-value @(Model.IsVaccinated ? "bool-true" : "bool-false")">
+                            @(Model.IsVaccinated ? "Yes" : "No")
+                        </span>
+                    </span>
+                </div>
+
+                <div class="detail-row">
+                    <span class="detail-label">Changed eating habits:</span>
+                    <span class="detail-value">
+                        <span class="bool-value @(Model.HasChangedEatingHabits ? "bool-true" : "bool-false")">
+                            @(Model.HasChangedEatingHabits ? "Yes" : "No")
+                        </span>
+                    </span>
+                </div>
+
+                <div class="detail-row">
+                    <span class="detail-label">Unusual behaviors:</span>
+                    <span class="detail-value">
+                        <span class="bool-value @(Model.HasUnusualBehaviors ? "bool-true" : "bool-false")">
+                            @(Model.HasUnusualBehaviors ? "Yes" : "No")
+                        </span>
+                    </span>
+                </div>
+
+                <div class="detail-row">
+                    <span class="detail-label">Dewormed:</span>
+                    <span class="detail-value">
+                        <span class="bool-value @(Model.IsDewormed ? "bool-true" : "bool-false")">
+                            @(Model.IsDewormed ? "Yes" : "No")
+                        </span>
+                    </span>
+                </div>
+            </div>
+
+            @if (!string.IsNullOrEmpty(Model.PicturePath))
+            {
+                <div class="detail-section">
+                    <h3 class="section-title">
+                        <i class="fas fa-camera"></i> Attached Photo
+                    </h3>
+                    <div class="pet-image-container">
+                        <img src="@Model.PicturePath" alt="Consultation photo" class="pet-image" />
+                    </div>
+                </div>
+            }
+        </div>
+
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="action-buttons">
+                <a href="@Url.Action("Index", "Vet_Consultations")" class="btn btn-secondary">
+                    <i class="fas fa-times"></i> Cancel
+                </a>
+                <button type="submit" class="btn btn-danger">
+                    <i class="fas fa-trash-alt"></i> Confirm Delete
+                </button>
+            </div>
+        }
+    </div>
+</div>

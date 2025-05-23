@@ -1,0 +1,518 @@
+﻿@{
+    ViewBag.Title = "Contact Us";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - DrPaws Pet Care</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4b6cb7;
+            --secondary-color: #182848;
+            --accent-color: #ff6b6b;
+            --light-color: #f8f9fa;
+            --dark-color: #343a40;
+            --whatsapp-color: #25D366;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #333;
+            line-height: 1.6;
+            background-color: #f9f9f9;
+        }
+
+        /* Contact Hero Section */
+        .contact-hero {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 5rem 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 3rem;
+        }
+
+            .contact-hero::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: url('https://images.unsplash.com/photo-1583337130417-3346a1be7dee?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80') no-repeat center center/cover;
+                opacity: 0.15;
+                z-index: 0;
+            }
+
+        .contact-hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .contact-hero h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .contact-hero p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* Contact Container */
+        .contact-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Contact Cards */
+        .contact-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            padding: 30px;
+            margin-bottom: 30px;
+            transition: all 0.3s ease;
+        }
+
+            .contact-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 15px 40px rgba(0,0,0,0.12);
+            }
+
+            .contact-card i {
+                font-size: 2.5rem;
+                color: var(--primary-color);
+                margin-bottom: 1.5rem;
+            }
+
+            .contact-card h3 {
+                font-size: 1.5rem;
+                margin-bottom: 1rem;
+                color: var(--secondary-color);
+            }
+
+        /* Contact Form */
+        .contact-form {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            padding: 40px;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+            .form-control:focus {
+                border-color: var(--primary-color);
+                box-shadow: 0 0 0 3px rgba(75, 108, 183, 0.2);
+                outline: none;
+            }
+
+        textarea.form-control {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .btn-submit {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+            .btn-submit:hover {
+                background-color: #ff5252;
+                transform: translateY(-3px);
+                box-shadow: 0 7px 20px rgba(255,107,107,0.4);
+            }
+
+        /* WhatsApp Button */
+        .btn-whatsapp {
+            background-color: var(--whatsapp-color);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            width: 100%;
+            margin-top: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+            .btn-whatsapp:hover {
+                background-color: #128C7E;
+                transform: translateY(-3px);
+                box-shadow: 0 7px 20px rgba(37, 211, 102, 0.4);
+            }
+
+            .btn-whatsapp i {
+                margin-right: 10px;
+                font-size: 1.2rem;
+            }
+
+        /* Contact Info */
+        .contact-info {
+            margin-top: 3rem;
+        }
+
+        .contact-info-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 1.5rem;
+        }
+
+        .contact-info-icon {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            margin-right: 1rem;
+            margin-top: 5px;
+        }
+
+        .contact-info-content h4 {
+            margin-bottom: 0.5rem;
+            color: var(--secondary-color);
+        }
+
+        /* Map */
+        .contact-map {
+            height: 400px;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            margin-top: 3rem;
+        }
+
+            .contact-map iframe {
+                width: 100%;
+                height: 100%;
+                border: none;
+            }
+
+        /* Hours Table */
+        .hours-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1.5rem;
+        }
+
+            .hours-table tr:nth-child(even) {
+                background-color: #f5f5f5;
+            }
+
+            .hours-table th,
+            .hours-table td {
+                padding: 12px 15px;
+                text-align: left;
+                border-bottom: 1px solid #ddd;
+            }
+
+            .hours-table th {
+                background-color: var(--primary-color);
+                color: white;
+            }
+
+        /* Error Styling */
+        .error {
+            border-color: #ff6b6b !important;
+        }
+
+        .error-message {
+            color: #ff6b6b;
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+
+        /* Responsive */
+        @@media (max-width: 768px) {
+            .contact-hero h1 {
+                font-size: 2.2rem;
+            }
+
+            .contact-hero p {
+                font-size: 1rem;
+            }
+
+            .contact-form {
+                padding: 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Contact Hero Section -->
+    <section class="contact-hero">
+        <div class="contact-hero-content">
+            <h1>We'd Love to Hear From You</h1>
+            <p>Whether you have questions about our services, need to schedule an appointment, or just want to say hello, our team is here to help you and your pet.</p>
+        </div>
+    </section>
+
+    <div class="contact-container">
+        <div class="row">
+            <!-- Contact Form Column -->
+            <div class="col-md-7">
+                <div class="contact-form">
+                    <h2>Send Us a Message</h2>
+                    <p>Fill out the form below and we'll get back to you as soon as possible.</p>
+
+                    <form id="contactForm">
+                        <div class="form-group">
+                            <label for="name">Your Name *</label>
+                            <input type="text" id="name" name="name" class="form-control" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email">Email Address *</label>
+                            <input type="email" id="email" name="email" class="form-control" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="phone">Phone Number</label>
+                            <input type="tel" id="phone" name="phone" class="form-control">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="subject">Subject *</label>
+                            <select id="subject" name="subject" class="form-control" required>
+                                <option value="">Select a subject</option>
+                                <option value="appointment">Schedule an Appointment</option>
+                                <option value="question">General Question</option>
+                                <option value="grooming">Grooming Services</option>
+                                <option value="boarding">Boarding Inquiry</option>
+                                <option value="emergency">Emergency Contact</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="message">Your Message *</label>
+                            <textarea id="message" name="message" class="form-control" required></textarea>
+                        </div>
+
+                        <button type="button" class="btn-submit" onclick="showWhatsAppOption()">Send Message</button>
+                    </form>
+                </div>
+
+                <!-- WhatsApp Option Modal (hidden by default) -->
+                <div id="whatsappModal" style="display:none; background:white; padding:20px; border-radius:15px; margin-top:20px; box-shadow:0 5px 15px rgba(0,0,0,0.1);">
+                    <h3>Would you prefer to contact us via WhatsApp?</h3>
+                    <p>For faster response, you can message us directly on WhatsApp.</p>
+                    <div style="display:flex; gap:10px; margin-top:20px;">
+                        <button class="btn-submit" onclick="submitForm()">No, use Email</button>
+                        <a href="https://wa.me/27821234567?text=Hello%20DrPaws,%20I%20have%20a%20question%20about..." class="btn-whatsapp" target="_blank">
+                            <i class="fab fa-whatsapp"></i> Chat on WhatsApp
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Map Section -->
+                <div class="contact-map">
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3454.6744190916914!2d31.026490175483806!3d-29.85450657560362!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1ef7aa19d8e10d3f%3A0xb8c1b5e907f2c57b!2s41%20Acutt%20St%2C%20Durban%20Central%2C%20Durban%2C%204001%2C%20South%20Africa!5e0!3m2!1sen!2sza!4v1712061000000!5m2!1sen!2sza" allowfullscreen="" loading="lazy"></iframe>
+                </div>
+            </div>
+
+            <!-- Contact Info Column -->
+            <div class="col-md-5">
+                <div class="contact-card">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <h3>Our Location</h3>
+                    <p>41 Acutt St<br>Durban Central, 4001<br>South Africa</p>
+                </div>
+
+                <div class="contact-card">
+                    <i class="fas fa-phone-alt"></i>
+                    <h3>Contact Numbers</h3>
+                    <p>
+                        <strong>Main Office:</strong> (031) 123-4567<br>
+                        <strong>Emergency:</strong> (031) 987-6543<br>
+                        <strong>Fax:</strong> (031) 123-4568
+                    </p>
+                </div>
+
+                <div class="contact-card">
+                    <i class="fab fa-whatsapp" style="color:var(--whatsapp-color);"></i>
+                    <h3>WhatsApp Us</h3>
+                    <p>For quick questions or appointments, message us on WhatsApp.</p>
+                    <a href="https://wa.me/0720382598?text=Hello%20DrPaws,%20I%20have%20a%20question%20about..." class="btn-whatsapp" target="_blank">
+                        <i class="fab fa-whatsapp"></i> Chat Now
+                    </a>
+                </div>
+
+                <div class="contact-card">
+                    <i class="fas fa-envelope"></i>
+                    <h3>Email Us</h3>
+                    <p>
+                        <strong>General Inquiries:</strong> info@drpaws.com<br>
+                        <strong>Support:</strong> support@drpaws.com<br>
+                        <strong>Appointments:</strong> appointments@drpaws.com
+                    </p>
+                </div>
+
+                <div class="contact-card">
+                    <i class="fas fa-clock"></i>
+                    <h3>Business Hours</h3>
+                    <table class="hours-table">
+                        <thead>
+                            <tr>
+                                <th>Day</th>
+                                <th>Hours</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Monday - Friday</td>
+                                <td>8:00 AM - 8:00 PM</td>
+                            </tr>
+                            <tr>
+                                <td>Saturday</td>
+                                <td>9:00 AM - 6:00 PM</td>
+                            </tr>
+                            <tr>
+                                <td>Sunday</td>
+                                <td>10:00 AM - 4:00 PM</td>
+                            </tr>
+                            <tr>
+                                <td>Emergency</td>
+                                <td>24/7</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Form validation
+            $('#contactForm').submit(function (e) {
+                e.preventDefault();
+                validateForm();
+            });
+
+            // Remove errors when typing
+            $('input, textarea, select').on('input change', function () {
+                $(this).removeClass('error');
+                $(this).next('.error-message').remove();
+            });
+        });
+
+        function validateForm() {
+            let valid = true;
+
+            // Clear previous errors
+            $('.error').removeClass('error');
+            $('.error-message').remove();
+
+            // Validate required fields
+            $('#contactForm').find('[required]').each(function () {
+                if (!$(this).val()) {
+                    $(this).addClass('error');
+                    $(this).after('<div class="error-message">This field is required</div>');
+                    valid = false;
+                }
+            });
+
+            // Validate email format
+            const emailInput = $('#email');
+            const email = emailInput.val();
+            const emailRegex = /^[^\s@@]+@@[^\s@@]+\.[^\s@@]+$/;
+
+            if (email && !emailRegex.test(email)) {
+                emailInput.addClass('error');
+                if (!emailInput.next('.error-message').length) {
+                    emailInput.after('<div class="error-message">Please enter a valid email address</div>');
+                }
+                valid = false;
+            }
+
+            if (valid) {
+                showWhatsAppOption();
+            } else {
+                // Show general error message
+                const generalError = $('#general-error');
+                if (generalError.length) {
+                    generalError.fadeIn().delay(3000).fadeOut();
+                } else {
+                    $('<div id="general-error" class="error-message" style="margin-bottom:20px;display:none;">Please correct the errors in the form.</div>')
+                        .prependTo('#contactForm')
+                        .fadeIn()
+                        .delay(3000)
+                        .fadeOut();
+                }
+
+                // Scroll to first error
+                $('html, body').animate({
+                    scrollTop: $('.error').first().offset().top - 100
+                }, 500);
+            }
+        }
+
+        function showWhatsAppOption() {
+            validateForm();
+
+            // Only show if form is valid
+            if ($('.error').length === 0) {
+                $('#whatsappModal').slideDown();
+
+                // Generate WhatsApp message from form data
+                const name = $('#name').val();
+                const phone = $('#phone').val();
+                const subject = $('#subject option:selected').text();
+                const message = $('#message').val();
+
+                const whatsappText = `Hello DrPaws,\n\nMy name is ${name}${phone ? ` (Phone: ${phone})` : ''}.\n\nI'm contacting you about: ${subject}\n\nMy message: ${message}`;
+                const encodedText = encodeURIComponent(whatsappText);
+
+                // Update WhatsApp link
+                $('.btn-whatsapp').attr('href', `https://wa.me/27821234567?text=${encodedText}`);
+            }
+        }
+
+        function submitForm() {
+            // In a real implementation, this would submit the form to your server
+            alert('Form would be submitted via email in a real implementation.');
+            $('#whatsappModal').slideUp();
+
+            // For demo purposes, just show a success message
+            const successMsg = $('<div class="alert alert-success" style="padding:15px; background:#d4edda; color:#155724; border-radius:4px; margin-top:20px;">Thank you! Your message has been sent.</div>');
+            $('#contactForm').append(successMsg);
+            successMsg.delay(3000).fadeOut();
+        }
+    </script>
+</body>
+</html>

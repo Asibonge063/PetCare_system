@@ -1,0 +1,143 @@
+﻿@{
+    ViewBag.Title = "Create Grooming Report ";
+}
+
+<h2>@ViewBag.Title</h2>
+
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-info">@TempData["Message"]</div>
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-group">
+        <label for="BookingId">Booking ID</label>
+        <input type="number" name="BookingId" id="BookingId" class="form-control" placeholder="Enter booking ID" required
+               onchange="fetchBookingDetails(this.value)"
+               value="@ViewBag.BookingId" />
+    </div>
+
+    <div class="form-group">
+        <label for="PetName">Pet Name</label>
+        <input type="text" name="PetName" id="PetName" class="form-control" readonly
+               value="@ViewBag.PetName" />
+    </div>
+
+    <div class="form-group">
+        <label for="PetType">Pet Type/Breed</label>
+        <input type="text" name="PetType" id="PetType" class="form-control" readonly
+               value="@ViewBag.PetType" />
+    </div>
+
+    <div class="form-group">
+        <label for="OwnerName">Owner Name</label>
+        <input type="text" name="OwnerName" id="OwnerName" class="form-control" readonly
+               value="@ViewBag.OwnerName" />
+    </div>
+
+    <div class="form-group">
+        <label for="GroomingType">Grooming Type</label>
+        <input type="text" name="GroomingType" id="GroomingType" class="form-control" readonly
+               value="@ViewBag.GroomingType" />
+    </div>
+
+    <div class="form-group">
+        <label for="Email">Owner Email</label>
+        <input type="text" name="Email" id="Email" class="form-control" readonly
+               value="@ViewBag.Email" />
+    </div>
+
+    <div class="form-group">
+        <label for="PhoneNumber">Owner Phone</label>
+        <input type="text" name="PhoneNumber" id="PhoneNumber" class="form-control" readonly
+               value="@ViewBag.PhoneNumber" />
+    </div>
+
+    <!-- Editable report fields -->
+    <div class="form-group">
+        <label for="Notes">Report Notes</label>
+        <textarea name="Notes" id="Notes" class="form-control" rows="5" placeholder="Write report here..." required></textarea>
+    </div>
+
+    <div class="form-group form-check">
+        <input type="checkbox" class="form-check-input" name="OwnerNotified" id="OwnerNotified" value="true">
+        <label class="form-check-label" for="OwnerNotified">Owner notified about any issues</label>
+    </div>
+
+    <div class="form-actions">
+        <button type="submit" class="btn btn-primary">
+            <i class="fas fa-save"></i> Submit Report
+        </button>
+       
+        <a href="@Url.Action("IndexTwo", "GroomingStaffs")" class="btn btn-info">
+            <i class="fas fa-home"></i> Return to Home
+        </a>
+    </div>
+}
+
+@section Scripts {
+    <script>
+        function fetchBookingDetails(bookingId) {
+            if (!bookingId) return;
+
+            $.ajax({
+                url: '@Url.Action("GetBookingDetails", "GroomingStaffs")',
+                type: 'GET',
+                data: { bookingId: bookingId },
+                success: function (data) {
+                    if (data) {
+                        $('#BookingId').val(data.BookingId);
+                        $('#PetName').val(data.PetName);
+                        $('#PetType').val(data.PetType);
+                        $('#OwnerName').val(data.OwnerName);
+                        $('#GroomingType').val(data.GroomingType);
+                        $('#Email').val(data.Email);
+                        $('#PhoneNumber').val(data.PhoneNumber);
+                        $('#SpecialInstructions').val(data.SpecialInstructions);
+                    } else {
+                        alert('Booking not found!');
+                        clearFields();
+                    }
+                },
+                error: function () {
+                    alert('Error fetching booking details');
+                    clearFields();
+                }
+            });
+        }
+
+        function clearFields() {
+            $('#BookingId').val('');
+            $('#PetName').val('');
+            $('#PetType').val('');
+            $('#OwnerName').val('');
+            $('#GroomingType').val('');
+            $('#Email').val('');
+            $('#PhoneNumber').val('');
+            // Don't clear the report fields
+        }
+
+        // If we have a booking ID on page load, fetch details
+        $(document).ready(function() {
+            var bookingId = $('#BookingId').val();
+            if (bookingId) {
+                fetchBookingDetails(bookingId);
+            }
+        });
+    </script>
+}
+
+<style>
+    .form-actions {
+        margin-top: 20px;
+        display: flex;
+        gap: 10px;
+    }
+
+    .btn i {
+        margin-right: 5px;
+    }
+</style>

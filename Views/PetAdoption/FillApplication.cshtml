@@ -1,0 +1,44 @@
+﻿@model PetCare_system.Models.Pet_Adoption
+@{
+    ViewBag.Title = "Adoption Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Complete Adoption Form</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div>
+        <h4>Adopting: @Model.PetName (@Model.PetType)</h4>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.ExperienceLevel)
+        @Html.DropDownListFor(m => m.ExperienceLevel, (SelectList)ViewBag.ExperienceLevels, "Select", new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.ExperienceLevel)
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.HomeDescription)
+        @Html.TextAreaFor(m => m.HomeDescription, new { @class = "form-control", rows = 4 })
+        @Html.ValidationMessageFor(m => m.HomeDescription)
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.AdoptionReason)
+        @Html.TextAreaFor(m => m.AdoptionReason, new { @class = "form-control", rows = 5 })
+        @Html.ValidationMessageFor(m => m.AdoptionReason)
+    </div>
+
+    <div class="form-group">
+        <label>
+            @Html.CheckBoxFor(m => m.HasAgreedToTerms)
+            I agree to the <a href="#">Terms and Conditions</a>.
+        </label>
+        @Html.ValidationMessageFor(m => m.HasAgreedToTerms)
+    </div>
+
+    <button type="submit" class="btn btn-primary">Submit Application</button>
+}

@@ -1,0 +1,310 @@
+﻿@model PetCare_system.Models.PaymentForAdoption
+
+@{
+    ViewBag.Title = "Adoption Confirmation";
+}
+
+<div class="container confirmation-container">
+    <div class="confirmation-header">
+        <div class="success-icon">
+            <i class="fa fa-check-circle"></i>
+        </div>
+        <h1>Adoption Confirmed!</h1>
+        <p class="thank-you">Thank you for giving a pet a loving home</p>
+    </div>
+
+    <div class="confirmation-card">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="confirmation-section">
+                    <h3><i class="fa fa-receipt"></i> Transaction Details</h3>
+                    <div class="detail-item">
+                        <span class="detail-label">Transaction ID:</span>
+                        <span class="detail-value">@Model.TransactionId</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Date:</span>
+                        <span class="detail-value">@Model.PaymentDate.ToString("f")</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Status:</span>
+                        <span class="badge success-badge">@Model.Status</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Amount Paid:</span>
+                        <span class="detail-value amount">@Model.Amount.ToString("C")</span>
+                    </div>
+                </div>
+
+                <div class="confirmation-section">
+                    <h3><i class="fa fa-user"></i> Adopter Information</h3>
+                    <div class="detail-item">
+                        <span class="detail-label">Name:</span>
+                        <span class="detail-value">@Model.User.FirstName @Model.User.LastName</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Email:</span>
+                        <span class="detail-value">@Model.User.Email</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="confirmation-section">
+                    <h3><i class="fa fa-paw"></i> Pet Details</h3>
+                    <div class="pet-avatar">
+                        <i class="fa fa-paw"></i>
+                    </div>
+                    <div class="pet-info">
+                        <h4>@Model.PetName</h4>
+                        <p>Adoption Fee: @Model.Amount.ToString("C")</p>
+                    </div>
+                </div>
+
+                <div class="confirmation-section">
+                    <h3><i class="fa fa-credit-card"></i> Payment Method</h3>
+                    <div class="payment-method">
+                        @Model.PaymentMethod (@Model.BankType)
+                        <div class="card-number">
+                            ****@Model.AccountNumber.Substring(Model.AccountNumber.Length - 4)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="next-steps">
+            <h3><i class="fa fa-info-circle"></i> Next Steps</h3>
+            <ul>
+                <li>You'll receive a confirmation email with these details</li>
+                <li>Our team will contact you within 24 hours to schedule pickup</li>
+                <li>Please bring a valid ID when picking up your pet</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="confirmation-actions">
+        @Html.ActionLink("Back to Home", "Index", "Home", null, new { @class = "btn btn-primary" })
+        <button onclick="window.print()" class="btn btn-default">
+            <i class="fa fa-print"></i> Print Confirmation
+        </button>
+    </div>
+</div>
+
+@section Styles {
+    <style>
+        .confirmation-container {
+            max-width: 900px;
+            margin: 30px auto;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .confirmation-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .success-icon {
+            font-size: 80px;
+            color: #2ecc71;
+            margin-bottom: 20px;
+        }
+
+        .confirmation-header h1 {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .thank-you {
+            font-size: 18px;
+            color: #7f8c8d;
+        }
+
+        .confirmation-card {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+        }
+
+        .confirmation-section {
+            margin-bottom: 30px;
+        }
+
+            .confirmation-section h3 {
+                color: #2c3e50;
+                font-weight: 500;
+                margin-bottom: 20px;
+                display: flex;
+                align-items: center;
+            }
+
+                .confirmation-section h3 i {
+                    margin-right: 10px;
+                    color: #3498db;
+                }
+
+        .detail-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .detail-label {
+            color: #7f8c8d;
+            font-weight: 500;
+        }
+
+        .detail-value {
+            color: #2c3e50;
+            font-weight: 500;
+        }
+
+        .amount {
+            color: #e74c3c;
+            font-weight: 600;
+        }
+
+        .success-badge {
+            background: #2ecc71;
+            color: white;
+            padding: 3px 10px;
+            border-radius: 50px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .pet-avatar {
+            width: 80px;
+            height: 80px;
+            background: #3498db;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            color: white;
+            font-size: 30px;
+        }
+
+        .pet-info {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+            .pet-info h4 {
+                color: #2c3e50;
+                font-weight: 600;
+                margin-bottom: 5px;
+            }
+
+            .pet-info p {
+                color: #7f8c8d;
+            }
+
+        .payment-method {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+
+        .card-number {
+            color: #7f8c8d;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        .next-steps {
+            background: #f1f8fe;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 30px;
+        }
+
+            .next-steps h3 {
+                color: #2c3e50;
+                font-weight: 500;
+                margin-top: 0;
+                margin-bottom: 15px;
+                display: flex;
+                align-items: center;
+            }
+
+                .next-steps h3 i {
+                    margin-right: 10px;
+                    color: #3498db;
+                }
+
+            .next-steps ul {
+                padding-left: 20px;
+                margin-bottom: 0;
+            }
+
+            .next-steps li {
+                margin-bottom: 8px;
+            }
+
+        .confirmation-actions {
+            text-align: center;
+        }
+
+        .btn {
+            margin: 0 10px;
+            min-width: 150px;
+        }
+
+        .btn-primary {
+            background-color: #3498db;
+            border-color: #2980b9;
+        }
+
+            .btn-primary:hover {
+                background-color: #2980b9;
+                border-color: #2472a4;
+            }
+
+        @@media print {
+            body * {
+                visibility: hidden;
+            }
+
+            .confirmation-container, .confirmation-container * {
+                visibility: visible;
+            }
+
+            .confirmation-container {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                padding: 0;
+                margin: 0;
+            }
+
+            .confirmation-actions {
+                display: none;
+            }
+        }
+    </style>
+}
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // Add animation to success icon
+            $('.success-icon').hover(
+                function() {
+                    $(this).css('transform', 'scale(1.1)');
+                },
+                function() {
+                    $(this).css('transform', 'scale(1)');
+                }
+            );
+        });
+    </script>
+}

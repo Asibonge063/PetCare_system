@@ -1,0 +1,539 @@
+﻿@{
+    ViewBag.Title = "About Us";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - DrPaws Pet Care</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4b6cb7;
+            --secondary-color: #182848;
+            --accent-color: #ff6b6b;
+            --light-color: #f8f9fa;
+            --dark-color: #343a40;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #333;
+            line-height: 1.6;
+            background-color: #f9f9f9;
+        }
+
+        /* Hero Section */
+        .about-hero {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 5rem 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 3rem;
+        }
+
+            .about-hero::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: url('https://images.unsplash.com/photo-1450778869180-41d0601e046e?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80') no-repeat center center/cover;
+                opacity: 0.15;
+                z-index: 0;
+            }
+
+        .about-hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .about-hero h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .about-hero p {
+            font-size: 1.2rem;
+        }
+
+        /* Main Content */
+        .about-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Section Styling */
+        .about-section {
+            margin-bottom: 4rem;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+            .section-title h2 {
+                font-size: 2.2rem;
+                color: var(--secondary-color);
+                display: inline-block;
+                padding-bottom: 10px;
+            }
+
+                .section-title h2::after {
+                    content: '';
+                    position: absolute;
+                    width: 80px;
+                    height: 3px;
+                    background-color: var(--accent-color);
+                    bottom: 0;
+                    left: 50%;
+                    transform: translateX(-50%);
+                }
+
+        /* Story Section */
+        .story-content {
+            display: flex;
+            align-items: center;
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .story-text {
+            flex: 1;
+        }
+
+        .story-image {
+            flex: 1;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+            .story-image img {
+                width: 100%;
+                height: auto;
+                display: block;
+                transition: transform 0.5s ease;
+            }
+
+            .story-image:hover img {
+                transform: scale(1.05);
+            }
+
+        /* Mission Section */
+        .mission-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            margin-bottom: 2rem;
+            border-top: 4px solid var(--accent-color);
+        }
+
+            .mission-card h3 {
+                color: var(--secondary-color);
+                margin-bottom: 1rem;
+                font-size: 1.5rem;
+            }
+
+        /* Team Section */
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .team-member {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+        }
+
+            .team-member:hover {
+                transform: translateY(-10px);
+                box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+            }
+
+        .member-image {
+            height: 250px;
+            overflow: hidden;
+        }
+
+            .member-image img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                transition: transform 0.5s ease;
+            }
+
+        .team-member:hover .member-image img {
+            transform: scale(1.1);
+        }
+
+        .member-info {
+            padding: 20px;
+            text-align: center;
+        }
+
+            .member-info h3 {
+                margin-bottom: 0.5rem;
+                color: var(--secondary-color);
+            }
+
+            .member-info p {
+                color: var(--primary-color);
+                font-weight: 500;
+                margin-bottom: 1rem;
+            }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+            .social-links a {
+                color: var(--dark-color);
+                transition: color 0.3s ease;
+            }
+
+                .social-links a:hover {
+                    color: var(--accent-color);
+                }
+
+        /* Values Section */
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .value-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+            .value-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 15px 40px rgba(0,0,0,0.12);
+            }
+
+            .value-card i {
+                font-size: 2.5rem;
+                color: var(--primary-color);
+                margin-bottom: 1.5rem;
+            }
+
+            .value-card h3 {
+                color: var(--secondary-color);
+                margin-bottom: 1rem;
+            }
+
+        /* CTA Section */
+        .cta-section {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 4rem 0;
+            text-align: center;
+            border-radius: 15px;
+            margin: 4rem 0;
+        }
+
+            .cta-section h2 {
+                font-size: 2rem;
+                margin-bottom: 1.5rem;
+            }
+
+            .cta-section p {
+                max-width: 600px;
+                margin: 0 auto 2rem;
+                font-size: 1.1rem;
+            }
+
+        /* Buttons */
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.9rem;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background-color: var(--accent-color);
+            color: white;
+            box-shadow: 0 4px 15px rgba(255,107,107,0.4);
+        }
+
+            .btn-primary:hover {
+                background-color: #ff5252;
+                transform: translateY(-3px);
+                box-shadow: 0 7px 20px rgba(255,107,107,0.6);
+            }
+
+        .btn-outline {
+            background-color: transparent;
+            color: white;
+            border: 2px solid white;
+            margin-left: 15px;
+        }
+
+            .btn-outline:hover {
+                background-color: white;
+                color: var(--primary-color);
+            }
+
+        /* Responsive */
+        @@media (max-width: 768px) {
+            .about-hero h1 {
+                font-size: 2.2rem;
+            }
+
+            .about-hero p {
+                font-size: 1rem;
+            }
+
+            .story-content {
+                flex-direction: column;
+            }
+
+            .section-title h2 {
+                font-size: 1.8rem;
+            }
+
+            .cta-section h2 {
+                font-size: 1.6rem;
+            }
+
+            .btn-outline {
+                margin-left: 0;
+                margin-top: 15px;
+                display: block;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+    <section class="about-hero">
+        <div class="about-hero-content">
+            <h1>Our Passion for Pets</h1>
+            <p>At DrPaws, we believe every pet deserves exceptional care and every owner deserves peace of mind.</p>
+        </div>
+    </section>
+
+    <div class="about-container">
+        <!-- Our Story Section -->
+        <section class="about-section">
+            <div class="section-title">
+                <h2>Our Story</h2>
+            </div>
+
+            <div class="story-content">
+                <div class="story-text">
+                    <p>Founded in 2010 by Dr. Sarah Johnson, DrPaws began as a small veterinary clinic with a simple mission: to provide compassionate, high-quality care for pets in our community. What started as a one-woman practice has grown into a comprehensive pet care center serving thousands of furry patients each year.</p>
+                    <p>After noticing gaps in the pet care industry, Dr. Johnson expanded services to include grooming, boarding, and training - creating a one-stop destination for pet owners. Today, our state-of-the-art facility houses 12 exam rooms, a surgical suite, grooming salon, daycare center, and luxury boarding suites.</p>
+                    <p>While we've grown in size, we've never lost sight of our original values. Every team member at DrPaws shares Dr. Johnson's passion for animal welfare and commitment to excellence.</p>
+                </div>
+                <div class="story-image">
+                    <img src="https://images.unsplash.com/photo-1532469060546-4eb37b460481?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8bWFuJTIwd2l0aCUyMGRvZ3xlbnwwfHwwfHx8MA%3D%3D" alt="Dr. Sarah Johnson with a dog">
+                </div>
+            </div>
+        </section>
+
+        <!-- Mission Section -->
+        <section class="about-section">
+            <div class="section-title">
+                <h2>Our Mission & Vision</h2>
+            </div>
+
+            <div class="mission-card">
+                <h3>Our Mission</h3>
+                <p>To enhance the lives of pets and their owners by providing exceptional medical care, grooming, boarding, and training services in a compassionate, state-of-the-art environment. We strive to build lasting relationships with our clients and their furry family members through education, preventive care, and personalized attention.</p>
+            </div>
+
+            <div class="mission-card">
+                <h3>Our Vision</h3>
+                <p>To be recognized as the premier pet care provider in our region, setting the standard for veterinary medicine and pet services. We aim to create a community where all pets receive the love and care they deserve, and where pet owners feel supported and educated in their pet parenting journey.</p>
+            </div>
+        </section>
+
+        <!-- Team Section -->
+        <section class="about-section">
+            <div class="section-title">
+                <h2>Meet Our Team</h2>
+            </div>
+
+            <div class="team-grid">
+                <div class="team-member">
+                    <div class="member-image">
+                        <img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Dr. Sarah Johnson">
+                    </div>
+                    <div class="member-info">
+                        <h3>Dr. Sarah Johnson</h3>
+                        <p>Founder & Chief Veterinarian</p>
+                        <div class="social-links">
+                            <a href="#"><i class="fab fa-linkedin"></i></a>
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                            <a href="#"><i class="fas fa-envelope"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="team-member">
+                    <div class="member-image">
+                        <img src="https://images.unsplash.com/photo-1594824476967-48c8b964273f?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Dr. Michael Chen">
+                    </div>
+                    <div class="member-info">
+                        <h3>Dr. Michael Chen</h3>
+                        <p>Senior Veterinarian</p>
+                        <div class="social-links">
+                            <a href="#"><i class="fab fa-linkedin"></i></a>
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                            <a href="#"><i class="fas fa-envelope"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="team-member">
+                    <div class="member-image">
+                        <img src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Emma Rodriguez">
+                    </div>
+                    <div class="member-info">
+                        <h3>Emma Rodriguez</h3>
+                        <p>Head Groomer</p>
+                        <div class="social-links">
+                            <a href="#"><i class="fab fa-linkedin"></i></a>
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                            <a href="#"><i class="fas fa-envelope"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="team-member">
+                    <div class="member-image">
+                        <img src="https://images.unsplash.com/photo-1562788869-4ed32648eb72?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="David Wilson">
+                    </div>
+                    <div class="member-info">
+                        <h3>David Wilson</h3>
+                        <p>Training Specialist</p>
+                        <div class="social-links">
+                            <a href="#"><i class="fab fa-linkedin"></i></a>
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                            <a href="#"><i class="fas fa-envelope"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Values Section -->
+        <section class="about-section">
+            <div class="section-title">
+                <h2>Our Core Values</h2>
+            </div>
+
+            <div class="values-grid">
+                <div class="value-card">
+                    <i class="fas fa-heart"></i>
+                    <h3>Compassion</h3>
+                    <p>We treat every pet as if they were our own, with kindness, patience, and understanding.</p>
+                </div>
+
+                <div class="value-card">
+                    <i class="fas fa-award"></i>
+                    <h3>Excellence</h3>
+                    <p>We maintain the highest standards of care through continuous education and improvement.</p>
+                </div>
+
+                <div class="value-card">
+                    <i class="fas fa-hand-holding-heart"></i>
+                    <h3>Integrity</h3>
+                    <p>We're honest and transparent in all our interactions and recommendations.</p>
+                </div>
+
+                <div class="value-card">
+                    <i class="fas fa-users"></i>
+                    <h3>Community</h3>
+                    <p>We actively support local animal welfare organizations and pet owners.</p>
+                </div>
+
+                <div class="value-card">
+                    <i class="fas fa-lightbulb"></i>
+                    <h3>Innovation</h3>
+                    <p>We embrace new technologies and techniques to provide the best possible care.</p>
+                </div>
+
+                <div class="value-card">
+                    <i class="fas fa-laugh-beam"></i>
+                    <h3>Joy</h3>
+                    <p>We celebrate the happiness that pets bring to our lives every day.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section class="cta-section">
+            <h2>Ready to Experience the DrPaws Difference?</h2>
+            <p>Join our family of satisfied pets and owners today.</p>
+            <a href="@Url.Action("Contact", "Home")" class="btn btn-primary">Contact Us</a>
+            <a href="@Url.Action("Index", "Home")" class="btn btn-outline">Our Services</a>
+        </section>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Smooth scrolling for anchor links
+            $('a[href*="#"]').on('click', function (e) {
+                e.preventDefault();
+                $('html, body').animate(
+                    {
+                        scrollTop: $($(this).attr('href')).offset().top - 100,
+                    },
+                    500,
+                    'linear'
+                );
+            });
+
+            // Animation for team members on scroll
+            $(window).scroll(function () {
+                $('.team-member').each(function () {
+                    var cardPosition = $(this).offset().top;
+                    var scrollPosition = $(window).scrollTop() + $(window).height();
+
+                    if (scrollPosition > cardPosition) {
+                        $(this).addClass('animate__animated animate__fadeInUp');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

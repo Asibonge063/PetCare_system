@@ -1,0 +1,185 @@
+﻿@model IEnumerable<PetCare_system.Models.Pet_Boarding>
+@{
+    ViewBag.Title = "Pet Boarding Bookings";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!-- Optional: Font Awesome if you want icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/site.css")" />
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f8f9fa;
+    }
+
+    .container {
+        width: 100%;
+        padding-left: 30px;
+        padding-right: 30px;
+        margin-top: 50px;
+        margin-bottom: 50px;
+    }
+    .table {
+        width: 100%;
+        table-layout: auto;
+    }
+
+
+    .card {
+        border: none;
+        border-radius: 8px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .card-header {
+        font-size: 1.2rem;
+        background-color: #007bff;
+        color: white;
+        padding: 15px;
+        border-radius: 8px 8px 0 0;
+    }
+
+    .card-body {
+        font-size: 1rem;
+        padding: 20px;
+    }
+
+    .btn {
+        font-size: 1.1rem;
+        padding: 10px;
+        margin-right: 10px;
+    }
+
+    .btn-sm {
+        font-size: 0.875rem;
+        padding: 6px 10px;
+        margin-right: 5px;
+    }
+
+    .badge {
+        padding: 6px 12px;
+        font-size: 0.8rem;
+        border-radius: 20px;
+        color: #fff;
+    }
+
+        .badge.confirmed {
+            background-color: #28a745;
+        }
+
+        .badge.pending {
+            background-color: #ffc107;
+            color: #212529;
+        }
+
+        .badge.cancelled {
+            background-color: #dc3545;
+        }
+
+    .table th, .table td {
+        vertical-align: middle;
+    }
+
+    h2 {
+        font-size: 2rem;
+        margin-bottom: 20px;
+    }
+
+    .text-center {
+        text-align: center;
+    }
+
+    .shadow-sm {
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .alert {
+        max-width: 800px;
+        margin: 20px auto;
+        font-weight: bold;
+    }
+</style>
+
+<div class="container">
+    @if (TempData["Message"] != null)
+    {
+        <div class="alert alert-success" role="alert">
+            @TempData["Message"]
+        </div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger" role="alert">
+            @TempData["Error"]
+        </div>
+    }
+
+    <div class="card shadow-sm">
+        <div class="card-header">
+            <i class="fas fa-paw"></i> Pet Boarding Bookings
+        </div>
+        <div class="card-body">
+            <h2 class="text-center">Current Bookings</h2>
+            <p class="text-center text-muted mb-4">Review and manage all pet stay bookings here.</p>
+
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>Owner</th>
+                            <th>Pet</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Type</th>
+                            <th>Breed</th>
+                            <th>Check-In</th>
+                            <th>Check-Out</th>
+                            <th>Booked</th>
+                            <th>Package</th>
+                            <th>Price</th>
+                            <th>Needs</th>
+                            <th>Status</th>
+                            <th>CheckIn-Status</th>
+                            <th>Agreement</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var booking in Model)
+                        {
+                            <tr>
+                                <td>@booking.OwnerName</td>
+                                <td>@booking.PetName</td>
+                                <td>@booking.Email</td>
+                                <td>@booking.Phone</td>
+                                <td>@booking.PetType</td>
+                                <td>@booking.PetBreed</td>
+                                <td>@booking.CheckInDate.ToString("dd MMM yyyy")</td>
+                                <td>@booking.CheckOutDate.ToString("dd MMM yyyy")</td>
+                                <td>@booking.BookingDate.ToString("dd MMM yyyy")</td>
+                                <td>@booking.Package</td>
+                                <td>@booking.PackagePrice.ToString("C")</td>
+                                <td>@booking.SpecialNeeds</td>
+                                <td>
+                                    <span class="badge @(booking.Check_Status == "Confirmed" ? "confirmed" : booking.Check_Status == "Pending" ? "pending" : "cancelled")">
+                                        @booking.Check_Status
+                                    </span>
+                                </td>
+                                <td>@booking.Check_Status</td>
+                                <td>@(booking.Agreement ? "Yes" : "No")</td>
+                                <td>
+                                    <a class="btn btn-sm btn-success" title="Check In" href="@Url.Action("AdminCheckIn", new { id = booking.board_Id })">
+                                        <i class="fas fa-sign-in-alt"></i>
+                                    </a>
+                                
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

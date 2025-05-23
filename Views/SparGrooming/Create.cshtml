@@ -1,0 +1,532 @@
+﻿@model PetCare_system.Models.Spar_Grooming
+@{
+    ViewBag.Title = "Pet Spa & Grooming Services";
+}
+
+<!-- Service Showcase Section -->
+<section class="services-showcase">
+    <div class="container">
+        <h1 class="showcase-title"><i class="fas fa-paw"></i> Our Premium Pet Services</h1>
+        <p class="showcase-subtitle">Treat your furry friends to the ultimate spa experience</p>
+
+        <div class="services-grid">
+            <!-- Basic Grooming -->
+            <div class="service-card">
+                <div class="service-image" style="background-image: url('https://images.unsplash.com/photo-1591769225440-811ad7d6eab2?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');"></div>
+                <div class="service-content">
+                    <h3>Basic Grooming</h3>
+                    <p>Includes bath, blow dry, nail trimming, and ear cleaning</p>
+                    <div class="service-price">R50 per hour</div>
+                </div>
+            </div>
+
+            <!-- Full Grooming -->
+            <div class="service-card">
+                <div class="service-image" style="background-image: url('https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');"></div>
+                <div class="service-content">
+                    <h3>Full Grooming Package</h3>
+                    <p>Complete spa treatment with haircut and paw pad treatment</p>
+                    <div class="service-price">From R200</div>
+                </div>
+            </div>
+
+            <!-- Deluxe Spa -->
+            <div class="service-card">
+                <div class="service-image" style="background-image: url('https://images.unsplash.com/photo-1588943211346-0908a1fb0b01?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');"></div>
+                <div class="service-content">
+                    <h3>Deluxe Spa Treatment</h3>
+                    <p>Blueberry facial, deep conditioning, and aromatherapy</p>
+                    <div class="service-price">From R300</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="showcase-cta">
+            <button id="showFormBtn" class="btn-cta">
+                <i class="fas fa-calendar-alt"></i> Book Now
+            </button>
+        </div>
+    </div>
+</section>
+
+<!-- Booking Form Section -->
+<section id="bookingForm" class="booking-section" style="display: none;">
+    <div class="container">
+        <h2 class="booking-title"><i class="fas fa-calendar-check"></i> Book Your Appointment</h2>
+
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="form-container">
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                <!-- Owner Information -->
+                <div class="form-section">
+                    <h3><i class="fas fa-user"></i> Your Information</h3>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.OwnerName, htmlAttributes: new { @class = "control-label" })
+                        @Html.EditorFor(model => model.OwnerName, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                        @Html.HiddenFor(model => model.OwnerName) <!-- Ensures value gets submitted -->
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label" })
+                        @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                        @Html.HiddenFor(model => model.Email) <!-- Ensures value gets submitted -->
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.PhoneNumber, htmlAttributes: new { @class = "control-label" })
+                        @Html.EditorFor(model => model.PhoneNumber, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                        @Html.HiddenFor(model => model.PhoneNumber) <!-- Ensures value gets submitted -->
+                    </div>
+                </div>
+
+                <!-- Pet Selection -->
+                <!-- Pet Selection -->
+                <!-- Pet Selection Section -->
+                <div class="form-section">
+                    <h3><i class="fas fa-paw"></i> Pet Details</h3>
+
+                    <div class="form-group">
+                        <label class="control-label">Select Your Pet</label>
+                        @{
+                            var petsList = ViewBag.PetId as SelectList;
+                            var hasPets = petsList != null && petsList.Any();
+                        }
+
+                        @if (hasPets)
+                        {
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-paw"></i></span>
+                                @Html.DropDownListFor(model => model.SelectedPetId,
+                                    petsList,
+                                    "-- Select Pet --",
+                                    new { @class = "form-control", id = "petSelector" })
+                            </div>
+                            @Html.ValidationMessageFor(model => model.SelectedPetId, "", new { @class = "text-danger small" })
+                        }
+                        else
+                        {
+                            <div class="alert alert-warning">
+                                <p>No pets found. Please @Html.ActionLink("add a pet", "Register", "Pet") first.</p>
+                            </div>
+                            @Html.Hidden("SelectedPetId", "")
+                        }
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.PetName, htmlAttributes: new { @class = "control-label" })
+                        @Html.EditorFor(model => model.PetName, new { htmlAttributes = new { @class = "form-control", id = "PetName" } })
+                        @Html.ValidationMessageFor(model => model.PetName, "", new { @class = "text-danger" })
+                    </div>
+
+
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Breed, htmlAttributes: new { @class = "control-label" })
+                        @Html.EditorFor(model => model.Breed, new { htmlAttributes = new { @class = "form-control", id = "Breed" } })
+                        @Html.ValidationMessageFor(model => model.Breed, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+
+                <!-- Service Selection -->
+                <div class="form-section">
+                    <h3><i class="fas fa-spa"></i> Service Selection</h3>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.ServiceType, htmlAttributes: new { @class = "control-label" })
+                        @Html.EnumDropDownListFor(model => model.ServiceType, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.ServiceType, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label">Add-on Services</label>
+                        <div class="addons-container">
+                            <div class="addon-option">
+                                @Html.CheckBox("FleaTreatment", false, new { id = "FleaTreatment" })
+                                <label for="FleaTreatment">
+                                    <span class="addon-name">Flea Treatment</span>
+                                    <span class="addon-price">+R25</span>
+                                </label>
+                            </div>
+                            <div class="addon-option">
+                                @Html.CheckBox("DeShedding", false, new { id = "DeShedding" })
+                                <label for="DeShedding">
+                                    <span class="addon-name">De-shedding</span>
+                                    <span class="addon-price">+R30</span>
+                                </label>
+                            </div>
+                            <div class="addon-option">
+                                @Html.CheckBox("TeethCleaning", false, new { id = "TeethCleaning" })
+                                <label for="TeethCleaning">
+                                    <span class="addon-name">Teeth Cleaning</span>
+                                    <span class="addon-price">+R50</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.DurationHours, htmlAttributes: new { @class = "control-label" })
+                        @Html.DropDownListFor(model => model.DurationHours, (SelectList)ViewBag.DurationOptions, "Select Duration", new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.DurationHours, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <!-- Appointment Time -->
+                <div class="form-section">
+                    <h3><i class="far fa-clock"></i> Appointment Time</h3>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.PreferredDate, htmlAttributes: new { @class = "control-label" })
+                        @Html.EditorFor(model => model.PreferredDate, new { htmlAttributes = new { @class = "form-control", type = "date" } })
+                        @Html.ValidationMessageFor(model => model.PreferredDate, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.PreferredTime, htmlAttributes: new { @class = "control-label" })
+                        @Html.DropDownListFor(model => model.PreferredTime, (SelectList)ViewBag.PreferredTimes, "Select Time", new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.PreferredTime, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <!-- Special Instructions -->
+                <div class="form-section">
+                    <h3><i class="fas fa-edit"></i> Special Instructions</h3>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.SpecialInstructions, htmlAttributes: new { @class = "control-label" })
+                        @Html.TextAreaFor(model => model.SpecialInstructions, new { @class = "form-control", rows = 4, placeholder = "Any special requests or notes..." })
+                        @Html.ValidationMessageFor(model => model.SpecialInstructions, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="form-submit">
+                    <button type="submit" class="btn-book">
+                        <i class="fas fa-paw"></i> Confirm Booking
+                    </button>
+                </div>
+            </div>
+        }
+    </div>
+</section>
+
+@section Styles {
+    <style>
+        /* Font Awesome */
+        @@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css');
+
+        /* Global Styles */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Services Showcase */
+        .services-showcase {
+            background: #f9f5ff;
+            padding: 60px 0;
+            text-align: center;
+        }
+
+        .showcase-title {
+            color: #6a4c93;
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+
+        .showcase-subtitle {
+            color: #666;
+            font-size: 1.2rem;
+            margin-bottom: 40px;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .service-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+
+            .service-card:hover {
+                transform: translateY(-10px);
+            }
+
+        .service-image {
+            height: 200px;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .service-content {
+            padding: 20px;
+        }
+
+            .service-content h3 {
+                color: #6a4c93;
+                margin-bottom: 10px;
+            }
+
+            .service-content p {
+                color: #666;
+                margin-bottom: 15px;
+            }
+
+        .service-price {
+            color: #6a4c93;
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+
+        .btn-cta {
+            background: #6a4c93;
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+            .btn-cta:hover {
+                background: #5a3d83;
+                transform: translateY(-3px);
+                box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            }
+
+        /* Booking Section */
+        .booking-section {
+            padding: 60px 0;
+            background: white;
+        }
+
+        .booking-title {
+            color: #6a4c93;
+            text-align: center;
+            margin-bottom: 40px;
+            font-size: 2rem;
+        }
+
+        .form-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #f9f5ff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+
+        .form-section {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #e0d6f5;
+        }
+
+            .form-section h3 {
+                color: #6a4c93;
+                margin-bottom: 20px;
+                font-size: 1.3rem;
+            }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .control-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+            .form-control:focus {
+                border-color: #6a4c93;
+                outline: none;
+                box-shadow: 0 0 0 3px rgba(106, 76, 147, 0.1);
+            }
+
+        .addons-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .addon-option {
+            flex: 1 1 200px;
+        }
+
+            .addon-option input[type="checkbox"] {
+                display: none;
+            }
+
+            .addon-option label {
+                display: flex;
+                justify-content: space-between;
+                padding: 12px 15px;
+                border: 1px solid #ddd;
+                border-radius: 5px;
+                cursor: pointer;
+                transition: all 0.3s;
+            }
+
+            .addon-option input[type="checkbox"]:checked + label {
+                border-color: #6a4c93;
+                background: #f0e9ff;
+            }
+
+        .addon-name {
+            font-weight: 500;
+        }
+
+        .addon-price {
+            color: #6a4c93;
+            font-weight: 600;
+        }
+
+        .form-submit {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .btn-book {
+            background: #6a4c93;
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+            .btn-book:hover {
+                background: #5a3d83;
+                transform: translateY(-3px);
+                box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            }
+
+        /* Responsive Design */
+        @@media (max-width: 768px) {
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .addons-container {
+                flex-direction: column;
+            }
+
+            .form-container {
+                padding: 20px;
+            }
+        }
+    </style>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        $(function () {
+            // Show booking form when button is clicked
+            $('#showFormBtn').click(function () {
+                $('#bookingForm').slideDown(800);
+                $('html, body').animate({
+                    scrollTop: $('#bookingForm').offset().top - 20
+                }, 800);
+            });
+
+            // Handle checkbox changes to update AddOnServices
+            $('input[type="checkbox"]').change(function () {
+                var addOnValue = 0;
+                if ($('#FleaTreatment').is(':checked')) addOnValue |= 1;
+                if ($('#DeShedding').is(':checked')) addOnValue |= 2;
+                if ($('#TeethCleaning').is(':checked')) addOnValue |= 4;
+
+                if ($('#AddOnServices').length === 0) {
+                    $('form').append('<input type="hidden" id="AddOnServices" name="AddOnServices" />');
+                }
+                $('#AddOnServices').val(addOnValue);
+            });
+
+            // Set minimum date to today
+            var today = new Date().toISOString().split('T')[0];
+            $('#PreferredDate').attr('min', today);
+        });
+
+
+
+        $(document).ready(function() {
+            $('#petSelector').change(function() {
+                var petId = $(this).val();
+                if (petId) {
+                    $.get('@Url.Action("GetPetDetails", "SparGrooming")', { id: petId })
+                        .done(function(data) {
+                            if (data) {
+                                // Update visible fields
+                                $('#PetName').val(data.Name);
+                                $('#PetType').val(data.Type);
+                                $('#Breed').val(data.Breed);
+
+                                // Update hidden fields
+                                $('input[name="PetName"]').val(data.Name);
+                                $('input[name="PetType"]').val(data.Type);
+                                $('input[name="Breed"]').val(data.Breed);
+
+                                // Make fields readonly
+                                $('#PetName, #Breed').prop('readonly', true);
+                                $('#PetType').prop('disabled', true);
+                            }
+                        });
+                } else {
+                    // Clear and enable fields
+                    $('#PetName, #Breed').val('').prop('readonly', false);
+                    $('#PetType').val('').prop('disabled', false);
+                    $('input[name="PetName"], input[name="PetType"], input[name="Breed"]').val('');
+                }
+            });
+
+            // Initialize on page load
+            if ($('#petSelector').val()) {
+                $('#petSelector').trigger('change');
+            }
+
+            // Ensure validation works
+            $('form').submit(function() {
+                // If pet selected but fields cleared manually
+                if ($('#petSelector').val() &&
+                   ($('#PetName').val() === '' || $('#Breed').val() === '')) {
+                    $('#petSelector').trigger('change');
+                }
+                return true;
+            });
+        });
+    </script>
+}
+
+
+

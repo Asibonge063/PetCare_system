@@ -1,0 +1,390 @@
+﻿@model PetCare_system.Models.Pet
+
+<!-- Bootstrap CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+<!-- Animate.css -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+
+<div class="container py-5 animate__animated animate__fadeIn">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-10">
+            <div class="card border-0 shadow-lg overflow-hidden">
+                <div class="card-header bg-gradient-primary text-white py-4 position-relative">
+                    <div class="position-absolute w-100 h-100 bg-primary opacity-10 top-0 start-0"></div>
+                    <h2 class="text-center mb-0 fw-bold">
+                        <i class="fas fa-paw me-2"></i>Register Your Pet
+                    </h2>
+                    <div class="position-absolute bottom-0 start-0 w-100">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320" preserveAspectRatio="none">
+                            <path fill="rgba(255,255,255,0.3)" fill-opacity="1" d="M0,192L48,197.3C96,203,192,213,288,229.3C384,245,480,267,576,250.7C672,235,768,181,864,181.3C960,181,1056,235,1152,234.7C1248,235,1344,181,1392,154.7L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="card-body p-4 p-md-5">
+                    @using (Html.BeginForm("Register", "Pet", FormMethod.Post, new { enctype = "multipart/form-data", @class = "needs-validation", novalidate = "novalidate", id = "petForm" }))
+                    {
+                        @Html.AntiForgeryToken()
+
+                        <div class="mb-4 text-center">
+                            <div class="avatar-preview mb-3 mx-auto rounded-circle overflow-hidden border border-4 border-primary" style="width: 120px; height: 120px; background: #f8f9fa;">
+                                <img id="imagePreview" src="#" alt="Pet preview" class="w-100 h-100 object-fit-cover d-none" />
+                                <div class="w-100 h-100 d-flex align-items-center justify-content-center text-primary">
+                                    <i class="fas fa-paw fa-3x"></i>
+                                </div>
+                            </div>
+                            <h4 class="text-primary fw-bold"><i class="fas fa-info-circle me-2"></i>Pet Information</h4>
+                            <div class="divider-custom">
+                                <div class="divider-custom-line bg-primary"></div>
+                                <div class="divider-custom-icon"><i class="fas fa-heart text-primary"></i></div>
+                                <div class="divider-custom-line bg-primary"></div>
+                            </div>
+                            @Html.ValidationSummary(true, "", new { @class = "alert alert-danger animate__animated animate__shakeX" })
+                        </div>
+
+                        <div class="row g-4">
+                            <!-- Name Field -->
+                            <div class="col-md-12">
+                                <div class="form-floating">
+                                    <div class="input-group has-validation">
+                                        <span class="input-group-text bg-light bg-opacity-50"><i class="fas fa-dog text-primary"></i></span>
+                                        @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter pet's name", required = "required", id = "petName" } })
+                                        <label for="petName" class="fw-bold">Pet Name</label>
+                                        <div class="invalid-feedback animate__animated animate__fadeIn">
+                                            Please provide a pet name.
+                                        </div>
+                                    </div>
+                                </div>
+                                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger small animate__animated animate__fadeIn" })
+                            </div>
+
+                            <!-- Type Field -->
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <div class="input-group has-validation">
+                                        <span class="input-group-text bg-light bg-opacity-50"><i class="fas fa-cat text-primary"></i></span>
+                                        @Html.DropDownListFor(model => model.Type,
+                                            new SelectList(new List<string> {
+                                                "Dog", "Cat", "Bird", "Fish", "Rabbit",
+                                                "Hamster", "Guinea Pig", "Turtle"
+                                            }),
+                                            "Select Pet Type",
+                                            new { @class = "form-select", required = "required", id = "petType" })
+                                        <label for="petType" class="fw-bold">Pet Type</label>
+                                        <div class="invalid-feedback animate__animated animate__fadeIn">
+                                            Please select a pet type.
+                                        </div>
+                                    </div>
+                                </div>
+                                @Html.ValidationMessageFor(model => model.Type, "", new { @class = "text-danger small animate__animated animate__fadeIn" })
+                            </div>
+
+                            <!-- Breed Field -->
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light bg-opacity-50"><i class="fas fa-dna text-primary"></i></span>
+                                        @Html.EditorFor(model => model.Breed, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter breed (Optional)", id = "petBreed" } })
+                                        <label for="petBreed" class="fw-bold">Breed (Optional)</label>
+                                    </div>
+                                </div>
+                                @Html.ValidationMessageFor(model => model.Breed, "", new { @class = "text-danger small animate__animated animate__fadeIn" })
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <div class="input-group has-validation">
+                                        <span class="input-group-text bg-light bg-opacity-50"><i class="fas fa-birthday-cake text-primary"></i></span>
+                                        @Html.EditorFor(model => model.DateOfBirth, new
+                                        {
+                                            htmlAttributes = new
+                                            {
+                                                @class = "form-control",
+                                                type = "date",
+                                                required = "required",
+                                                id = "petDob",
+                                                max = DateTime.Now.AddDays(-5).ToString("yyyy-MM-dd")
+                                            }
+                                        })
+                                        <label for="petDob" class="fw-bold">Date of Birth</label>
+                                        <div class="invalid-feedback animate__animated animate__fadeIn">
+                                            Pet must be at least 5 days old
+                                        </div>
+                                    </div>
+                                </div>
+                                @Html.ValidationMessageFor(model => model.DateOfBirth, "", new { @class = "text-danger small animate__animated animate__fadeIn" })
+                            </div>
+
+                            <!-- Image Upload Field -->
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold d-block mb-2">Pet Picture</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light bg-opacity-50"><i class="fas fa-camera text-primary"></i></span>
+                                    <input type="file" name="ImageFile" id="petImage" class="form-control" accept="image/*" />
+                                    <button class="btn btn-outline-secondary" type="button" id="clearImage">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                                <small class="form-text text-muted">JPEG or PNG, max 5MB</small>
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-3 mt-5">
+                            <button type="submit" class="btn btn-primary btn-lg py-3 fw-bold rounded-pill shadow-sm">
+                                <i class="fas fa-paper-plane me-2"></i>Register Pet
+                            </button>
+                            <a href="@Url.Action("Index", "Home")" class="btn btn-outline-secondary btn-lg py-3 fw-bold rounded-pill">
+                                <i class="fas fa-arrow-left me-2"></i>Cancel
+                            </a>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <div class="toast show align-items-center text-white bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body">
+                    <i class="fas fa-exclamation-circle me-2"></i>@TempData["ErrorMessage"]
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // In the form submit handler
+        document.querySelector('.needs-validation').addEventListener('submit', function (event) {
+            // Existing validation code...
+
+            // Date validation
+            const dobInput = document.getElementById('petDob');
+            if (dobInput.value) {
+                const selectedDate = new Date(dobInput.value);
+                const minDate = new Date();
+                minDate.setDate(minDate.getDate() - 5);
+
+                if (selectedDate > minDate) {
+                    dobInput.classList.add('is-invalid');
+                    dobInput.nextElementSibling.textContent = 'Pet must be at least 5 days old';
+                    isValid = false;
+                }
+            }
+
+            // Rest of existing validation...
+        });
+        // Enable Bootstrap form validation
+        (function () {
+            'use strict'
+
+            // Fetch all the forms we want to apply custom Bootstrap validation styles to
+            var forms = document.querySelectorAll('.needs-validation')
+
+            // Loop over them and prevent submission
+            Array.prototype.slice.call(forms)
+                .forEach(function (form) {
+                    form.addEventListener('submit', function (event) {
+                        if (!form.checkValidity()) {
+                            event.preventDefault()
+                            event.stopPropagation()
+                            // Add animation to invalid fields
+                            document.querySelectorAll('.is-invalid').forEach(el => {
+                                el.classList.add('animate__animated', 'animate__headShake')
+                                setTimeout(() => {
+                                    el.classList.remove('animate__headShake')
+                                }, 1000)
+                            })
+                        }
+
+                        form.classList.add('was-validated')
+                    }, false)
+                })
+        })()
+
+        // Initialize toast
+        var toastElList = [].slice.call(document.querySelectorAll('.toast'))
+        var toastList = toastElList.map(function (toastEl) {
+            return new bootstrap.Toast(toastEl)
+        })
+
+        // Image preview functionality
+        document.getElementById('petImage').addEventListener('change', function (e) {
+            const [file] = e.target.files
+            if (file) {
+                const preview = document.getElementById('imagePreview')
+                preview.src = URL.createObjectURL(file)
+                preview.classList.remove('d-none')
+                preview.parentElement.querySelector('i').classList.add('d-none')
+            }
+        })
+
+        // Clear image button
+        document.getElementById('clearImage').addEventListener('click', function () {
+            const input = document.getElementById('petImage')
+            input.value = ''
+            const preview = document.getElementById('imagePreview')
+            preview.src = '#'
+            preview.classList.add('d-none')
+            preview.parentElement.querySelector('i').classList.remove('d-none')
+        })
+
+        // Add animation when scrolling to form
+        document.addEventListener('DOMContentLoaded', function () {
+            const formGroups = document.querySelectorAll('.form-floating')
+            formGroups.forEach((group, index) => {
+                group.style.opacity = '0'
+                group.style.transform = 'translateY(20px)'
+                group.style.transition = 'all 0.5s ease'
+                setTimeout(() => {
+                    group.style.opacity = '1'
+                    group.style.transform = 'translateY(0)'
+                }, 100 + (index * 100))
+            })
+        })
+    </script>
+
+    <style>
+        :root {
+            --primary-color: #6a11cb;
+            --secondary-color: #2575fc;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+        }
+
+        .bg-gradient-primary {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%) !important;
+        }
+
+        .card {
+            border: none;
+            border-radius: 20px;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+            .card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1) !important;
+            }
+
+        .card-header {
+            position: relative;
+            z-index: 1;
+        }
+
+        .form-control, .form-select {
+            border-radius: 12px;
+            padding: 16px 20px;
+            border: 2px solid #e9ecef;
+            transition: all 0.3s;
+        }
+
+            .form-control:focus, .form-select:focus {
+                border-color: var(--primary-color);
+                box-shadow: 0 0 0 0.25rem rgba(106, 17, 203, 0.25);
+            }
+
+        .input-group-text {
+            min-width: 50px;
+            justify-content: center;
+            background-color: rgba(233, 236, 239, 0.5);
+            border: 2px solid #e9ecef;
+            border-right: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            border: none;
+            background-size: 200% auto;
+            transition: all 0.5s ease;
+        }
+
+            .btn-primary:hover {
+                background-position: right center;
+                transform: translateY(-3px);
+                box-shadow: 0 10px 20px rgba(106, 17, 203, 0.2);
+            }
+
+        .btn-outline-secondary {
+            transition: all 0.3s;
+        }
+
+            .btn-outline-secondary:hover {
+                background-color: #f8f9fa;
+                transform: translateY(-3px);
+            }
+
+        .divider-custom {
+            margin: 1.25rem 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .divider-custom-line {
+            width: 100%;
+            max-width: 7rem;
+            height: 0.25rem;
+            background-color: currentColor;
+            border-radius: 1rem;
+        }
+
+            .divider-custom-line:first-child {
+                margin-right: 1rem;
+            }
+
+            .divider-custom-line:last-child {
+                margin-left: 1rem;
+            }
+
+        .divider-custom-icon {
+            color: currentColor;
+            font-size: 1.5rem;
+        }
+
+        .floating-label {
+            position: absolute;
+            top: 0;
+            left: 0;
+            transition: all 0.3s;
+        }
+
+        .avatar-preview {
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+            .avatar-preview:hover {
+                transform: scale(1.05);
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            }
+
+        .invalid-feedback {
+            font-size: 0.85em;
+        }
+
+        .is-invalid {
+            border-color: #dc3545 !important;
+        }
+
+            .is-invalid:focus {
+                box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25) !important;
+            }
+    </style>
+}

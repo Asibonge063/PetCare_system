@@ -1,0 +1,354 @@
+﻿@model PetCare_system.Models.Vet_Consultations
+
+@{
+    ViewBag.Title = "Edit Consultation";
+}
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+<style>
+    :root {
+        --primary-color: #4b6cb7;
+        --secondary-color: #182848;
+        --accent-color: #ff6b6b;
+        --light-color: #f8f9fa;
+        --dark-color: #343a40;
+    }
+
+    body {
+        background-color: #f9f9f9;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .edit-header {
+        text-align: center;
+        margin: 2rem 0 3rem;
+    }
+
+        .edit-header h2 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--secondary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .edit-header .subtitle {
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+    .edit-card {
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        padding: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    .form-section {
+        margin-bottom: 1.5rem;
+    }
+
+    .section-title {
+        font-size: 1.3rem;
+        font-weight: 600;
+        color: var(--primary-color);
+        margin-bottom: 1rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid #eee;
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .control-label {
+        font-weight: 600;
+        color: var(--secondary-color);
+        margin-bottom: 0.5rem;
+        display: block;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 10px 15px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: all 0.3s;
+    }
+
+        .form-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(75, 108, 183, 0.2);
+            outline: none;
+        }
+
+    textarea.form-control {
+        min-height: 120px;
+    }
+
+    .checkbox-container {
+        display: flex;
+        align-items: center;
+    }
+
+    .checkbox-label {
+        margin-left: 10px;
+        font-weight: 500;
+        color: #555;
+    }
+
+    .checkbox-input {
+        width: 20px;
+        height: 20px;
+        accent-color: var(--primary-color);
+    }
+
+    .file-upload {
+        position: relative;
+        display: inline-block;
+        width: 100%;
+    }
+
+    .file-upload-btn {
+        display: block;
+        padding: 10px 15px;
+        background-color: #f8f9fa;
+        border: 1px dashed #ccc;
+        border-radius: 8px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+
+        .file-upload-btn:hover {
+            background-color: #e9ecef;
+            border-color: var(--primary-color);
+        }
+
+    .file-upload-input {
+        position: absolute;
+        left: 0;
+        top: 0;
+        opacity: 0;
+        width: 100%;
+        height: 100%;
+        cursor: pointer;
+    }
+
+    .action-buttons {
+        display: flex;
+        justify-content: flex-end;
+        gap: 15px;
+        margin-top: 2rem;
+    }
+
+    .btn {
+        border-radius: 50px;
+        padding: 10px 25px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        border: none;
+        cursor: pointer;
+    }
+
+    .btn-save {
+        background-color: var(--primary-color);
+        color: white;
+    }
+
+        .btn-save:hover {
+            background-color: #3a5a9a;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(75, 108, 183, 0.3);
+        }
+
+    .btn-cancel {
+        background-color: #f8f9fa;
+        color: var(--secondary-color);
+        border: 1px solid #ddd;
+    }
+
+        .btn-cancel:hover {
+            background-color: #e9ecef;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+    .current-image {
+        max-width: 200px;
+        max-height: 200px;
+        border-radius: 8px;
+        margin-top: 10px;
+        display: block;
+    }
+
+    .text-danger {
+        color: #dc3545;
+        font-size: 0.9rem;
+        margin-top: 5px;
+    }
+
+    /* Responsive adjustments */
+    @@media (max-width: 768px) {
+        .action-buttons {
+            flex-direction: column;
+        }
+
+        .btn {
+            width: 100%;
+        }
+    }
+</style>
+
+<div class="container">
+    <div class="edit-header">
+        <h2>Edit Consultation</h2>
+        <p class="subtitle">Update the details of this veterinary appointment</p>
+    </div>
+
+    @using (Html.BeginForm("Edit", "Vet_Consultations", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="edit-card">
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            @Html.HiddenFor(model => model.Consult_Id)
+
+            <!-- Consultation Information Section -->
+            <div class="form-section">
+                <h3 class="section-title">
+                    <i class="fas fa-calendar-alt"></i> Appointment Details
+                </h3>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Consult_Description, htmlAttributes: new { @class = "control-label" })
+                    @Html.TextAreaFor(model => model.Consult_Description, new { @class = "form-control", placeholder = "Enter consultation notes..." })
+                    @Html.ValidationMessageFor(model => model.Consult_Description, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-row" style="display: flex; gap: 20px;">
+                    <div class="form-group" style="flex: 1;">
+                        @Html.LabelFor(model => model.Consult_Date, htmlAttributes: new { @class = "control-label" })
+                        @Html.EditorFor(model => model.Consult_Date, new { htmlAttributes = new { @class = "form-control", type = "date" } })
+                        @Html.ValidationMessageFor(model => model.Consult_Date, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="form-group" style="flex: 1;">
+                        @Html.LabelFor(model => model.Consult_Time, htmlAttributes: new { @class = "control-label" })
+                        @Html.EditorFor(model => model.Consult_Time, new { htmlAttributes = new { @class = "form-control", type = "time" } })
+                        @Html.ValidationMessageFor(model => model.Consult_Time, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pet Health Section -->
+            <div class="form-section">
+                <h3 class="section-title">
+                    <i class="fas fa-heartbeat"></i> Pet Health Status
+                </h3>
+
+                <div class="form-group">
+                    <div class="checkbox-container">
+                        @Html.CheckBoxFor(model => model.HasSignsOfIllness, new { @class = "checkbox-input" })
+                        <label class="checkbox-label">Showing signs of illness</label>
+                    </div>
+                    @Html.ValidationMessageFor(model => model.HasSignsOfIllness, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group">
+                    <div class="checkbox-container">
+                        @Html.CheckBoxFor(model => model.IsOnMedication, new { @class = "checkbox-input" })
+                        <label class="checkbox-label">Currently on medication</label>
+                    </div>
+                    @Html.ValidationMessageFor(model => model.IsOnMedication, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group">
+                    <div class="checkbox-container">
+                        @Html.CheckBoxFor(model => model.IsVaccinated, new { @class = "checkbox-input" })
+                        <label class="checkbox-label">Up to date on vaccinations</label>
+                    </div>
+                    @Html.ValidationMessageFor(model => model.IsVaccinated, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group">
+                    <div class="checkbox-container">
+                        @Html.CheckBoxFor(model => model.HasChangedEatingHabits, new { @class = "checkbox-input" })
+                        <label class="checkbox-label">Changed eating habits</label>
+                    </div>
+                    @Html.ValidationMessageFor(model => model.HasChangedEatingHabits, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group">
+                    <div class="checkbox-container">
+                        @Html.CheckBoxFor(model => model.HasUnusualBehaviors, new { @class = "checkbox-input" })
+                        <label class="checkbox-label">Exhibiting unusual behaviors</label>
+                    </div>
+                    @Html.ValidationMessageFor(model => model.HasUnusualBehaviors, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group">
+                    <div class="checkbox-container">
+                        @Html.CheckBoxFor(model => model.IsDewormed, new { @class = "checkbox-input" })
+                        <label class="checkbox-label">Recently dewormed</label>
+                    </div>
+                    @Html.ValidationMessageFor(model => model.IsDewormed, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <!-- Pet Photo Section -->
+            <div class="form-section">
+                <h3 class="section-title">
+                    <i class="fas fa-camera"></i> Pet Photo
+                </h3>
+
+                <div class="form-group">
+                    <label class="control-label">Update Pet Photo</label>
+                    <div class="file-upload">
+                        <div class="file-upload-btn">
+                            <i class="fas fa-cloud-upload-alt"></i> Choose a file or drag it here
+                        </div>
+                        <input type="file" name="PicturePath" class="file-upload-input" />
+                    </div>
+                    @Html.ValidationMessageFor(model => model.PicturePath, "", new { @class = "text-danger" })
+
+                    @if (!string.IsNullOrEmpty(Model.PicturePath))
+                    {
+                        <span class="control-label" style="display: block; margin-top: 15px;">Current Photo:</span>
+                        <img src="@Model.PicturePath" alt="Current pet photo" class="current-image" />
+                    }
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <a href="@Url.Action("Index", "Vet_Consultations")" class="btn btn-cancel">
+                    <i class="fas fa-times"></i> Cancel
+                </a>
+                <button type="submit" class="btn btn-save">
+                    <i class="fas fa-save"></i> Save Changes
+                </button>
+            </div>
+        </div>
+    }
+</div>
+
+<script>
+    // Enhance file upload display
+    document.querySelector('.file-upload-input').addEventListener('change', function (e) {
+        const fileName = e.target.files[0]?.name || 'No file selected';
+        document.querySelector('.file-upload-btn').innerHTML =
+            `<i class="fas fa-file-image"></i> ${fileName}`;
+    });
+
+    // Date picker enhancement
+    document.addEventListener('DOMContentLoaded', function () {
+        const dateInput = document.querySelector('input[type="date"]');
+        if (dateInput && !dateInput.value) {
+            const today = new Date().toISOString().split('T')[0];
+            dateInput.value = today;
+        }
+    });
+</script>

@@ -1,0 +1,794 @@
+﻿@model PetCare_system.Models.Vet_Consultations
+
+@{
+    ViewBag.Title = "Book Vet Consultation";
+}
+
+<div class="consultation-booking-container">
+    <div class="booking-header">
+        <h2>Book Vet Consultation</h2>
+        <p class="subtitle">Schedule a physical or virtual consultation for your pet's health needs</p>
+        <div class="progress-steps">
+            <div class="step active"><span>1</span> Pet Details</div>
+            <div class="step"><span>2</span> Consultation Type</div>
+            <div class="step"><span>3</span> Date & Time</div>
+            <div class="step"><span>4</span> Health Info</div>
+            <div class="step"><span>5</span> Review</div>
+        </div>
+    </div>
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show">
+            <i class="fas fa-exclamation-circle me-2"></i>
+            @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    @using (Html.BeginForm("Create", "Vet_Consultations", FormMethod.Post, new { @class = "booking-form", enctype = "multipart/form-data" }))
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-section">
+            <div class="section-header">
+                <span class="step-number">1</span>
+                <h4>Select Your Pet</h4>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.PetId, "Pet", new { @class = "form-label" })
+                <div class="input-group">
+                    <span class="input-group-text"><i class="fas fa-paw"></i></span>
+                    @Html.DropDownListFor(model => model.PetId, ViewBag.PetId as SelectList, "-- Select Pet --", new { @class = "form-control" })
+                </div>
+                @Html.ValidationMessageFor(model => model.PetId, "", new { @class = "text-danger small" })
+            </div>
+        </div>
+
+        <div class="form-section">
+            <div class="section-header">
+                <span class="step-number">2</span>
+                <h4>Consultation Type</h4>
+            </div>
+            <div class="consultation-type-options">
+                <div class="type-option">
+                    <input type="radio" id="physical" name="consultationType" value="Physical" checked />
+                    <label for="physical">
+                        <div class="type-card">
+                            <div class="type-icon">
+                                <i class="fas fa-clinic-medical"></i>
+                            </div>
+                            <h5>Physical Consultation</h5>
+                            <p>Visit our clinic for an in-person examination with full diagnostic capabilities</p>
+                        </div>
+                    </label>
+                </div>
+                <div class="type-option">
+                    <input type="radio" id="virtual" name="consultationType" value="Virtual" />
+                    <label for="virtual">
+                        <div class="type-card">
+                            <div class="type-icon">
+                                <i class="fas fa-video"></i>
+                            </div>
+                            <h5>Virtual Consultation</h5>
+                            <p>Secure video call with our veterinarian from your home</p>
+                        </div>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Physical Consultation Fields (Initially Hidden) -->
+        <div class="form-section physical-consultation-fields">
+            <div class="section-header">
+                <span class="step-number">3</span>
+                <h4>Physical Consultation Procedures</h4>
+            </div>
+
+            <div class="form-check">
+                @Html.CheckBoxFor(model => model.InjectionAndVaccination, new { @class = "form-check-input", id = "injectionCheck" })
+                <label class="form-check-label" for="injectionCheck">Injection and Vaccination</label>
+            </div>
+
+            <div class="form-check">
+                @Html.CheckBoxFor(model => model.Neutering, new { @class = "form-check-input", id = "neuteringCheck" })
+                <label class="form-check-label" for="neuteringCheck">Neutering</label>
+            </div>
+
+            <div class="form-check">
+                @Html.CheckBoxFor(model => model.GeneralCheckUp, new { @class = "form-check-input", id = "checkupCheck" })
+                <label class="form-check-label" for="checkupCheck">General Check-Up</label>
+            </div>
+
+            <div class="form-check">
+                @Html.CheckBoxFor(model => model.Deworming, new { @class = "form-check-input", id = "dewormingCheck" })
+                <label class="form-check-label" for="dewormingCheck">Deworming</label>
+            </div>
+
+            <div class="form-check">
+                @Html.CheckBoxFor(model => model.PregnancyOrUltraSound, new { @class = "form-check-input", id = "pregnancyCheck" })
+                <label class="form-check-label" for="pregnancyCheck">Pregnancy or Ultrasound</label>
+            </div>
+
+            <div class="form-check">
+                @Html.CheckBoxFor(model => model.AllergyTest, new { @class = "form-check-input", id = "allergyCheck" })
+                <label class="form-check-label" for="allergyCheck">Allergy Test</label>
+            </div>
+        </div>
+
+        
+
+        <div class="form-section">
+            <div class="section-header">
+                <span class="step-number">3</span>
+                <h4>Date & Time</h4>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Consult_Date, "Consultation Date", new { @class = "form-label" })
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+                            @Html.EditorFor(model => model.Consult_Date, new { htmlAttributes = new { @class = "form-control", type = "date", min = DateTime.Now.ToString("yyyy-MM-dd") } })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.Consult_Date, "", new { @class = "text-danger small" })
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Consult_Time, "Consultation Time", new { @class = "form-label" })
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="far fa-clock"></i></span>
+                            @Html.EditorFor(model => model.Consult_Time, new { htmlAttributes = new { @class = "form-control", type = "time" } })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.Consult_Time, "", new { @class = "text-danger small" })
+                    </div>
+                </div>
+            </div>
+            <div class="availability-note">
+                <i class="fas fa-info-circle"></i> Our standard consultation hours are 9:00 AM to 6:00 PM, Monday to Saturday
+            </div>
+        </div>
+
+        <div class="form-section virtual-consultation-fields" style="display: none;">
+            <div class="section-header">
+                <span class="step-number">4</span>
+                <h4>Pet Health Information</h4>
+                <p class="section-subtitle">Please provide details to help our veterinarian prepare for your consultation</p>
+            </div>
+            <div class="health-checklist">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="form-check">
+                                @Html.CheckBoxFor(model => model.HasSignsOfIllness, new { @class = "form-check-input", id = "illnessCheck" })
+                                <label class="form-check-label" for="illnessCheck">
+                                    <i class="fas fa-thermometer-half me-2"></i> Shows signs of illness
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="form-check">
+                                @Html.CheckBoxFor(model => model.IsOnMedication, new { @class = "form-check-input", id = "medicationCheck" })
+                                <label class="form-check-label" for="medicationCheck">
+                                    <i class="fas fa-pills me-2"></i> Currently on medication
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="form-check">
+                                @Html.CheckBoxFor(model => model.IsVaccinated, new { @class = "form-check-input", id = "vaccinatedCheck" })
+                                <label class="form-check-label" for="vaccinatedCheck">
+                                    <i class="fas fa-syringe me-2"></i> Up-to-date vaccinations
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="form-check">
+                                @Html.CheckBoxFor(model => model.HasChangedEatingHabits, new { @class = "form-check-input", id = "eatingCheck" })
+                                <label class="form-check-label" for="eatingCheck">
+                                    <i class="fas fa-utensils me-2"></i> Changed eating habits
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="form-check">
+                                @Html.CheckBoxFor(model => model.HasUnusualBehaviors, new { @class = "form-check-input", id = "behaviorCheck" })
+                                <label class="form-check-label" for="behaviorCheck">
+                                    <i class="fas fa-brain me-2"></i> Unusual behaviors
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="form-check">
+                                @Html.CheckBoxFor(model => model.IsDewormed, new { @class = "form-check-input", id = "dewormedCheck" })
+                                <label class="form-check-label" for="dewormedCheck">
+                                    <i class="fas fa-bug me-2"></i> Recent deworming
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="petImage">
+                    <i class="fas fa-camera me-2"></i> Upload Picture (Optional)
+                </label>
+                <div class="file-upload-wrapper">
+                    <input type="file" name="petImage" class="form-control" id="petImage" />
+                    <div class="file-upload-message">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <span>Click to upload or drag and drop</span>
+                        <small>JPG, PNG up to 5MB</small>
+                    </div>
+                </div>
+                @Html.ValidationMessageFor(model => model.PicturePath, "", new { @class = "text-danger small" })
+            </div>
+        </div>
+
+        <div class="form-section">
+            <div class="section-header">
+                <span class="step-number">5</span>
+                <h4>Additional Information</h4>
+                <p class="section-subtitle">Please describe your pet's symptoms or concerns in detail</p>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.Consult_Description, "Description", new { @class = "form-label" })
+                @Html.TextAreaFor(model => model.Consult_Description, new { @class = "form-control", rows = "5", placeholder = "Example: My dog has been vomiting occasionally for the past 2 days and seems lethargic. He's eating but not as much as usual..." })
+                @Html.ValidationMessageFor(model => model.Consult_Description, "", new { @class = "text-danger small" })
+            </div>
+            <div class="form-text">
+                <i class="fas fa-lightbulb"></i> The more details you provide, the better we can prepare for your consultation.
+            </div>
+        </div>
+        <div class="form-actions">
+            <a href="@Url.Action("Index", "Home")" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left me-2"></i> Back
+            </a>
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-calendar-check me-2"></i> Confirm Booking
+            </button>
+        </div>
+    }
+</div>
+
+@section Styles {
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+    <style>
+        :root {
+            --primary-color: #4e73df;
+            --secondary-color: #1cc88a;
+            --danger-color: #e74a3b;
+            --warning-color: #f6c23e;
+            --info-color: #36b9cc;
+            --light-color: #f8f9fc;
+            --dark-color: #5a5c69;
+            --border-radius: 0.35rem;
+        }
+
+        body {
+            background-color: #f8f9fc;
+            font-family: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        }
+
+        .consultation-booking-container {
+            max-width: 900px;
+            margin: 2rem auto;
+            padding: 2.5rem;
+            background: #fff;
+            border-radius: var(--border-radius);
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+        }
+
+        .booking-header {
+            margin-bottom: 2.5rem;
+            text-align: center;
+        }
+
+            .booking-header h2 {
+                color: var(--primary-color);
+                font-weight: 700;
+                margin-bottom: 0.5rem;
+            }
+
+        .subtitle {
+            color: var(--dark-color);
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+        }
+
+        .progress-steps {
+            display: flex;
+            justify-content: space-between;
+            margin: 2rem 0;
+            position: relative;
+        }
+
+            .progress-steps::before {
+                content: '';
+                position: absolute;
+                top: 50%;
+                left: 0;
+                right: 0;
+                height: 2px;
+                background-color: #e3e6f0;
+                z-index: 1;
+            }
+
+        .step {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            color: #b7b9cc;
+            font-size: 0.85rem;
+        }
+
+            .step span {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                width: 2.5rem;
+                height: 2.5rem;
+                background-color: #e3e6f0;
+                border-radius: 50%;
+                margin-bottom: 0.5rem;
+                color: #b7b9cc;
+                font-weight: 600;
+            }
+
+            .step.active {
+                color: var(--primary-color);
+            }
+
+                .step.active span {
+                    background-color: var(--primary-color);
+                    color: white;
+                    box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.25);
+                }
+
+        .form-section {
+            margin-bottom: 2.5rem;
+            padding: 1.5rem;
+            background: #fff;
+            border-radius: var(--border-radius);
+            border: 1px solid #e3e6f0;
+            transition: all 0.3s ease;
+        }
+
+            .form-section:hover {
+                border-color: #d1d3e2;
+                box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+            }
+
+        .section-header {
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+        }
+
+            .section-header h4 {
+                margin: 0;
+                font-weight: 600;
+                color: var(--dark-color);
+            }
+
+        .step-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 2rem;
+            height: 2rem;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            margin-right: 1rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .section-subtitle {
+            color: #858796;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+            margin-left: 3rem;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: var(--dark-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .input-group-text {
+            background-color: #f8f9fc;
+            color: #6e707e;
+        }
+
+        .consultation-type-options {
+            display: flex;
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .type-option {
+            flex: 1;
+        }
+
+            .type-option input[type="radio"] {
+                display: none;
+            }
+
+                .type-option input[type="radio"]:checked + label .type-card {
+                    border-color: var(--primary-color);
+                    background-color: #f8f9fe;
+                    box-shadow: 0 0.125rem 0.25rem rgba(78, 115, 223, 0.3);
+                }
+
+        .type-card {
+            padding: 1.5rem;
+            border: 1px solid #e3e6f0;
+            border-radius: var(--border-radius);
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            height: 100%;
+            background-color: #fff;
+        }
+
+            .type-card:hover {
+                border-color: #bac8f3;
+            }
+
+        .type-icon {
+            width: 4rem;
+            height: 4rem;
+            margin: 0 auto 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f0f3ff;
+            border-radius: 50%;
+            color: var(--primary-color);
+            font-size: 1.5rem;
+        }
+
+        .type-card h5 {
+            margin-bottom: 0.75rem;
+            color: var(--dark-color);
+            font-weight: 600;
+        }
+
+        .type-card p {
+            color: #6e707e;
+            margin-bottom: 1.25rem;
+            font-size: 0.9rem;
+        }
+
+        .benefits {
+            text-align: left;
+            margin-top: 1rem;
+            font-size: 0.85rem;
+        }
+
+            .benefits span {
+                display: block;
+                margin-bottom: 0.5rem;
+                color: #5a5c69;
+            }
+
+            .benefits i {
+                color: var(--secondary-color);
+                margin-right: 0.5rem;
+            }
+
+        .availability-note {
+            margin-top: 1rem;
+            padding: 0.75rem;
+            background-color: #f8f9fc;
+            border-left: 3px solid var(--info-color);
+            border-radius: 0 var(--border-radius) var(--border-radius) 0;
+            font-size: 0.85rem;
+            color: #5a5c69;
+        }
+
+            .availability-note i {
+                color: var(--info-color);
+                margin-right: 0.5rem;
+            }
+
+        .health-checklist .form-check-label {
+            display: flex;
+            align-items: center;
+            padding: 0.5rem 0;
+            color: #5a5c69;
+        }
+
+        .health-checklist .form-check-input {
+            margin-top: 0;
+        }
+
+        .health-checklist i {
+            color: var(--primary-color);
+        }
+
+        .file-upload-wrapper {
+            position: relative;
+            margin-bottom: 1rem;
+        }
+
+            .file-upload-wrapper input[type="file"] {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: 100%;
+                opacity: 0;
+                cursor: pointer;
+            }
+
+        .file-upload-message {
+            padding: 2rem;
+            border: 2px dashed #d1d3e2;
+            border-radius: var(--border-radius);
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .file-upload-wrapper:hover .file-upload-message {
+            border-color: var(--primary-color);
+            background-color: #f8f9fe;
+        }
+
+        .file-upload-message i {
+            font-size: 2rem;
+            color: #d1d3e2;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .file-upload-message span {
+            display: block;
+            color: #5a5c69;
+            font-weight: 500;
+        }
+
+        .file-upload-message small {
+            color: #858796;
+            font-size: 0.8rem;
+        }
+
+        .form-text {
+            margin-top: 0.5rem;
+            font-size: 0.85rem;
+            color: #858796;
+        }
+
+            .form-text i {
+                color: var(--warning-color);
+                margin-right: 0.3rem;
+            }
+
+        .form-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #e3e6f0;
+        }
+
+        .btn {
+            padding: 0.5rem 1.5rem;
+            font-weight: 600;
+            border-radius: var(--border-radius);
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+            .btn-primary:hover {
+                background-color: #2e59d9;
+                border-color: #2653d4;
+            }
+
+        .btn-outline-secondary {
+            color: #5a5c69;
+            border-color: #d1d3e2;
+        }
+
+            .btn-outline-secondary:hover {
+                background-color: #e3e6f0;
+                border-color: #d1d3e2;
+                color: #5a5c69;
+            }
+
+        .text-danger {
+            color: var(--danger-color) !important;
+        }
+
+        .small {
+            font-size: 0.8rem;
+        }
+
+        @@media (max-width: 768px) {
+            .consultation-booking-container {
+                padding: 1.5rem;
+            }
+
+            .consultation-type-options {
+                flex-direction: column;
+            }
+
+            .progress-steps {
+                flex-wrap: wrap;
+            }
+
+            .step {
+                flex: 0 0 33.333%;
+                margin-bottom: 1rem;
+            }
+
+                .step span {
+                    width: 2rem;
+                    height: 2rem;
+                    font-size: 0.8rem;
+                }
+        }
+    </style>
+}
+
+@section Scripts {
+    <script>
+       
+            $(document).ready(function () {
+                // Toggle physical consultation fields
+                function toggleConsultationFields() {
+                    $('.physical-consultation-fields').toggle($('input[name="consultationType"]:checked').val() === 'Physical');
+                    $('.virtual-consultation-fields').toggle($('input[name="consultationType"]:checked').val() === 'Virtual');
+                }
+
+             $('input[name="consultationType"]').change(toggleConsultationFields);
+            toggleConsultationFields(); // Initialize state
+         });
+    
+        $(document).ready(function () {
+            // Toggle virtual consultation fields
+            $('input[name="consultationType"]').change(function () {
+                $('.virtual-consultation-fields').toggle($(this).val() === 'Virtual');
+            });
+
+            // File upload display
+            $('input[name="petImage"]').change(function () {
+                const fileName = $(this).val().split('\\').pop();
+                if (fileName) {
+                    $('.file-upload-message span').text(fileName);
+                    $('.file-upload-message i').removeClass('fa-cloud-upload-alt').addClass('fa-check-circle').css('color', '#1cc88a');
+                }
+            });
+
+            // Date validation
+            $('#Consult_Date').change(function () {
+                const date = new Date(this.value);
+                const errorField = $(this).siblings('.text-danger');
+
+                if (date.getDay() === 0) { // Sunday
+                    errorField.text('No consultations on Sundays');
+                    $(this).addClass('is-invalid');
+                } else {
+                    errorField.text('');
+                    $(this).removeClass('is-invalid');
+                }
+            });
+
+            // Time validation
+            function validateConsultationTime(input) {
+                const time = input.value;
+                const [hours] = time.split(':').map(Number);
+                if (hours < 9 || hours >= 18) {
+                    input.setCustomValidity('Time must be between 9AM-6PM');
+                } else {
+                    input.setCustomValidity('');
+                }
+            }
+
+            // Form submission handler
+            $('.booking-form').submit(function (e) {
+                let isValid = true;
+                const dateInput = $('#Consult_Date');
+                const timeInput = $('#Consult_Time');
+
+                // Clear previous errors
+                $('.is-invalid').removeClass('is-invalid');
+                $('.text-danger').text('');
+
+                // Date validation
+                if (!dateInput.val()) {
+                    dateInput.addClass('is-invalid');
+                    dateInput.siblings('.text-danger').text('Please select a date');
+                    isValid = false;
+                } else {
+                    const consultDate = new Date(dateInput.val());
+                    const today = new Date();
+                    today.setHours(0, 0, 0, 0);
+
+                    if (consultDate < today) {
+                        dateInput.addClass('is-invalid');
+                        dateInput.siblings('.text-danger').text('Date cannot be in the past');
+                        isValid = false;
+                    }
+
+                    if (consultDate.getDay() === 0) {
+                        dateInput.addClass('is-invalid');
+                        dateInput.siblings('.text-danger').text('No consultations on Sundays');
+                        isValid = false;
+                    }
+                }
+
+                //// Time validation
+                //if (!timeInput.val()) {
+                //    timeInput.addClass('is-invalid');
+                //    timeInput.siblings('.text-danger').text('Please select a time');
+                //    isValid = false;
+                //} else {
+                //    const consultTime = timeInput.val().split(':');
+                //    const hours = parseInt(consultTime[0]);
+                //    const minutes = parseInt(consultTime[1]);
+
+                //    if (hours < 9 || hours >= 18) {
+                //        timeInput.addClass('is-invalid');
+                //        timeInput.siblings('.text-danger').text('Time must be between 9AM-6PM');
+                //        isValid = false;
+                //    }
+
+                //    // Check if time is in past for today
+                //    const now = new Date();
+                //    if (new Date(dateInput.val()).toDateString() === now.toDateString()) {
+                //        const currentHour = now.getHours();
+                //        const currentMinute = now.getMinutes();
+
+                //        if (hours < currentHour || (hours === currentHour && minutes < currentMinute)) {
+                //            timeInput.addClass('is-invalid');
+                //            timeInput.siblings('.text-danger').text('Time cannot be in the past');
+                //            isValid = false;
+                //        }
+                //    }
+                //}
+
+                if (!isValid) {
+                    e.preventDefault();
+                    if ($('.alert-danger').length === 0) {
+                        $('.booking-header').after(
+                            `<div class="alert alert-danger alert-dismissible fade show">
+                                    <i class="fas fa-exclamation-circle me-2"></i>
+                                    Please correct the errors below
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>`
+                        );
+                    }
+                    $('html, body').animate({
+                        scrollTop: $('.is-invalid').first().offset().top - 100
+                    }, 500);
+                }
+            });
+
+            // File upload display
+            $('input[name="petImage"]').change(function () {
+                const fileName = $(this).val().split('\\').pop();
+                if (fileName) {
+                    $('.file-upload-message span').text(fileName);
+                    $('.file-upload-message i').removeClass('fa-cloud-upload-alt').addClass('fa-check-circle').css('color', '#1cc88a');
+                }
+            });
+
+            // Form validation
+            $('.booking-form').submit(function (e) {
+                // Add any custom validation here
+                return true;
+            });
+        });
+    </script>
+}

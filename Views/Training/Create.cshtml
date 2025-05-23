@@ -1,0 +1,128 @@
+﻿@model PetCare_system.Models.Training
+
+@{
+    ViewBag.Title = "Schedule New Training";
+}
+
+<div class="container mt-4">
+    <h2 class="mb-4">@ViewBag.Title</h2>
+
+    @using (Html.BeginForm("Create", "CustomerTraining", FormMethod.Post, new { @class = "needs-validation", novalidate = "novalidate" }))
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h5>Session Details</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            @Html.LabelFor(model => model.PetId, "Which pet?", new { @class = "form-label" })
+                            @Html.DropDownListFor(model => model.PetId,
+                                (SelectList)ViewBag.PetList, "-- Select Your Pet --",
+                                new { @class = "form-select", required = "required" })
+                            @Html.ValidationMessageFor(model => model.PetId, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            @Html.LabelFor(model => model.TrainingTypeId, "Training Type", new { @class = "form-label" })
+                            @Html.DropDownListFor(model => model.TrainingTypeId,
+                                (SelectList)ViewBag.TrainingTypeList, "-- Select Training --",
+                                new { @class = "form-select", required = "required", id = "trainingTypeDropdown" })
+                            @Html.ValidationMessageFor(model => model.TrainingTypeId, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            @Html.LabelFor(model => model.TrainingDate, "Preferred Date", new { @class = "form-label" })
+                            @Html.TextBoxFor(model => model.TrainingDate, "{0:yyyy-MM-dd}",
+                                new
+                                     {
+                                    @class = "form-control",
+                                    type = "date",
+                                    min = DateTime.Today.ToString("yyyy-MM-dd"),
+                                    required = "required",
+                                    id = "trainingDate"
+                                })
+                            @Html.ValidationMessageFor(model => model.TrainingDate, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            @Html.LabelFor(model => model.TrainingLocation, "Preferred Location", new { @class = "form-label" })
+                            @Html.DropDownListFor(model => model.TrainingLocation,
+                                new SelectList(new List<string> { "Main Facility", "In-Home", "Park" }),
+                                "-- Select Location --",
+                                new { @class = "form-select", required = "required" })
+                            @Html.ValidationMessageFor(model => model.TrainingLocation, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            @Html.LabelFor(model => model.TrainingDuration, "Duration", new { @class = "form-label" })
+                            <div class="input-group">
+                                @Html.TextBoxFor(model => model.TrainingDuration,
+                                    new { @class = "form-control", id = "trainingDuration", @readonly = "readonly" })
+                                <span class="input-group-text">minutes</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            @Html.LabelFor(model => model.TrainingCost, "Estimated Cost", new { @class = "form-label" })
+                            <div class="input-group">
+                                <span class="input-group-text">$</span>
+                                @Html.TextBoxFor(model => model.TrainingCost,
+                                    new { @class = "form-control", id = "trainingCost", @readonly = "readonly" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+              
+                </div>
+            </div>
+      
+
+        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+            <a href="@Url.Action("Index")" class="btn btn-outline-secondary me-md-2">Cancel</a>
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-calendar-check"></i> Schedule Training
+            </button>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // Set minimum date to today
+            $('#trainingDate').attr('min', new Date().toISOString().split('T')[0]);
+
+            // Auto-populate duration and cost when training type is selected
+            $('#trainingTypeDropdown').change(function() {
+                var typeId = $(this).val();
+                if (typeId) {
+                    $.get('@Url.Action("GetTrainingTypeDetails", "CustomerTraining")', { id: typeId }, function(data) {
+                        if (data) {
+                            $('#trainingDuration').val(data.DefaultDuration);
+                            $('#trainingCost').val(data.DefaultCost.toFixed(2));
+                        }
+                    });
+                } else {
+                    $('#trainingDuration').val('');
+                    $('#trainingCost').val('');
+                }
+            });
+        });
+    </script>
+}

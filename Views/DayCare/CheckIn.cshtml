@@ -1,0 +1,219 @@
+﻿@model PetCare_system.Models.DayCare
+
+@{
+    ViewBag.Title = "Pet Check-In";
+}
+
+<div class="container-fluid px-4">
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">
+            <i class="fas fa-paw text-primary mr-2"></i>New Check-In
+        </h1>
+        <a href="@Url.Action("Index","Home")" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm">
+            <i class="fas fa-arrow-left fa-sm text-white-50"></i> Back to Dashboard
+        </a>
+    </div>
+
+    <!-- Owner Information Card -->
+    <div class="card shadow mb-4">
+        <div class="card-header bg-primary text-white py-3">
+            <h5 class="m-0 font-weight-bold">
+                <i class="fas fa-user-circle mr-2"></i>Owner Information
+            </h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <dl class="row mb-0">
+                        <dt class="col-sm-4 font-weight-normal text-muted">Full Name:</dt>
+                        <dd class="col-sm-8">@ViewBag.Owner.FirstName @ViewBag.Owner.LastName</dd>
+
+                        <dt class="col-sm-4 font-weight-normal text-muted">Email:</dt>
+                        <dd class="col-sm-8">@ViewBag.Owner.Email</dd>
+                    </dl>
+                </div>
+                <div class="col-md-6">
+                    <dl class="row mb-0">
+                        <dt class="col-sm-4 font-weight-normal text-muted">Phone:</dt>
+                        <dd class="col-sm-8">@ViewBag.Owner.CellphoneNumber</dd>
+
+                       
+                    </dl>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Check-In Form -->
+    <div class="card shadow">
+        <div class="card-header bg-white py-3">
+            <h5 class="m-0 font-weight-bold text-primary">
+                <i class="fas fa-clipboard-check mr-2"></i>Check-In Details
+            </h5>
+        </div>
+        <div class="card-body">
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+
+                @Html.HiddenFor(m => m.UserId)
+
+                if (!ViewData.ModelState.IsValid)
+                {
+                    <div class="alert alert-danger">
+                        @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+                    </div>
+                }
+
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        @Html.LabelFor(model => model.MembershipId, "Select Pet", new { @class = "font-weight-bold" })
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-paw"></i></span>
+                            </div>
+                            @Html.DropDownListFor(model => model.MembershipId, (SelectList)ViewBag.Memberships, "-- Select Pet --", new
+                            {
+                                @class = "form-control form-control-lg",
+                                @id = "MembershipId"
+                            })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.MembershipId, "", new { @class = "text-danger small" })
+                    </div>
+
+                    <div class="form-group col-md-6">
+                        @Html.LabelFor(model => model.CheckInDate, new { @class = "font-weight-bold" })
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
+                            </div>
+                            @Html.EditorFor(model => model.CheckInDate, new { htmlAttributes = new { @class = "form-control form-control-lg datetimepicker" } })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.CheckInDate, "", new { @class = "text-danger small" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.SpecialInstructions, new { @class = "font-weight-bold" })
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fas fa-comment-medical"></i></span>
+                        </div>
+                        @Html.TextAreaFor(model => model.SpecialInstructions, new
+                        {
+                            @class = "form-control form-control-lg",
+                            rows = 3,
+                            placeholder = "Medical requirements, behavioral notes, or special care instructions..."
+                        })
+                    </div>
+                    @Html.ValidationMessageFor(model => model.SpecialInstructions, "", new { @class = "text-danger small" })
+                </div>
+
+                @Html.HiddenFor(model => model.CareType, new { id = "CareType" })
+
+                <div class="form-group mt-5">
+                    <button type="submit" class="btn btn-primary btn-lg btn-block shadow-sm">
+                        <i class="fas fa-check-circle mr-2"></i>Confirm Check-In
+                    </button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <style>
+        .card {
+            border-radius: 0.75rem;
+            border: none;
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+        }
+
+        .form-control-lg {
+            height: calc(2.875rem + 2px);
+            padding: 0.5rem 1rem;
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+
+        .input-group-text {
+            background-color: #f8f9fc;
+            border-right: 0;
+        }
+
+        .datetimepicker {
+            background-color: white;
+            cursor: pointer;
+        }
+
+        .badge-success {
+            background-color: #1cc88a;
+            padding: 0.5em 0.8em;
+        }
+    </style>
+}
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            // Initialize datetime picker
+            $('.datetimepicker').datetimepicker({
+                format: 'YYYY-MM-DD HH:mm',
+                icons: {
+                    time: 'fas fa-clock',
+                    date: 'fas fa-calendar',
+                    up: 'fas fa-arrow-up',
+                    down: 'fas fa-arrow-down'
+                }
+            });
+
+            // Create a mapping of Membership IDs to their Care Types
+            var membershipTypeMap = {};
+
+            $('#MembershipId option').each(function () {
+                var membershipId = $(this).val();
+                var text = $(this).text();
+
+                // Expected format: PetName (Type)
+                var matches = text.match(/\(([^)]+)\)/);
+                if (matches && matches[1]) {
+                    membershipTypeMap[membershipId] = matches[1].trim();
+                }
+            });
+
+            $('#MembershipId').on('change', function () {
+                var selectedId = $(this).val();
+                var membershipType = membershipTypeMap[selectedId];
+
+                if (membershipType) {
+                    $('#membershipTypeBadge').text(membershipType);
+                    $('#CareType').val(membershipType);
+                    updateBadgeColor(membershipType);
+                }
+            });
+
+            function updateBadgeColor(type) {
+                var $badge = $('#membershipTypeBadge');
+                $badge.removeClass('badge-primary badge-success badge-warning badge-danger badge-info');
+
+                switch (type.toLowerCase()) {
+                    case 'premium':
+                        $badge.addClass('badge-primary');
+                        break;
+                    case 'basic':
+                        $badge.addClass('badge-success');
+                        break;
+                    case 'vip':
+                        $badge.addClass('badge-danger');
+                        break;
+                    default:
+                        $badge.addClass('badge-info');
+                }
+            }
+
+            if ($('#MembershipId').val()) {
+                $('#MembershipId').trigger('change');
+            }
+        });
+    </script>
+}

@@ -1,0 +1,175 @@
+﻿@model PetCare_system.Models.Pet_Adoption
+
+@{
+    ViewBag.Title = "Adoption Application";
+}
+
+<div class="container adoption-container">
+    <div class="form-header">
+        <h2><i class="fa fa-paw"></i> @ViewBag.Title</h2>
+        <p>Please complete this form to begin the adoption process. We'll contact you within 48 hours to discuss next steps.</p>
+    </div>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+
+
+        <div class="form-section">
+            <div class="section-header">
+
+                <h4>Select Your Pet</h4>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.Id, "Pet", new { @class = "form-label" })
+                <div class="input-group">
+                    <span class="input-group-text"><i class="fas fa-paw"></i></span>
+                    @Html.DropDownList("Id", null, "-- Select Pet --", new { @class = "form-select" })
+                </div>
+                @Html.ValidationMessageFor(model => model.Id, "", new { @class = "text-danger small" })
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h3><i class="fa fa-paw"></i> Adoption Details</h3>
+
+
+
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.ExperienceLevel)
+            @Html.DropDownListFor(model => model.ExperienceLevel, (SelectList)ViewBag.ExperienceLevels, "Select your experience level", new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.ExperienceLevel, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.HomeDescription)
+            @Html.TextAreaFor(model => model.HomeDescription, new { @class = "form-control", rows = "3", placeholder = "Describe your home environment" })
+            @Html.ValidationMessageFor(model => model.HomeDescription, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.AdoptionReason)
+            @Html.TextAreaFor(model => model.AdoptionReason, new { @class = "form-control", rows = "4", placeholder = "Why do you want to adopt a pet?" })
+            @Html.ValidationMessageFor(model => model.AdoptionReason, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group terms-agreement">
+            <div class="checkbox">
+                <label>
+                    @Html.CheckBoxFor(model => model.HasAgreedToTerms)
+                    I understand that completing this application does not guarantee adoption and that all information provided is truthful.
+                </label>
+                @Html.ValidationMessageFor(model => model.HasAgreedToTerms, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary btn-lg">
+                <i class="fa fa-paper-plane"></i> Submit Application
+            </button>
+        </div>
+    }
+</div>
+<div class="form-actions text-center mb-4">
+    <a href="@Url.Action("Adopt", "PetAdoption")" class="btn btn-outline-secondary btn-lg">
+        <i class="fa fa-dog"></i> Browse Available Pets
+    </a>
+</div>
+
+@section Styles {
+    <style>
+        .adoption-container {
+            max-width: 800px;
+            margin: 30px auto;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .form-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+            .form-header h2 {
+                color: #2c3e50;
+                font-weight: 600;
+            }
+
+            .form-header i {
+                color: #e74c3c;
+                margin-right: 10px;
+            }
+
+        .form-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+            .form-section h3 {
+                color: #2c3e50;
+                margin-top: 0;
+                border-bottom: 1px solid #ddd;
+                padding-bottom: 10px;
+                font-weight: 500;
+            }
+
+                .form-section h3 i {
+                    margin-right: 10px;
+                    color: #3498db;
+                }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-control {
+            border-radius: 4px;
+            box-shadow: none;
+            border: 1px solid #ddd;
+        }
+
+            .form-control:focus {
+                border-color: #3498db;
+                box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+            }
+
+        textarea.form-control {
+            min-height: 100px;
+        }
+
+        .terms-agreement {
+            margin: 25px 0;
+            padding: 15px;
+            background: #f1f8fe;
+            border-radius: 4px;
+        }
+
+        .form-actions {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .btn-primary {
+            background-color: #e74c3c;
+            border-color: #c0392b;
+            padding: 10px 30px;
+        }
+
+            .btn-primary:hover {
+                background-color: #c0392b;
+                border-color: #a93226;
+            }
+
+            .btn-primary i {
+                margin-right: 8px;
+            }
+    </style>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

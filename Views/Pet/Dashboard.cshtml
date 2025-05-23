@@ -1,0 +1,330 @@
+﻿@model IEnumerable<PetCare_system.Models.Pet>
+@using System.Linq
+
+
+
+@{
+  
+    ViewBag.Title = "My Pets Dashboard";
+}
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+<style>
+    :root {
+        --primary-color: #4b6cb7;
+        --secondary-color: #182848;
+        --accent-color: #ff6b6b;
+        --light-color: #f8f9fa;
+        --dark-color: #343a40;
+    }
+
+    body {
+        background-color: #f9f9f9;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .pets-header {
+        text-align: center;
+        margin: 3rem 0;
+        position: relative;
+    }
+
+        .pets-header h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--secondary-color);
+            margin-bottom: 1rem;
+            position: relative;
+            display: inline-block;
+        }
+
+            .pets-header h2::after {
+                content: '';
+                position: absolute;
+                width: 80px;
+                height: 4px;
+                background-color: var(--accent-color);
+                bottom: -10px;
+                left: 50%;
+                transform: translateX(-50%);
+            }
+
+    .pet-card {
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        overflow: hidden;
+        transition: all 0.3s ease;
+        margin-bottom: 2rem;
+        border: none;
+    }
+
+        .pet-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        }
+
+    .pet-image-container {
+        height: 200px;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    }
+
+    .pet-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s ease;
+    }
+
+    .pet-card:hover .pet-image {
+        transform: scale(1.1);
+    }
+
+    .pet-details {
+        padding: 1.5rem;
+    }
+
+    .pet-name {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: var(--secondary-color);
+        margin-bottom: 0.5rem;
+    }
+
+    .pet-breed {
+        color: var(--primary-color);
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+    }
+
+    .pet-info {
+        color: #666;
+        margin-bottom: 0.3rem;
+        font-size: 0.95rem;
+    }
+
+        .pet-info i {
+            width: 20px;
+            color: var(--accent-color);
+            margin-right: 8px;
+        }
+
+    .pet-actions {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 1.5rem;
+    }
+
+    .btn-pet {
+        border-radius: 50px;
+        padding: 8px 20px;
+        font-weight: 600;
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        transition: all 0.3s ease;
+    }
+
+    .btn-edit {
+        background-color: var(--primary-color);
+        color: white;
+        border: none;
+    }
+
+        .btn-edit:hover {
+            background-color: #3a5a9a;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(75, 108, 183, 0.4);
+        }
+
+    .btn-delete {
+        background-color: #ff6b6b;
+        color: white;
+        border: none;
+    }
+
+        .btn-delete:hover {
+            background-color: #e05555;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
+        }
+
+    .no-pets-card {
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        padding: 3rem;
+        text-align: center;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    .no-pets-icon {
+        font-size: 4rem;
+        color: var(--primary-color);
+        margin-bottom: 1.5rem;
+    }
+
+    .btn-register {
+        background-color: var(--accent-color);
+        color: white;
+        border: none;
+        padding: 10px 25px;
+        border-radius: 50px;
+        font-weight: 600;
+        margin-top: 1.5rem;
+        transition: all 0.3s ease;
+    }
+
+        .btn-register:hover {
+            background-color: #ff5252;
+            transform: translateY(-3px);
+            box-shadow: 0 7px 20px rgba(255,107,107,0.4);
+        }
+
+    .pet-type-badge {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        background-color: var(--accent-color);
+        color: white;
+        padding: 5px 15px;
+        border-radius: 50px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-transform: uppercase;
+    }
+
+    .pet-age {
+        font-size: 0.9rem;
+        color: #888;
+        font-style: italic;
+    }
+
+    /* Responsive adjustments */
+    @@media (max-width: 768px) {
+        .pets-header h2 {
+            font-size: 2rem;
+        }
+
+        .pet-actions {
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .btn-pet {
+            width: 100%;
+        }
+    }
+</style>
+
+<div class="container">
+    <div class="pets-header">
+        <h2>My Beloved Pets</h2>
+        <p class="text-muted">Meet your furry family members</p>
+        <a href="@Url.Action("Register", "Pet")" class="btn btn-register">
+            <i class="fas fa-plus-circle"></i> Add New Pet
+        </a>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="no-pets-card">
+            <div class="no-pets-icon">
+                <i class="fas fa-paw"></i>
+            </div>
+            <h3>No Pets Registered Yet</h3>
+            <p class="text-muted">You haven't added any pets to your profile. Let's get started by registering your first pet!</p>
+            <a href="@Url.Action("Register", "Pet")" class="btn btn-register">
+                <i class="fas fa-plus-circle"></i> Register Your Pet
+            </a>
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            @foreach (var pet in Model)
+            {
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="pet-card">
+                        <div class="pet-image-container">
+                            @if (!string.IsNullOrEmpty(pet.PicturePath))
+                            {
+                                <img src="@pet.PicturePath" alt="@pet.Name" class="pet-image" />
+                            }
+                            else
+                            {
+                                <i class="fas fa-paw" style="font-size: 5rem; color: rgba(0,0,0,0.1);"></i>
+                            }
+                            <div class="pet-type-badge">@pet.Type</div>
+                        </div>
+                        <div class="pet-details">
+                            <h3 class="pet-name">@pet.Name</h3>
+                            <p class="pet-breed">@pet.Breed</p>
+
+                            <p class="pet-info">
+                                <i class="fas fa-birthday-cake"></i>
+                                @pet.DateOfBirth.ToString("dd MMM yyyy")
+                                <span class="pet-age">(@CalculateAge(pet.DateOfBirth) old)</span>
+                            </p>
+
+
+
+                            <div class="pet-actions">
+                                <a href="@Url.Action("Edit", "Pet", new { id = pet.Id })" class="btn btn-pet btn-edit">
+                                    <i class="fas fa-edit"></i> Edit
+                                </a>
+                                <a href="@Url.Action("Details", "Pet", new { id = pet.Id })" class="btn btn-pet btn-primary">
+                                    <i class="fas fa-info-circle"></i> Details
+                                </a>
+                                <a href="@Url.Action("Delete", "Pet", new { id = pet.Id })" class="btn btn-pet btn-delete" onclick="return confirm('Are you sure you want to delete @pet.Name?');">
+                                    <i class="fas fa-trash-alt"></i> Delete
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+@functions {
+    string CalculateAge(DateTime birthDate)
+    {
+        var today = DateTime.Today;
+        var age = today.Year - birthDate.Year;
+        if (birthDate.Date > today.AddYears(-age)) age--;
+
+        if (age == 0)
+        {
+            var months = today.Month - birthDate.Month;
+            if (birthDate.Date > today.AddMonths(-months)) months--;
+            return $"{months} month{(months != 1 ? "s" : "")}";
+        }
+
+        return $"{age} year{(age != 1 ? "s" : "")}";
+    }
+}
+
+<script>
+    // Confirmation for delete action
+    function confirmDelete(petName) {
+        return confirm(`Are you sure you want to delete ${petName}? This action cannot be undone.`);
+    }
+
+    // Animation for pet cards
+    document.addEventListener('DOMContentLoaded', function () {
+        const petCards = document.querySelectorAll('.pet-card');
+
+        petCards.forEach((card, index) => {
+            // Add delay based on index for staggered animation
+            card.style.animationDelay = `${index * 0.1}s`;
+            card.classList.add('animate__animated', 'animate__fadeInUp');
+        });
+    });
+</script>

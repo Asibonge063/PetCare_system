@@ -1,0 +1,24 @@
+﻿@model PetCare_system.Models.Adoption
+
+@{
+    ViewBag.Title = "Adoption Application Received";
+}
+
+<h2>Thank You for Your Adoption Application!</h2>
+
+@using (Html.BeginForm("SubmitAdoptionSelection", "Adoption", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    <div class="pet-card">
+
+        <div class="pet-info">
+            <strong>@(Model.PetName ?? Model.Pet?.Name ?? "Unknown")</strong>
+            <p>Type: @(Model.PetType ?? Model.Pet?.Type ?? "Unknown")</p>
+            <p>Breed: @(Model.PetBreed ?? Model.Pet?.Breed ?? "Unknown")</p>
+            <p>Date of Birth: @(Model.Pet?.DateOfBirth.ToString("yyyy-MM-dd") ?? "Unknown")</p>
+        </div>
+    </div>
+}
+<p>We will review your application and notify you once it's processed.</p>
+
+<p>If you have any questions, please feel free to contact us.</p>

@@ -1,0 +1,601 @@
+﻿@model PetCare_system.Models.Pet_Adoption
+@{
+    ViewBag.Title = "Adoption Agreement Form";
+}
+
+<div class="container adoption-agreement-container" id="pdf-content">
+    <div class="agreement-header">
+       
+        <h1><i class="fa fa-paw"></i> Pet Adoption Agreement</h1>
+        <div class="document-meta">
+            <p>Document ID: ADOPT-@DateTime.Now.ToString("yyyyMMdd")-@Guid.NewGuid().ToString().Substring(0, 5).ToUpper()</p>
+            <p>Generated: @DateTime.Now.ToString("f")</p>
+        </div>
+    </div>
+
+    <div class="agreement-body">
+        <!-- Pet Information Section -->
+        <div class="section pet-information">
+            <h2><i class="fa fa-info-circle"></i> Pet Information</h2>
+            <div class="row">
+                <div class="col-md-6">
+                    <p><strong>Pet Name:</strong> @ViewBag.PetName</p>
+                    <p><strong>Type/Breed:</strong> @ViewBag.PetType</p>
+                </div>
+                <div class="col-md-6">
+                    <p><strong>Adoption Date:</strong> @DateTime.Now.ToString("d")</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Adopter Information Section -->
+        <div class="section adopter-information">
+            <h2><i class="fa fa-user"></i> Adopter Information</h2>
+            <div class="row">
+                <div class="col-md-6">
+                    <p><strong>Full Name:</strong> @Session["UserFullName"]</p>
+                    <p><strong>Email:</strong> @Session["UserEmail"]</p>
+                </div>
+                <div class="col-md-6">
+                    <p><strong>Phone:</strong> @Session["UserPhone"]</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Terms and Conditions -->
+        <div class="section terms-conditions">
+            <h2><i class="fa fa-file-text"></i> Terms and Conditions</h2>
+            <div class="terms-content">
+                <h3>1. Care Commitment</h3>
+                <p>The Adopter agrees to provide proper food, water, shelter, veterinary care, and humane treatment to the pet at all times.</p>
+
+                <h3>2. No Transfer of Ownership</h3>
+                <p>The Adopter agrees not to sell, give away, or otherwise transfer ownership of the pet without prior written consent from PetCare System.</p>
+
+                <h3>3. Return Policy</h3>
+                <p>If the Adopter can no longer care for the pet, they must return the pet to PetCare System and not abandon or surrender it to another party.</p>
+
+                <h3>4. Home Environment</h3>
+                <p>The Adopter confirms their home is safe and appropriate for the pet, with adequate space and facilities.</p>
+
+                <h3>5. Compliance with Laws</h3>
+                <p>The Adopter agrees to comply with all local laws and regulations regarding pet ownership.</p>
+            </div>
+        </div>
+
+        <!-- Signatures Section -->
+        <div class="section signatures">
+            <h2><i class="fa fa-pencil"></i> Your Signature</h2>
+
+            <div class="signature-instructions alert alert-info">
+                <i class="fa fa-info-circle"></i> <strong>How to sign:</strong> Click the "Enable Signature" button, then draw your signature in the box below.
+            </div>
+
+            <div class="signature-controls">
+                <button id="enable-signature" class="btn btn-primary">
+                    <i class="fa fa-check-circle"></i> Enable Signature
+                </button>
+                <span id="signature-status" class="status-message"></span>
+            </div>
+
+            <div class="signature-pad-container">
+                <canvas id="signature-canvas"></canvas>
+                <div class="signature-placeholder">Sign here after enabling</div>
+            </div>
+            <div class="signature-actions">
+                <button type="button" class="btn btn-danger" id="clear-signature" disabled>
+                    <i class="fa fa-trash"></i> Clear Signature
+                </button>
+            </div>
+
+            <div class="signature-details">
+                <div class="form-group">
+                    <label for="signature-name">Printed Name</label>
+                    <input type="text" class="form-control" id="signature-name" required>
+                </div>
+                <div class="form-group">
+                    <label for="signature-date">Date</label>
+                    <input type="date" class="form-control" id="signature-date" required>
+                </div>
+            </div>
+        </div>
+
+        <!-- Adoption Checklist -->
+        <div class="section checklist">
+            <h2><i class="fa fa-check-square"></i> Adoption Checklist</h2>
+            <div class="checklist-items">
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" id="check-vet" required> I have scheduled a veterinary appointment within 14 days
+                    </label>
+                </div>
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" id="check-supplies" required> I have all necessary supplies (food, leash, crate, etc.)
+                    </label>
+                </div>
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" id="check-understand" required> I understand all terms and conditions of this agreement
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="action-buttons">
+        <button id="back-to-home" class="btn btn-default btn-lg">
+            <i class="fa fa-home"></i> Back to Home
+        </button>
+        <button id="generate-pdf" class="btn btn-success btn-lg">
+            <i class="fa fa-file-pdf-o"></i> Save as PDF
+        </button>
+        <button id="print-agreement" class="btn btn-primary btn-lg">
+            <i class="fa fa-print"></i> Print Agreement
+        </button>
+    </div>
+</div>
+
+@section Styles {
+    <style>
+        /* Signature Section Styles */
+        .signature-instructions {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+        }
+
+        .signature-controls {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .status-message {
+            color: #3498db;
+            font-weight: bold;
+        }
+
+        .signature-wrapper {
+            border: 2px solid #eee;
+            padding: 20px;
+            border-radius: 8px;
+            background: #f9f9f9;
+            margin-bottom: 20px;
+        }
+
+        .signature-pad-container {
+            position: relative;
+            height: 180px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            background: white;
+        }
+
+        #signature-canvas {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            z-index: 2;
+            cursor: crosshair;
+            background-color: white !important;
+        }
+
+        .signature-placeholder {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #ccc;
+            font-size: 1.2em;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .signature-actions {
+            text-align: right;
+            margin-bottom: 15px;
+        }
+
+        /* Button states */
+        #enable-signature.active {
+            background-color: #27ae60;
+        }
+
+        #clear-signature:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Base Styles */
+        .adoption-agreement-container {
+            max-width: 900px;
+            margin: 20px auto;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f9f9f9;
+            padding: 0;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+
+        /* Header Styles */
+        .agreement-header {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+        }
+
+            .agreement-header h1 {
+                margin: 15px 0 10px;
+                font-weight: 600;
+                font-size: 28px;
+            }
+
+            .agreement-header i {
+                margin-right: 15px;
+            }
+
+        .logo {
+            max-height: 80px;
+            margin-bottom: 15px;
+        }
+
+        .document-meta {
+            background: rgba(0,0,0,0.1);
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 15px;
+            font-size: 12px;
+        }
+
+        /* Body Sections */
+        .agreement-body {
+            padding: 30px;
+            background: white;
+        }
+
+        .section {
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+
+            .section:last-child {
+                border-bottom: none;
+                margin-bottom: 20px;
+            }
+
+            .section h2 {
+                color: #2c3e50;
+                margin-bottom: 20px;
+                font-weight: 500;
+                display: flex;
+                align-items: center;
+            }
+
+                .section h2 i {
+                    margin-right: 10px;
+                    color: #3498db;
+                }
+
+        /* Footer Styles */
+        .agreement-footer {
+            background: #2c3e50;
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            border: none;
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            min-width: 200px;
+        }
+
+            .btn i {
+                margin-right: 8px;
+            }
+
+        .btn-default {
+            background: #ecf0f1;
+            color: #2c3e50;
+        }
+
+            .btn-default:hover {
+                background: #bdc3c7;
+            }
+
+        .btn-success {
+            background: #2ecc71;
+            color: white;
+        }
+
+            .btn-success:hover {
+                background: #27ae60;
+            }
+
+        .btn-primary {
+            background: white;
+            color: #2c3e50;
+        }
+
+            .btn-primary:hover {
+                background: #f8f9fa;
+            }
+
+        .btn-warning {
+            background: #f39c12;
+            color: white;
+        }
+
+        .footer-note {
+            font-size: 12px;
+            opacity: 0.8;
+            margin-top: 15px;
+        }
+
+        /* Responsive Adjustments */
+        @@media (max-width: 768px) {
+            .agreement-body {
+                padding: 20px;
+            }
+
+            .signature-pad {
+                height: 150px;
+            }
+
+            .btn {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+        }
+
+        /* Print Styles */
+        @@media print {
+            body * {
+                visibility: hidden;
+            }
+
+            #pdf-content, #pdf-content * {
+                visibility: visible;
+            }
+
+            #pdf-content {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                padding: 0;
+                margin: 0;
+            }
+
+            .btn {
+                display: none !important;
+            }
+
+            #signature-canvas {
+                border: 1px solid #000 !important;
+            }
+        }
+    </style>
+}
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/signature_pad/1.5.3/signature_pad.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            // Signature Pad Variables
+            var canvas = document.getElementById('signature-canvas');
+            var signaturePad = null;
+            var isSignatureEnabled = false;
+
+            // Initialize the signature pad with proper dimensions
+            function initializeSignaturePad() {
+                // Clear any existing instance
+                if (signaturePad) {
+                    signaturePad.off();
+                    signaturePad.clear();
+                }
+
+                // Set canvas dimensions
+                var ratio = Math.max(window.devicePixelRatio || 1, 1);
+                canvas.width = canvas.offsetWidth * ratio;
+                canvas.height = canvas.offsetHeight * ratio;
+                canvas.getContext("2d").scale(ratio, ratio);
+
+                // Create new signature pad instance
+                signaturePad = new SignaturePad(canvas, {
+                    backgroundColor: 'rgba(255, 255, 255, 0)',
+                    penColor: 'rgb(0, 0, 0)',
+                    minWidth: 1,
+                    maxWidth: 3,
+                    throttle: 16
+                });
+
+                // Fix for mobile devices
+                if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+                    canvas.addEventListener('touchstart', preventScroll, { passive: false });
+                    canvas.addEventListener('touchmove', preventScroll, { passive: false });
+                }
+            }
+
+            function preventScroll(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                return false;
+            }
+
+            // Handle window resize
+            function resizeCanvas() {
+                var ratio = Math.max(window.devicePixelRatio || 1, 1);
+                canvas.width = canvas.offsetWidth * ratio;
+                canvas.height = canvas.offsetHeight * ratio;
+                canvas.getContext("2d").scale(ratio, ratio);
+
+                if (isSignatureEnabled && signaturePad) {
+                    signaturePad.clear(); // Clear on resize to prevent artifacts
+                }
+            }
+
+            // Initial setup
+            resizeCanvas();
+            window.addEventListener('resize', resizeCanvas);
+
+            // Enable Signature Button
+            $('#enable-signature').click(function () {
+                if (!isSignatureEnabled) {
+                    initializeSignaturePad();
+
+                    // UI Feedback
+                    $(this).html('<i class="fa fa-check-circle"></i> Signature Enabled');
+                    $(this).addClass('active');
+                    $('#signature-status').text('Draw your signature above');
+                    $('#clear-signature').prop('disabled', false);
+                    $('.signature-placeholder').hide();
+
+                    // Set cursor
+                    canvas.style.cursor = 'crosshair';
+                    isSignatureEnabled = true;
+
+                    // Scroll to signature area
+                    $('html, body').animate({
+                        scrollTop: $('.signature-pad-container').offset().top - 50
+                    }, 500);
+                }
+            });
+
+            // Clear Signature Button
+            $('#clear-signature').click(function () {
+                if (signaturePad) {
+                    signaturePad.clear();
+                    $('#signature-status').text('Signature cleared - sign again');
+                }
+            });
+
+            // Back to Home Button
+            $('#back-to-home').click(function() {
+                window.location.href = '@Url.Action("Index", "Home")';
+            });
+
+            // Print Button
+            $('#print-agreement').click(function() {
+                // Validate before printing
+                if (!validateForm()) {
+                    return;
+                }
+                window.print();
+            });
+
+            // Generate PDF Button
+            $('#generate-pdf').click(function(e) {
+                e.preventDefault();
+
+                if (!validateForm()) {
+                    return;
+                }
+
+                // Show loading state
+                var btn = $(this);
+                btn.html('<i class="fa fa-spinner fa-spin"></i> Generating PDF...');
+                btn.prop('disabled', true);
+
+                // Generate PDF
+                generatePDF().then(function() {
+                    btn.html('<i class="fa fa-file-pdf-o"></i> Save as PDF');
+                    btn.prop('disabled', false);
+                });
+            });
+
+            function validateForm() {
+                if (!isSignatureEnabled) {
+                    alert('Please enable the signature field first.');
+                    return false;
+                }
+
+                if (signaturePad.isEmpty()) {
+                    alert('Please provide your signature.');
+                    return false;
+                }
+
+                if (!$('#signature-name').val()) {
+                    alert('Please enter your printed name.');
+                    return false;
+                }
+
+                if (!$('#signature-date').val()) {
+                    alert('Please enter the date.');
+                    return false;
+                }
+
+                if (!$('#check-vet').is(':checked') || !$('#check-supplies').is(':checked') || !$('#check-understand').is(':checked')) {
+                    alert('Please check all checklist items.');
+                    return false;
+                }
+
+                return true;
+            }
+
+            function generatePDF() {
+                return new Promise(function(resolve) {
+                    // Use html2canvas to capture the content
+                    html2canvas(document.getElementById('pdf-content'), {
+                        scale: 2,
+                        logging: false,
+                        useCORS: true,
+                        allowTaint: true,
+                        backgroundColor: '#ffffff'
+                    }).then(function(canvas) {
+                        // Create PDF
+                        const { jsPDF } = window.jspdf;
+                        const pdf = new jsPDF('p', 'mm', 'a4');
+                        const imgData = canvas.toDataURL('image/png');
+                        const imgWidth = 210; // A4 width in mm
+                        const pageHeight = 295; // A4 height in mm
+                        const imgHeight = canvas.height * imgWidth / canvas.width;
+                        let heightLeft = imgHeight;
+                        let position = 0;
+
+                        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                        heightLeft -= pageHeight;
+
+                        // Add additional pages if content is too long
+                        while (heightLeft >= 0) {
+                            position = heightLeft - imgHeight;
+                            pdf.addPage();
+                            pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                            heightLeft -= pageHeight;
+                        }
+
+                        // Save the PDF
+                        const adopterName = $('#signature-name').val().replace(/\s+/g, '_');
+                        const petName = '@ViewBag.PetName'.replace(/\s+/g, '_');
+                        pdf.save(`Adoption_Agreement_${adopterName}_${petName}.pdf`);
+                        resolve();
+                    });
+                });
+            }
+        });
+    </script>
+}

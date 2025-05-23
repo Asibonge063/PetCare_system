@@ -1,0 +1,69 @@
+﻿@model PetCare_system.Models.TrainingType
+@{
+    ViewBag.Title = "Delete Training Type";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+        }
+
+        .container {
+            max-width: 960px;
+            margin-top: 50px;
+            margin-bottom: 50px;
+        }
+
+        .alert {
+            font-size: 1.1rem;
+        }
+
+        .btn {
+            font-size: 1.1rem;
+            padding: 10px;
+            margin-top: 20px;
+        }
+
+        .btn-lg {
+            font-size: 1.2rem;
+            padding: 12px;
+        }
+
+        .shadow-sm {
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container my-5">
+        <h2 class="text-center mb-4">Delete Training Type</h2>
+
+        <div class="alert alert-danger">
+            <h4>Are you sure you want to delete the following training type?</h4>
+            <p><strong>Name:</strong> @Model.Name</p>
+            <p><strong>Description:</strong> @Model.Description</p>
+        </div>
+
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="form-group">
+                <button type="submit" class="btn btn-danger btn-lg btn-block">Delete</button>
+                <a href="@Url.Action("Index")" class="btn btn-secondary btn-lg btn-block">Cancel</a>
+            </div>
+        }
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

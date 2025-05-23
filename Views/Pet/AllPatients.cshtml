@@ -1,0 +1,234 @@
+﻿@model IEnumerable<PetCare_system.Models.PetPatientViewModel>
+
+@{
+    ViewBag.Title = "Patient Directory";
+}
+
+<div class="container-fluid px-4">
+    <div class="d-flex flex-column flex-md-row align-items-center justify-content-between mb-4">
+        <div class="mb-3 mb-md-0">
+            <h1 class="mb-1 text-gradient"><i class="fas fa-paw me-2"></i>Patient Directory</h1>
+            <p class="mb-0 text-muted">Browse and manage all animal patients</p>
+        </div>
+        <div>
+            <a href="@Url.Action("Dashboard_Doc", "Doctor")" class="btn btn-outline-primary btn-rounded">
+                <i class="fas fa-chevron-left me-2"></i>Back to Dashboard
+            </a>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-lg rounded-3 overflow-hidden">
+        <div class="card-header bg-primary bg-gradient text-white py-3">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <h5 class="mb-0"><i class="fas fa-list-ul me-2"></i>Patient Records</h5>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <span class="badge bg-white text-primary fs-6">@Model.Count() Patients</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-body p-4">
+            @using (Html.BeginForm())
+            {
+                <div class="row g-3 mb-4">
+                    <div class="col-md-5">
+                        <div class="input-group input-group-lg">
+                            <span class="input-group-text bg-light"><i class="fas fa-search text-primary"></i></span>
+                            @Html.TextBox("searchString", ViewBag.CurrentFilter as string, new
+                            {
+                                @class = "form-control form-control-lg",
+                                placeholder = "Search patients...",
+                                style = "border-left: none"
+                            })
+                            <button type="submit" class="btn btn-primary px-4">
+                                Go
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        @Html.DropDownList("petTypeFilter", ViewBag.PetTypes as SelectList, "All Pet Types", new
+                        {
+                            @class = "form-select form-select-lg",
+                            onchange = "this.form.submit()"
+                        })
+                    </div>
+                    <div class="col-md-4 d-flex align-items-center justify-content-end">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="showImages" checked>
+                            <label class="form-check-label" for="showImages">Show Photos</label>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            <div class="table-responsive rounded-3 border">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="bg-light">
+                        <tr>
+                            <th style="width: 80px;"></th>
+                            <th>@Html.ActionLink("Patient Name", "AllPatients", new { sortOrder = ViewBag.NameSortParm, searchString = ViewBag.CurrentFilter, petTypeFilter = ViewBag.CurrentTypeFilter }, new { @class = "text-decoration-none text-dark fw-bold" })</th>
+                            <th>@Html.ActionLink("Type", "AllPatients", new { sortOrder = ViewBag.TypeSortParm, searchString = ViewBag.CurrentFilter, petTypeFilter = ViewBag.CurrentTypeFilter }, new { @class = "text-decoration-none text-dark fw-bold" })</th>
+                            <th>Breed</th>
+                            <th>Age</th>
+                            <th>Date of Birth</th>
+                            <th>Owner</th>
+                            <th style="width: 40px;"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var pet in Model)
+                        {
+                            <tr class="patient-row">
+                                <td class="text-center">
+                                    <div class="patient-avatar">
+                                        <img src="@Url.Action("GetImage", "Pet", new { id = pet.Id })"
+                                             alt="@pet.Name"
+                                             class="img-thumbnail rounded-circle shadow-sm"
+                                             style="width: 60px; height: 60px; object-fit: cover; transition: transform 0.3s;" />
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="fw-bold">@pet.Name</div>
+                                    <small class="text-muted">ID: @pet.Id</small>
+                                </td>
+                                <td>
+                                    <span class="badge rounded-pill bg-info bg-opacity-10 text-info">
+                                        @pet.Type
+                                    </span>
+                                </td>
+                                <td>@pet.Breed</td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <span class="me-2">@pet.Age years</span>
+                                        @if (pet.Age < 2)
+                                        {
+                                            <span class="badge bg-warning bg-opacity-15 text-warning">Young</span>
+                                        }
+                                        else if (pet.Age > 8)
+                                        {
+                                            <span class="badge bg-danger bg-opacity-15 text-danger">Senior</span>
+                                        }
+                                    </div>
+                                </td>
+                                <td>@pet.DateOfBirth.ToString("MMM dd, yyyy")</td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="symbol symbol-40px me-3">
+                                            <div class="symbol-label bg-primary bg-opacity-10 text-primary fs-5 fw-bold">
+                                                @pet.OwnerName.Substring(0, 1)
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div class="fw-semibold">@pet.OwnerName</div>
+                                            <div class="text-muted">Owner</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <button class="btn btn-sm btn-icon btn-outline-primary rounded-circle" title="View Details">
+                                        <i class="fas fa-chevron-right"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center mt-4">
+                <div class="text-muted">Showing <span class="fw-bold">@Model.Count()</span> patients</div>
+                <nav aria-label="Page navigation">
+                    <ul class="pagination pagination-sm">
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+                        </li>
+                        <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                        <li class="page-item">
+                            <a class="page-link" href="#">Next</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <style>
+        .text-gradient {
+            background: linear-gradient(135deg, #3a7bd5 0%, #00d2ff 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 700;
+        }
+
+        .patient-avatar img:hover {
+            transform: scale(1.1);
+            cursor: pointer;
+        }
+
+        .patient-row:hover {
+            background-color: #f8f9fa;
+            cursor: pointer;
+        }
+
+        .btn-rounded {
+            border-radius: 50px;
+            padding: 8px 20px;
+        }
+
+        .symbol {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .symbol-40px {
+            width: 40px;
+            height: 40px;
+        }
+
+        .symbol-label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            width: 100%;
+            height: 100%;
+        }
+
+        .card {
+            border: none;
+            box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.08);
+        }
+
+        .form-control-lg, .form-select-lg {
+            padding: 0.75rem 1.25rem;
+            font-size: 1rem;
+        }
+    </style>
+}
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // Toggle patient images
+            $('#showImages').change(function() {
+                $('.patient-avatar').toggle(this.checked);
+            });
+
+            // Add click effect to rows
+            $('.patient-row').click(function() {
+                // Add your click handler here
+                console.log("Patient clicked");
+            });
+        });
+    </script>
+}

@@ -1,0 +1,568 @@
+﻿@model List<PetCare_system.Models.Vet_Consultations>
+@using System.Linq
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>@ViewBag.Title - PetCare System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+     
+        
+        /* Full-width container adjustment */
+        .main-container {
+            max-width: 100% !important;
+            margin: 0 auto;
+            padding: 2rem;
+            border-radius: 0;
+            box-shadow: none;
+        }
+
+        /* Table font size adjustments */
+        .table {
+            font-size: 0.95rem;
+        }
+
+            .table th {
+                font-size: 0.9rem;
+            }
+
+            .table td {
+                padding: 1.25rem;
+            }
+
+        /* Payment button fix */
+        .action-buttons {
+            min-width: 160px;
+        }
+   
+
+    body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f8f9fa;
+    color: #495057;
+    }
+
+    .app-header {
+    background: linear-gradient(135deg, #4361ee, #4cc9f0);
+    color: white;
+    padding: 1.5rem 0;
+    text-align: center;
+    font-weight: 600;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .main-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    .table-responsive {
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid #e9ecef;
+    }
+
+    .table {
+    margin-bottom: 0;
+    }
+
+    .table thead {
+    background: linear-gradient(135deg, #4361ee, #4cc9f0);
+    color: white;
+    }
+
+    .table th {
+    font-weight: 500;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    letter-spacing: 0.5px;
+    padding: 1rem;
+    border-bottom: none;
+    }
+
+    .table td {
+    vertical-align: middle;
+    padding: 1rem;
+    border-top: 1px solid #f1f3f5;
+    }
+
+    .table tbody tr:hover {
+    background-color: #f8fafc;
+    transition: background-color 0.2s ease;
+    }
+
+    .status-badge {
+    padding: 0.35rem 0.65rem;
+    border-radius: 50px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: inline-block;
+    min-width: 85px;
+    text-align: center;
+    }
+
+    .status-available {
+    background-color: #e6f7ee;
+    color: #28a745;
+    }
+
+    .status-unavailable {
+    background-color: #fde8e8;
+    color: #dc3545;
+    }
+
+    .status-paid {
+    background-color: #e6f7ee;
+    color: #28a745;
+    }
+
+    .status-unpaid {
+    background-color: #fde8e8;
+    color: #dc3545;
+    }
+
+    .status-overdue {
+    background-color: #fff3e0;
+    color: #ff9800;
+    }
+
+    .status-scheduled {
+    background-color: #e3f2fd;
+    color: #1976d2;
+    }
+
+    .pet-type-icon {
+    font-size: 1.2rem;
+    margin-right: 8px;
+    }
+
+    .dog-icon {
+    color: #795548;
+    }
+
+    .cat-icon {
+    color: #9e9e9e;
+    }
+
+    .bird-icon {
+    color: #ffc107;
+    }
+
+    .other-icon {
+    color: #9c27b0;
+    }
+
+    .action-buttons .btn {
+    padding: 0.35rem 0.6rem;
+    font-size: 0.8rem;
+    margin-right: 4px;
+    border-radius: 6px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    transition: all 0.2s ease;
+    }
+
+    .action-buttons .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .no-consultations {
+    text-align: center;
+    padding: 3rem;
+    background-color: #f8f9fa;
+    border-radius: 12px;
+    border: 1px dashed #dee2e6;
+    }
+
+    .consultation-image {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .consultation-image:hover {
+    transform: scale(1.05);
+    }
+
+    .modal-image {
+    max-width: 100%;
+    max-height: 80vh;
+    border-radius: 8px;
+    }
+
+    .datetime-cell {
+    display: flex;
+    flex-direction: column;
+    }
+
+    .date-text {
+    font-weight: 500;
+    color: #212529;
+    }
+
+    .time-text {
+    font-size: 0.85rem;
+    color: #6c757d;
+    }
+
+    .pet-info {
+    display: flex;
+    align-items: center;
+    }
+
+    .pet-name {
+    font-weight: 600;
+    color: #212529;
+    }
+
+    .pet-type {
+    font-size: 0.85rem;
+    color: #6c757d;
+    }
+
+    .btn-primary {
+    background: linear-gradient(135deg, #4361ee, #4cc9f0);
+    border: none;
+    }
+
+    .btn-outline-secondary {
+    border-color: #dee2e6;
+    }
+
+    .pagination .page-item.active .page-link {
+    background: linear-gradient(135deg, #4361ee, #4cc9f0);
+    border-color: transparent;
+    }
+
+    .pagination .page-link {
+    color: #4361ee;
+    border-radius: 6px;
+    margin: 0 3px;
+    border: 1px solid #dee2e6;
+    }
+
+    .description-text {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    }
+    </style>
+</head>
+<body>
+    <div class="app-header">
+        <div class="container">
+            <h2><i class="fas fa-stethoscope"></i> Veterinary Consultations</h2>
+            <p class="mb-0">Manage your pet's medical records and appointments</p>
+        </div>
+    </div>
+
+    <!-- Add search box in the action buttons section -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h4><i class="fas fa-list"></i> Consultation Records</h4>
+       
+            <a href="@Url.Action("Create", "Vet_Consultations")" class="btn btn-primary btn-sm">
+                <i class="fas fa-plus"></i> New Consultation
+            </a>
+            <a href="@Url.Action("Index", "Home")" class="btn btn-outline-secondary btn-sm">
+                <i class="fas fa-home"></i> Dashboard
+            </a>
+        </div>
+    
+
+   
+    @if (Model == null || !Model.Any())
+    {
+        <div class="no-consultations">
+            <i class="fas fa-clipboard-list fa-3x mb-3 text-muted"></i>
+            <h5>No Consultations Found</h5>
+            <p class="text-muted">You haven't booked any veterinary consultations yet.</p>
+            <a href="@Url.Action("Create", "Vet_Consultations")" class="btn btn-primary">
+                <i class="fas fa-calendar-plus"></i> Schedule Your First Consultation
+            </a>
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Pet Name</th>
+                        <th>Pet Type</th>
+                        <th>Date & Time</th>
+                        <th>Consultation Type</th>
+                        <th>Consultation Description</th>
+                        <th>Doctor Name</th>
+                        <th>Doctor Availability</th>
+                        <th>Doctor's Feedback</th>
+                        <th>Payment Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var consultation in Model)
+                    {
+                        <tr>
+                            <td>
+                                <div class="pet-info">
+                                    @{
+                                        var petIconClass = "other-icon";
+                                        var petIcon = "fa-paw";
+                                        if (consultation.PetType?.ToLower() == "dog")
+                                        {
+                                            petIconClass = "dog-icon";
+                                            petIcon = "fa-dog";
+                                        }
+                                        else if (consultation.PetType?.ToLower() == "cat")
+                                        {
+                                            petIconClass = "cat-icon";
+                                            petIcon = "fa-cat";
+                                        }
+                                        else if (consultation.PetType?.ToLower() == "bird")
+                                        {
+                                            petIconClass = "bird-icon";
+                                            petIcon = "fa-dove";
+                                        }
+                                    }
+                                    <i class="fas @petIcon pet-type-icon @petIconClass"></i>
+                                    <div>
+                                        <span class="pet-name">@consultation.PetName</span><br>
+                                        <span class="pet-type">@consultation.PetType</span>
+
+                                    </div>
+
+
+                                </div>
+                            </td>
+                            <td>@consultation.PetType</td>
+                            <td>
+                                <div class="datetime-cell">
+                                    <span class="date-text">@consultation.Consult_Date.ToString("MMM dd, yyyy")</span>
+                                    <span class="time-text">
+                                        @consultation.Consult_Time.ToString(@"hh\:mm") @(consultation.Consult_Time.Hour < 12 ? "AM" : "PM")
+                                    </span>
+                                </div>
+                            </td>
+                            <td data-label="Type">@consultation.ConsultationType </td>
+                            <td>
+                                @if (!string.IsNullOrEmpty(consultation.Consult_Description))
+                                {
+                                    <div class="description-text">
+                                        @consultation.Consult_Description
+                                    </div>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">No description</span>
+                                }
+                            </td>
+                            <td data-label="Doctor">
+                                <div class="doctor-name">
+                                    <i class="fas fa-user-md"></i>
+                                    @consultation.Doctor?.FullName
+                                </div>
+                            </td>
+
+                            <td>
+
+                                <span class="status-badge @(consultation.DoctorAvailability ? "status-available" : "status-unavailable")">
+                                    @(consultation.DoctorAvailability ? "Available" : "Unavailable")
+                                </span>
+
+                            </td>
+                            <td>
+                                @if (!string.IsNullOrEmpty(consultation.Feedback))
+                                {
+                                    <div class="description-text">
+                                        @consultation.Feedback
+                                    </div>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">No feedback yet</span>
+                                }
+                            </td>
+                            <td>
+                                @if (!consultation.PaymentStatus && consultation.Consult_Date < DateTime.Now)
+                                {
+                                    <span class="status-badge status-overdue">Overdue</span>
+                                }
+                                else if (!consultation.PaymentStatus && consultation.Consult_Date >= DateTime.Now)
+                                {
+                                    <span class="status-badge status-scheduled">Scheduled</span>
+                                }
+                                else
+                                {
+                                    <span class="status-badge @(consultation.PaymentStatus ? "status-paid" : "status-unpaid")">
+                                        @(consultation.PaymentStatus ? "Paid" : "Unpaid")
+                                    </span>
+                                }
+                            </td>
+                            <td>
+                                <div class="action-buttons d-flex">
+                                    <a href="@Url.Action("Edit", "Vet_Consultations", new { id = consultation.Consult_Id })"
+                                       class="btn btn-sm btn-outline-primary"
+                                       title="Edit"
+                                       data-bs-toggle="tooltip">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+
+                                    <a href="@Url.Action("Delete", "Vet_Consultations", new { id = consultation.Consult_Id })"
+                                       class="btn btn-sm btn-outline-danger"
+                                       title="Delete"
+                                       data-bs-toggle="tooltip"
+                                       onclick="return confirm('Are you sure you want to delete this consultation?');">
+                                        <i class="fas fa-trash-alt"></i>
+
+                                        @{
+                                            // Calculate combined datetime
+                                            var consultDate = consultation.Consult_Date.Date;
+                                            var consultTime = consultation.Consult_Time.TimeOfDay;
+                                            var consultDateTime = consultDate.Add(consultTime);
+                                        }
+
+                                        @if (!consultation.PaymentStatus && consultDateTime > DateTime.Now)
+                                        {
+                                            <a href="@Url.Action("Create", "Payment", new { consultId = consultation.Consult_Id })"
+                                               class="btn btn-sm btn-success"
+                                               title="Make Payment"
+                                               data-bs-toggle="tooltip">
+                                                <i class="fas fa-credit-card"></i>
+                                            </a>
+                                        }
+                                </div>
+
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center mt-4">
+            <div class="text-muted">
+                Showing @Model.Count records
+            </div>
+            <nav aria-label="Page navigation">
+                <ul class="pagination pagination-sm mb-0">
+                    <li class="page-item disabled">
+                        <a class="page-link" href="#" tabindex="-1" aria-disabled="true">
+                            <i class="fas fa-chevron-left"></i>
+                        </a>
+                    </li>
+                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                    <li class="page-item">
+                        <a class="page-link" href="#">
+                            <i class="fas fa-chevron-right"></i>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    }
+   
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Initialize tooltips
+        document.addEventListener('DOMContentLoaded', function () {
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl, {
+                    trigger: 'hover'
+                });
+            });
+        });
+
+
+        document.addEventListener('DOMContentLoaded', function () {
+            // Pagination functionality
+            const itemsPerPage = 10;
+            const tableRows = Array.from(document.querySelectorAll('tbody tr'));
+            const pageCount = Math.ceil(tableRows.length / itemsPerPage);
+            const pagination = document.querySelector('.pagination');
+            const pageInfo = document.querySelector('.text-muted');
+            let currentPage = 1;
+
+            // Make functions available globally
+            window.showPage = function (page) {
+                currentPage = page;
+                // Hide all rows
+                tableRows.forEach(row => row.style.display = 'none');
+
+                // Show items for current page
+                const start = (page - 1) * itemsPerPage;
+                const end = start + itemsPerPage;
+                tableRows.slice(start, end).forEach(row => row.style.display = 'table-row');
+
+                // Update page info
+                pageInfo.textContent = `Showing ${start + 1}-${Math.min(end, tableRows.length)} of ${tableRows.length} records`;
+
+                // Update pagination buttons
+                updatePagination(page);
+            }
+
+            window.updatePagination = function (page) {
+                pagination.innerHTML = '';
+
+                // Previous button
+                pagination.innerHTML += `
+                            <li class="page-item ${page === 1 ? 'disabled' : ''}">
+                                <a class="page-link" href="#" onclick="showPage(${page - 1})">
+                                    <i class="fas fa-chevron-left"></i>
+                                </a>
+                            </li>
+                        `;
+
+                // Page numbers
+                for (let i = 1; i <= pageCount; i++) {
+                    pagination.innerHTML += `
+                                <li class="page-item ${i === page ? 'active' : ''}">
+                                    <a class="page-link" href="#" onclick="showPage(${i})">${i}</a>
+                                </li>
+                            `;
+                }
+
+                // Next button
+                pagination.innerHTML += `
+                            <li class="page-item ${page === pageCount ? 'disabled' : ''}">
+                                <a class="page-link" href="#" onclick="showPage(${page + 1})">
+                                    <i class="fas fa-chevron-right"></i>
+                                </a>
+                            </li>
+                        `;
+            }
+
+            // Initialize first page
+            showPage(1);
+
+            // Tooltip initialization
+            new bootstrap.Tooltip(document.body, {
+                selector: '[data-bs-toggle="tooltip"]'
+            });
+        });
+
+    </script>
+</body>
+</html>

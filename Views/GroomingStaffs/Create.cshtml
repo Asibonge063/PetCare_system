@@ -1,0 +1,166 @@
+﻿@model PetCare_system.Models.GroomingStaff
+
+@{
+    ViewBag.Title = "Add New Groomer";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid px-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="mb-1"><i class="fas fa-user-plus me-2 text-primary"></i>@ViewBag.Title</h2>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="@Url.Action("Dashboard", "Home")">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a href="@Url.Action("Index")">Groomers</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Add New</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-header bg-white py-3">
+            <h5 class="mb-0"><i class="fas fa-info-circle me-2 text-secondary"></i>Groomer Information</h5>
+        </div>
+        <div class="card-body">
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+
+                @Html.ValidationSummary(true, "", new { @class = "alert alert-danger" })
+
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            @Html.EditorFor(model => model.Groom_Name, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter first name" } })
+                            @Html.LabelFor(model => model.Groom_Name, htmlAttributes: new { @class = "form-label" })
+                            @Html.ValidationMessageFor(model => model.Groom_Name, "", new { @class = "text-danger small" })
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            @Html.EditorFor(model => model.Groom_Surname, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter last name" } })
+                            @Html.LabelFor(model => model.Groom_Surname, htmlAttributes: new { @class = "form-label" })
+                            @Html.ValidationMessageFor(model => model.Groom_Surname, "", new { @class = "text-danger small" })
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-floating mb-4">
+                    @Html.EditorFor(model => model.Groom_Email, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter email address" } })
+                    @Html.LabelFor(model => model.Groom_Email, htmlAttributes: new { @class = "form-label" })
+                    @Html.ValidationMessageFor(model => model.Groom_Email, "", new { @class = "text-danger small" })
+                </div>
+
+                <div class="d-flex justify-content-between mt-4">
+                    <a href="@Url.Action("Index")" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left me-2"></i>Back to List
+                    </a>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save me-2"></i>Create Groomer
+                    </button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <style>
+        .form-floating {
+            position: relative;
+            margin-bottom: 1rem;
+        }
+
+            .form-floating label {
+                position: absolute;
+                top: 0;
+                left: 0;
+                height: 100%;
+                padding: 1rem 0.75rem;
+                pointer-events: none;
+                border: 1px solid transparent;
+                transform-origin: 0 0;
+                transition: opacity .1s ease-in-out, transform .1s ease-in-out;
+                color: #6c757d;
+            }
+
+            .form-floating > .form-control {
+                height: calc(3.5rem + 2px);
+                padding: 1rem 0.75rem;
+            }
+
+                .form-floating > .form-control:focus,
+                .form-floating > .form-control:not(:placeholder-shown) {
+                    padding-top: 1.625rem;
+                    padding-bottom: 0.625rem;
+                }
+
+                    .form-floating > .form-control:focus ~ label,
+                    .form-floating > .form-control:not(:placeholder-shown) ~ label,
+                    .form-floating > .form-select ~ label {
+                        opacity: .65;
+                        transform: scale(.85) translateY(-0.5rem) translateX(0.15rem);
+                    }
+
+        .card {
+            border: none;
+            border-radius: 0.5rem;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.05);
+        }
+
+        .card-header {
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .breadcrumb {
+            background-color: transparent;
+            padding: 0;
+            font-size: 0.875rem;
+        }
+
+        .btn {
+            padding: 0.5rem 1.25rem;
+            border-radius: 0.375rem;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background-color: #4361ee;
+            border-color: #4361ee;
+        }
+
+            .btn-primary:hover {
+                background-color: #3a56d4;
+                border-color: #3a56d4;
+                transform: translateY(-1px);
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            }
+
+        .btn-outline-secondary:hover {
+            background-color: #f8f9fa;
+        }
+    </style>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        // Add animation to form elements
+        document.addEventListener('DOMContentLoaded', function () {
+            const formElements = document.querySelectorAll('.form-floating');
+            formElements.forEach((el, index) => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(20px)';
+                el.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+                setTimeout(() => {
+                    el.style.opacity = '1';
+                    el.style.transform = 'translateY(0)';
+                }, 100 * index);
+            });
+        });
+    </script>
+}

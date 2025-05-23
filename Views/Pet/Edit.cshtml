@@ -1,0 +1,40 @@
+﻿@model PetCare_system.Models.Pet
+
+@{
+    ViewBag.Title = "Edit Pet";
+}
+
+<h2>Edit Pet</h2>
+
+@using (Html.BeginForm("Edit", "Pet", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.HiddenFor(model => model.Id)
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Name)
+        @Html.TextBoxFor(model => model.Name, new { @class = "form-control" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.DateOfBirth)
+        @Html.TextBoxFor(model => model.DateOfBirth, new { @class = "form-control" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Breed)
+        @Html.TextBoxFor(model => model.Breed, new { @class = "form-control" })
+    </div>
+
+    <!-- Added Type field -->
+    <div class="form-group">
+        @Html.LabelFor(model => model.Type)
+        @Html.TextBoxFor(model => model.Type, new { @class = "form-control" })
+    </div>
+
+    <div class="form-group">
+        <label>Upload Image</label>
+        <input type="file" name="ImageFile" class="form-control" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Save Changes</button>
+}

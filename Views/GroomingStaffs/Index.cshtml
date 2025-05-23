@@ -1,0 +1,200 @@
+﻿@model IEnumerable<PetCare_system.Models.GroomingStaff>
+
+@{
+    ViewBag.Title = "Groomers Management";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid px-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="mb-1"><i class="fas fa-scissors me-2 text-primary"></i>@ViewBag.Title</h2>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="@Url.Action("Dashboard", "Home")">Dashboard</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Groomers</li>
+                </ol>
+            </nav>
+        </div>
+        <a href="@Url.Action("Create")" class="btn btn-primary">
+            <i class="fas fa-plus me-2"></i>Add New Groomer
+        </a>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-header bg-white py-3">
+            <div class="d-flex justify-content-between align-items-center">
+                <h5 class="mb-0"><i class="fas fa-list me-2 text-secondary"></i>All Groomers</h5>
+                <div class="input-group" style="width: 300px;">
+                    <input type="text" class="form-control" placeholder="Search groomers..." id="searchInput">
+                    <button class="btn btn-outline-secondary" type="button">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="ps-4">
+                                @Html.DisplayNameFor(model => model.Groom_Name)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Groom_Surname)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Groom_Email)
+                            </th>
+                            <th class="text-end pe-4">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td class="ps-4 align-middle">
+                                    <div class="d-flex align-items-center">
+                                        <div class="avatar avatar-sm me-3 bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center">
+                                            <i class="fas fa-user"></i>
+                                        </div>
+                                        <div>
+                                            @Html.DisplayFor(modelItem => item.Groom_Name)
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="align-middle">
+                                    @Html.DisplayFor(modelItem => item.Groom_Surname)
+                                </td>
+                                <td class="align-middle">
+                                    <a href="mailto:@item.Groom_Email" class="text-reset">
+                                        <i class="fas fa-envelope me-2 text-muted"></i>@item.Groom_Email
+                                    </a>
+                                </td>
+                                <td class="text-end pe-4">
+                                    <div class="btn-group" role="group">
+                                        <a href="@Url.Action("Edit", new { id = item.GroomStaffId })" class="btn btn-sm btn-outline-primary" data-bs-toggle="tooltip" title="Edit">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <a href="@Url.Action("Details", new { id = item.GroomStaffId })" class="btn btn-sm btn-outline-info" data-bs-toggle="tooltip" title="Details">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        <a href="@Url.Action("Delete", new { id = item.GroomStaffId })" class="btn btn-sm btn-outline-danger" data-bs-toggle="tooltip" title="Delete">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="card-footer bg-white py-3">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="text-muted small">
+                    Showing <strong>@Model.Count()</strong> groomers
+                </div>
+                <nav>
+                    <ul class="pagination pagination-sm mb-0">
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#" tabindex="-1">Previous</a>
+                        </li>
+                        <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                        <li class="page-item">
+                            <a class="page-link" href="#">Next</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <style>
+        .avatar {
+            width: 36px;
+            height: 36px;
+            display: inline-flex;
+        }
+
+        .card {
+            border: none;
+            border-radius: 0.5rem;
+        }
+
+        .table th {
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.5px;
+            border-top: none;
+        }
+
+        .table-hover tbody tr:hover {
+            background-color: rgba(67, 97, 238, 0.05);
+        }
+
+        .btn-group .btn {
+            border-radius: 0.375rem !important;
+            margin-left: 0.25rem;
+        }
+
+        .breadcrumb {
+            background-color: transparent;
+            padding: 0;
+            font-size: 0.875rem;
+        }
+
+        .card-footer {
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .pagination .page-item.active .page-link {
+            background-color: #4361ee;
+            border-color: #4361ee;
+        }
+
+        .pagination .page-link {
+            color: #4361ee;
+        }
+    </style>
+}
+
+@section Scripts {
+    <script>
+        // Initialize tooltips
+        $(function () {
+            $('[data-bs-toggle="tooltip"]').tooltip();
+        });
+
+        // Simple search functionality
+        document.getElementById('searchInput').addEventListener('keyup', function () {
+            const searchValue = this.value.toLowerCase();
+            const rows = document.querySelectorAll('tbody tr');
+
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                row.style.display = text.includes(searchValue) ? '' : 'none';
+            });
+        });
+
+        // Add animation to table rows
+        document.addEventListener('DOMContentLoaded', function () {
+            const rows = document.querySelectorAll('tbody tr');
+            rows.forEach((row, index) => {
+                row.style.opacity = '0';
+                row.style.transform = 'translateY(20px)';
+                row.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+                setTimeout(() => {
+                    row.style.opacity = '1';
+                    row.style.transform = 'translateY(0)';
+                }, 50 * index);
+            });
+        });
+    </script>
+}

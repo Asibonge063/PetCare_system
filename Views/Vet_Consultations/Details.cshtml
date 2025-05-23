@@ -1,0 +1,286 @@
+﻿@model PetCare_system.Models.Vet_Consultations
+@{
+    ViewBag.Title = "Consultation Details";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>@ViewBag.Title - PetCare System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome@6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-light: #e6e9ff;
+            --secondary: #3a0ca3;
+            --success: #4cc9f0;
+            --warning: #f8961e;
+            --danger: #ef233c;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --text: #495057;
+            --border: #dee2e6;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f7ff;
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        .detail-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .detail-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+            .detail-header h2 {
+                font-weight: 700;
+                color: var(--primary);
+                position: relative;
+                display: inline-block;
+            }
+
+                .detail-header h2::after {
+                    content: '';
+                    position: absolute;
+                    bottom: -10px;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    width: 80px;
+                    height: 4px;
+                    background: var(--primary);
+                    border-radius: 2px;
+                }
+
+        .detail-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .pet-name {
+            color: var(--primary);
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .detail-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .detail-label {
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .detail-value {
+            padding-left: 1.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .pet-image-container {
+            text-align: center;
+            margin: 1.5rem 0;
+        }
+
+        .pet-image {
+            max-width: 250px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border: 4px solid white;
+        }
+
+        .health-condition-list {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .health-condition-item {
+            background: var(--primary-light);
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            display: inline-block;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .status-badge {
+            padding: 0.4rem 0.8rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .status-available {
+            background: var(--success);
+            color: white;
+        }
+
+        .status-unavailable {
+            background: var(--danger);
+            color: white;
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-action {
+            border-radius: 50px;
+            padding: 0.6rem 1.5rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s ease;
+        }
+
+            .btn-action:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+            }
+
+        .btn-feedback {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-back {
+            background: white;
+            color: var(--primary);
+            border: 1px solid var(--primary);
+        }
+
+        @@media (max-width: 768px) {
+            .detail-card {
+                padding: 1.5rem;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+                gap: 0.75rem;
+            }
+
+            .btn-action {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="detail-container">
+        <div class="detail-header">
+            <h2><i class="fas fa-stethoscope"></i> Consultation Details</h2>
+        </div>
+
+        <div class="detail-card">
+            <h3 class="pet-name">
+                <i class="fas fa-paw"></i> @Model.PetName
+                <span class="status-badge @(Model.DoctorAvailability ? "status-available" : "status-unavailable") ms-2">
+                    <i class="fas fa-user-md"></i> @(Model.DoctorAvailability ? "Available" : "Not Available")
+                </span>
+            </h3>
+
+            <div class="detail-section">
+                <h4 class="detail-label"><i class="fas fa-tag"></i> Consultation Type</h4>
+                <p class="detail-value">@Model.ConsultationType</p>
+            </div>
+
+            <div class="detail-section">
+                <h4 class="detail-label"><i class="fas fa-align-left"></i> Description</h4>
+                <p class="detail-value">@Model.Consult_Description</p>
+            </div>
+
+            <div class="detail-section">
+                <h4 class="detail-label"><i class="far fa-calendar-alt"></i> Consultation Date</h4>
+                <p class="detail-value">@Model.Consult_Date.ToShortDateString()</p>
+            </div>
+
+            @if (!string.IsNullOrEmpty(Model.Feedback))
+            {
+                <div class="detail-section">
+                    <h4 class="detail-label"><i class="fas fa-comment-medical"></i> Doctor's Feedback</h4>
+                    <div class="detail-value alert alert-light">
+                        @Model.Feedback
+                    </div>
+                </div>
+            }
+
+            @if (!string.IsNullOrEmpty(Model.PetPicturePath))
+            {
+                <div class="pet-image-container">
+                    <img src="@Url.Content(Model.PetPicturePath)" class="pet-image" alt="Pet Image" />
+                </div>
+            }
+
+            <div class="detail-section">
+                <h4 class="detail-label"><i class="fas fa-heartbeat"></i> Health Conditions</h4>
+                <div class="detail-value">
+                    <ul class="health-condition-list">
+                        @if (Model.HasSignsOfIllness)
+                        {
+                            <li class="health-condition-item"><i class="fas fa-exclamation-triangle"></i> Signs of illness</li>
+                        }
+                        @if (Model.IsOnMedication)
+                        {
+                            <li class="health-condition-item"><i class="fas fa-pills"></i> On medication</li>
+                        }
+                        @if (Model.IsVaccinated)
+                        {
+                            <li class="health-condition-item"><i class="fas fa-syringe"></i> Vaccinated</li>
+                        }
+                        @if (Model.HasChangedEatingHabits)
+                        {
+                            <li class="health-condition-item"><i class="fas fa-utensils"></i> Eating changes</li>
+                        }
+                        @if (Model.HasUnusualBehaviors)
+                        {
+                            <li class="health-condition-item"><i class="fas fa-brain"></i> Unusual behavior</li>
+                        }
+                        @if (Model.IsDewormed)
+                        {
+                            <li class="health-condition-item"><i class="fas fa-bug"></i> Dewormed</li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="action-buttons">
+            <a href="@Url.Action("ProvideFeedback", new { id = Model.Consult_Id })" class="btn btn-action btn-feedback">
+                <i class="fas fa-comment-medical"></i> Provide Feedback
+            </a>
+            <a href="@Url.Action("Dashboard_Doc", "Doctor")" class="btn btn-action btn-back">
+                <i class="fas fa-arrow-left"></i> Back to Dashboard
+            </a>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
